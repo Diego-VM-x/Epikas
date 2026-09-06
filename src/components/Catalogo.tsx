@@ -7,6 +7,7 @@ import {
   IconoBorrar,
   IconoBuscar,
   IconoCollar,
+  IconoCorazonFill,
   IconoDestello,
   IconoEditar,
   IconoFlecha,
@@ -62,6 +63,9 @@ interface CatalogoProps {
   esAdmin: boolean;
   onEditar: (p: Producto) => void;
   onEliminar: (id: string) => void;
+  favoritos: string[];
+  onToggleFavorito: (id: string) => void;
+  esFavorito: (id: string) => boolean;
 }
 
 export default function Catalogo({
@@ -74,6 +78,9 @@ export default function Catalogo({
   esAdmin,
   onEditar,
   onEliminar,
+  favoritos,
+  onToggleFavorito,
+  esFavorito,
 }: CatalogoProps) {
   const [orden, setOrden] = useState<TipoOrden>("nuevos");
   const [menuOrdenAbierto, setMenuOrdenAbierto] = useState(false);
@@ -233,6 +240,8 @@ export default function Catalogo({
                   esAdmin={esAdmin}
                   onEditar={() => onEditar(p)}
                   onEliminar={() => onEliminar(p.id)}
+                  favorito={esFavorito(p.id)}
+                  onToggleFavorito={() => onToggleFavorito(p.id)}
                 />
               </Reveal>
             ))}
@@ -293,12 +302,16 @@ function Tarjeta({
   esAdmin,
   onEditar,
   onEliminar,
+  favorito,
+  onToggleFavorito,
 }: {
   producto: Producto;
   onVer: () => void;
   esAdmin: boolean;
   onEditar: () => void;
   onEliminar: () => void;
+  favorito: boolean;
+  onToggleFavorito: () => void;
 }) {
   const [confirmando, setConfirmando] = useState(false);
 
@@ -370,6 +383,21 @@ function Tarjeta({
             )}
           </div>
         )}
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorito();
+          }}
+          title={favorito ? "Quitar de favoritos" : "Agregar a favoritos"}
+          className={`absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full shadow-lg transition-all ${
+            favorito
+              ? "bg-oro-400 text-vino-950"
+              : "bg-vino-950/80 text-oro-300 backdrop-blur-sm hover:bg-oro-400 hover:text-vino-950"
+          }`}
+        >
+          <IconoCorazonFill className="h-5 w-5" />
+        </button>
       </div>
 
       <div className="flex grow flex-col p-6 pt-5">

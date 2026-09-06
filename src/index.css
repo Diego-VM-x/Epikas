@@ -143,3 +143,67 @@ body {
 .tarjeta:hover .destello::after {
   transform: translateX(130%) skewX(-14deg);
 }
+
+/* ---------- Dark Mode ---------- */
+.dark {
+  --color-marfil-50: #1a1410;
+  --color-marfil-100: #2a2018;
+  --color-vino-950: #f8f2e3;
+  --color-vino-900: #e8dccf;
+  --color-tinta: #f0e6d8;
+}
+
+.dark body {
+  background-color: var(--color-marfil-50);
+  color: var(--color-tinta);
+}
+
+.dark ::selection {
+  background: var(--color-oro-500);
+  color: var(--color-vino-950);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--color-marfil-100);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-oro-700);
+  border-color: var(--color-marfil-100);
+}
+
+.dark .bg-marfil-50 {
+  background-color: var(--color-marfil-50);
+}
+
+.dark .text-marfil-50 {
+  color: var(--color-marfil-50);
+}
+
+.dark .bg-vino-950 {
+  background-color: var(--color-vino-950);
+}
+
+.dark .bg-vino-900 {
+  background-color: var(--color-vino-900);
+}
+
+.dark .text-vino-900 {
+  color: var(--color-vino-950);
+}
+
+.dark .text-vino-800 {
+  color: var(--color-vino-900);
+}
+
+.dark .text-tinta {
+  color: var(--color-tinta);
+}
+
+.dark .border-tinta\/10 {
+  border-color: rgb(240 230 216 / 0.1);
+}
+
+.dark .border-tinta\/15 {
+  border-color: rgb(240 230 216 / 0.15);
+}
