@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoSol, IconoLuna } from "./icons";
+import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill } from "./icons";
 
 interface HeaderProps {
   esAdmin: boolean;
   onAdmin: () => void;
   irA: (id: string) => void;
-  tema: "claro" | "oscuro";
-  onToggleTema: () => void;
   favoritos: string[];
   onToggleFavorito: (id: string) => void;
 }
@@ -21,8 +19,6 @@ export default function Header({
   esAdmin,
   onAdmin,
   irA,
-  tema,
-  onToggleTema,
   favoritos,
   onToggleFavorito,
 }: HeaderProps) {
@@ -79,18 +75,6 @@ export default function Header({
         </nav>
 
         <div className="flex items-center gap-2.5">
-          <button
-            onClick={onToggleTema}
-            aria-label={tema === "oscuro" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:bg-oro-400 hover:text-vino-950"
-          >
-            {tema === "oscuro" ? (
-              <IconoSol className="h-4.5 w-4.5" />
-            ) : (
-              <IconoLuna className="h-4.5 w-4.5" />
-            )}
-          </button>
-
           {favoritos.length > 0 && (
             <div className="relative">
               <button

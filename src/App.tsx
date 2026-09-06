@@ -12,7 +12,6 @@ import ScrollProgress from "./components/ScrollProgress";
 import Toast, { type AvisoToast } from "./components/Toast";
 import { SEMILLA } from "./data/seed";
 import { useFavoritos } from "./hooks/useFavoritos";
-import { useTema } from "./hooks/useTema";
 import type { Categoria, Producto } from "./types";
 import { CLAVE_ADMIN } from "./types";
 
@@ -36,7 +35,6 @@ function cargarProductos(): Producto[] {
 
 export default function App() {
   const { favoritos, toggle: toggleFavorito, esFavorito } = useFavoritos();
-  const { tema, toggle: toggleTema } = useTema();
   const [productos, setProductos] = useState<Producto[]>(cargarProductos);
   const [categoria, setCategoria] = useState<Categoria | "todos">("todos");
   const [busqueda, setBusqueda] = useState("");
@@ -128,8 +126,6 @@ export default function App() {
         esAdmin={esAdmin}
         onAdmin={() => setPanelAbierto(true)}
         irA={irA}
-        tema={tema}
-        onToggleTema={toggleTema}
         favoritos={favoritos}
         onToggleFavorito={toggleFavorito}
       />
