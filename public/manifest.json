@@ -1,0 +1,21 @@
+{
+  "name": "Epikas · Bisutería Católica",
+  "short_name": "Epikas",
+  "description": "Bisutería católica artesanal: rosarios, medallas, collares, anillos y pulseras hechos con fe.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#200a13",
+  "theme_color": "#200a13",
+  "lang": "es-MX",
+  "scope": "/",
+  "orientation": "portrait",
+  "categories": ["shopping", "lifestyle", "religion"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

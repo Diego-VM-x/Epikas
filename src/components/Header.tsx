@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { IconoCerrar, IconoLlave, IconoLogo } from "./icons";
+import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoSol, IconoLuna } from "./icons";
 
 interface HeaderProps {
   esAdmin: boolean;
   onAdmin: () => void;
   irA: (id: string) => void;
+  tema: "claro" | "oscuro";
+  onToggleTema: () => void;
+  favoritos: string[];
+  onToggleFavorito: (id: string) => void;
 }
 
 const ENLACES = [
@@ -13,7 +17,15 @@ const ENLACES = [
   { id: "contacto", nombre: "Contacto" },
 ];
 
-export default function Header({ esAdmin, onAdmin, irA }: HeaderProps) {
+export default function Header({
+  esAdmin,
+  onAdmin,
+  irA,
+  tema,
+  onToggleTema,
+  favoritos,
+  onToggleFavorito,
+}: HeaderProps) {
   const [scroll, setScroll] = useState(false);
   const [menu, setMenu] = useState(false);
 
@@ -66,7 +78,33 @@ export default function Header({ esAdmin, onAdmin, irA }: HeaderProps) {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={onToggleTema}
+            aria-label={tema === "oscuro" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:bg-oro-400 hover:text-vino-950"
+          >
+            {tema === "oscuro" ? (
+              <IconoSol className="h-4.5 w-4.5" />
+            ) : (
+              <IconoLuna className="h-4.5 w-4.5" />
+            )}
+          </button>
+
+          {favoritos.length > 0 && (
+            <div className="relative">
+              <button
+                aria-label={`Tus ${favoritos.length} piezas favoritas`}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:bg-oro-400 hover:text-vino-950"
+              >
+                <IconoCorazonFill className="h-4.5 w-4.5" />
+              </button>
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-oro-400 text-[10px] font-bold text-vino-950">
+                {favoritos.length}
+              </span>
+            </div>
+          )}
+
           <button
             onClick={onAdmin}
             className={`hidden items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] transition-all duration-300 sm:flex ${

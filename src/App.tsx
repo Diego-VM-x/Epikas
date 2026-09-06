@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
+import Breadcrumb from "./components/Breadcrumb";
 import Catalogo from "./components/Catalogo";
 import Cinta from "./components/Cinta";
 import DetalleModal from "./components/DetalleModal";
@@ -7,8 +8,11 @@ import Header from "./components/Header";
 import Nosotros from "./components/Nosotros";
 import Portada from "./components/Portada";
 import SchemaMarkup from "./components/SchemaMarkup";
+import ScrollProgress from "./components/ScrollProgress";
 import Toast, { type AvisoToast } from "./components/Toast";
 import { SEMILLA } from "./data/seed";
+import { useFavoritos } from "./hooks/useFavoritos";
+import { useTema } from "./hooks/useTema";
 import type { Categoria, Producto } from "./types";
 import { CLAVE_ADMIN } from "./types";
 
@@ -31,6 +35,8 @@ function cargarProductos(): Producto[] {
 }
 
 export default function App() {
+  const { favoritos, toggle: toggleFavorito, esFavorito } = useFavoritos();
+  const { tema, toggle: toggleTema } = useTema();
   const [productos, setProductos] = useState<Producto[]>(cargarProductos);
   const [categoria, setCategoria] = useState<Categoria | "todos">("todos");
   const [busqueda, setBusqueda] = useState("");
@@ -116,8 +122,17 @@ export default function App() {
       <div className="ruido pointer-events-none fixed inset-0 z-[95]" aria-hidden="true" />
 
       <SchemaMarkup productos={productos} />
+      <ScrollProgress />
 
-      <Header esAdmin={esAdmin} onAdmin={() => setPanelAbierto(true)} irA={irA} />
+      <Header
+        esAdmin={esAdmin}
+        onAdmin={() => setPanelAbierto(true)}
+        irA={irA}
+        tema={tema}
+        onToggleTema={toggleTema}
+        favoritos={favoritos}
+        onToggleFavorito={toggleFavorito}
+      />
 
       <main>
         <Portada onExplorar={() => irA("catalogo")} />
@@ -132,7 +147,11 @@ export default function App() {
           esAdmin={esAdmin}
           onEditar={editarDesdeTarjeta}
           onEliminar={eliminarProducto}
+          favoritos={favoritos}
+          onToggleFavorito={toggleFavorito}
+          esFavorito={esFavorito}
         />
+        <Breadcrumb items={[{ label: "Catálogo" }]} />
         <Nosotros />
       </main>
 
