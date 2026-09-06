@@ -3,6 +3,7 @@ import type { Producto } from "../types";
 import { formatearPrecio } from "../types";
 
 interface FavoritosModalProps {
+  abierto: boolean;
   productos: Producto[];
   favoritos: string[];
   esFavorito: (id: string) => boolean;
@@ -12,6 +13,7 @@ interface FavoritosModalProps {
 }
 
 export default function FavoritosModal({
+  abierto,
   productos,
   favoritos,
   esFavorito,
@@ -19,6 +21,8 @@ export default function FavoritosModal({
   onVerDetalle,
   onClose,
 }: FavoritosModalProps) {
+  if (!abierto) return null;
+
   const favoritosProductos = productos.filter((p) => esFavorito(p.id));
 
   return (
