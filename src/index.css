@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cinzel", "Georgia", serif;
+  --font-quote: "Cormorant Garamond", "Georgia", serif;
+  --font-sans: "Jost", "Trebuchet MS", sans-serif;
+
+  --color-vino-50: #fdf7f9;
+  --color-vino-100: #f8e8ec;
+  --color-vino-200: #eec3cd;
+  --color-vino-300: #dd92a3;
+  --color-vino-400: #c05f76;
+  --color-vino-500: #9c3d55;
+  --color-vino-600: #7e2a41;
+  --color-vino-700: #632034;
+  --color-vino-800: #481728;
+  --color-vino-900: #33101d;
+  --color-vino-950: #200a13;
+
+  --color-oro-100: #f9efcd;
+  --color-oro-200: #f0dd9d;
+  --color-oro-300: #e5c878;
+  --color-oro-400: #d4af37;
+  --color-oro-500: #b8932c;
+  --color-oro-600: #97741f;
+  --color-oro-700: #75591a;
+
+  --color-marfil-50: #f8f2e3;
+  --color-marfil-100: #f3ead3;
+  --color-marfil-200: #e9dcbb;
+  --color-marfil-300: #d8c69a;
+
+  --color-tinta: #3a222c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-marfil-50);
+  color: var(--color-tinta);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-oro-400);
+  color: var(--color-vino-950);
+}
+
+::-webkit-scrollbar { width: 11px; }
+::-webkit-scrollbar-track { background: var(--color-vino-950); }
+::-webkit-scrollbar-thumb { background: var(--color-oro-600); border-radius: 8px; border: 3px solid var(--color-vino-950); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-oro-400); }
+
+/* ---------- Animaciones ---------- */
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-11px); }
+}
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+@keyframes marquesina {
+  to { transform: translateX(-50%); }
+}
+@keyframes halo {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.06); }
+}
+@keyframes aparecerToast {
+  from { opacity: 0; transform: translate(-50%, 18px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes latido {
+  0%, 100% { transform: scale(1); }
+  12% { transform: scale(1.25); }
+  24% { transform: scale(1); }
+}
+
+.animar-flotar { animation: flotar 6s ease-in-out infinite; }
+.animar-flotar-lento { animation: flotar 8.5s ease-in-out infinite; }
+.animar-halo { animation: halo 4.5s ease-in-out infinite; }
+.animar-latido { animation: latido 2.4s ease-in-out infinite; transform-origin: center; }
+.animar-toast { animation: aparecerToast 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* ---------- Revelado al hacer scroll ---------- */
+.revelar {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.revelar.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Arcos de vitral ---------- */
+.arco { border-radius: 999px 999px 16px 16px; }
+
+/* ---------- Rayos de luz giratorios ---------- */
+.rayos {
+  background: repeating-conic-gradient(
+    from 0deg at 50% 50%,
+    rgb(212 175 55 / 0.16) 0deg 5deg,
+    transparent 5deg 12deg
+  );
+  -webkit-mask-image: radial-gradient(circle, black 25%, transparent 68%);
+  mask-image: radial-gradient(circle, black 25%, transparent 68%);
+  animation: girar 140s linear infinite;
+}
+
+/* ---------- Patrón de cruces ---------- */
+.patron-cruces {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M32 22v20M22 32h20' stroke='%23d4af37' stroke-opacity='0.13' stroke-width='1.3'/%3E%3C/svg%3E");
+}
+
+/* ---------- Grano sutil ---------- */
+.ruido {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity: 0.035;
+}
+
+/* ---------- Cinta corrediza ---------- */
+.marquesina-pista {
+  animation: marquesina 32s linear infinite;
+}
+.marquesina-pista:hover {
+  animation-play-state: paused;
+}
+
+/* ---------- Destello sobre tarjetas ---------- */
+.destello::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-130%) skewX(-14deg);
+  background: linear-gradient(105deg, transparent 42%, rgb(255 233 175 / 0.4) 50%, transparent 58%);
+  transition: transform 0.9s ease;
+  pointer-events: none;
+}
+.tarjeta:hover .destello::after {
+  transform: translateX(130%) skewX(-14deg);
+}
