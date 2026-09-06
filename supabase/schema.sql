@@ -75,17 +75,17 @@ CREATE POLICY "Cualquiera puede ver productos activos" ON public.productos
 
 CREATE POLICY "Solo admins pueden insertar productos" ON public.productos
   FOR INSERT WITH CHECK (EXISTS (
-    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email LIKE '%@epikas.mx'
+    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email IN ('diegoverde@epikas.ve', 'norelysmontes@epikas.ve')
   ));
 
 CREATE POLICY "Solo admins pueden actualizar productos" ON public.productos
   FOR UPDATE USING (EXISTS (
-    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email LIKE '%@epikas.mx'
+    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email IN ('diegoverde@epikas.ve', 'norelysmontes@epikas.ve')
   ));
 
 CREATE POLICY "Solo admins pueden eliminar productos" ON public.productos
   FOR DELETE USING (EXISTS (
-    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email LIKE '%@epikas.mx'
+    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email IN ('diegoverde@epikas.ve', 'norelysmontes@epikas.ve')
   ));
 
 -- Políticas para favoritos
@@ -101,7 +101,7 @@ CREATE POLICY "Usuarios pueden eliminar favoritos" ON public.favoritos
 -- Políticas para pedidos
 CREATE POLICY "Usuarios pueden ver sus propios pedidos" ON public.pedidos
   FOR SELECT USING (auth.uid() = user_id OR EXISTS (
-    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email LIKE '%@epikas.mx'
+    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email IN ('diegoverde@epikas.ve', 'norelysmontes@epikas.ve')
   ));
 
 CREATE POLICY "Cualquiera puede crear pedidos" ON public.pedidos
@@ -109,7 +109,7 @@ CREATE POLICY "Cualquiera puede crear pedidos" ON public.pedidos
 
 CREATE POLICY "Solo admins pueden actualizar pedidos" ON public.pedidos
   FOR UPDATE USING (EXISTS (
-    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email LIKE '%@epikas.mx'
+    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email IN ('diegoverde@epikas.ve', 'norelysmontes@epikas.ve')
   ));
 
 -- =============================================
