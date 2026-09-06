@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import AdminPanel from "./components/AdminPanel";
+import { lazy, Suspense, useEffect, useState } from "react";
 import Catalogo from "./components/Catalogo";
 import Cinta from "./components/Cinta";
 import DetalleModal from "./components/DetalleModal";
@@ -7,10 +6,13 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Nosotros from "./components/Nosotros";
 import Portada from "./components/Portada";
+import SchemaMarkup from "./components/SchemaMarkup";
 import Toast, { type AvisoToast } from "./components/Toast";
 import { SEMILLA } from "./data/seed";
 import type { Categoria, Producto } from "./types";
 import { CLAVE_ADMIN } from "./types";
+
+const AdminPanel = lazy(() => import("./components/AdminPanel"));
 
 const ALMACEN_PRODUCTOS = "epikas-catalogo-v1";
 const ALMACEN_SESION = "epikas-admin";
@@ -113,6 +115,8 @@ export default function App() {
     <div className="relative min-h-screen">
       <div className="ruido pointer-events-none fixed inset-0 z-[95]" aria-hidden="true" />
 
+      <SchemaMarkup productos={productos} />
+
       <Header esAdmin={esAdmin} onAdmin={() => setPanelAbierto(true)} irA={irA} />
 
       <main>
@@ -143,22 +147,24 @@ export default function App() {
 
       <DetalleModal producto={detalle} onClose={() => setDetalle(null)} />
 
-      <AdminPanel
-        abierto={panelAbierto}
-        esAdmin={esAdmin}
-        productos={productos}
-        editando={editando}
-        onClose={() => {
-          setPanelAbierto(false);
-          setEditando(null);
-        }}
-        onLogin={manejarLogin}
-        onLogout={manejarLogout}
-        onSave={guardarProducto}
-        onDelete={eliminarProducto}
-        onRestaurar={restaurarCatalogo}
-        onEditandoListo={() => setEditando(null)}
-      />
+      <Suspense fallback={null}>
+        <AdminPanel
+          abierto={panelAbierto}
+          esAdmin={esAdmin}
+          productos={productos}
+          editando={editando}
+          onClose={() => {
+            setPanelAbierto(false);
+            setEditando(null);
+          }}
+          onLogin={manejarLogin}
+          onLogout={manejarLogout}
+          onSave={guardarProducto}
+          onDelete={eliminarProducto}
+          onRestaurar={restaurarCatalogo}
+          onEditandoListo={() => setEditando(null)}
+        />
+      </Suspense>
 
       <Toast aviso={aviso} />
     </div>
