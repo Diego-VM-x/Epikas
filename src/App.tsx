@@ -4,6 +4,7 @@ import Breadcrumb from "./components/Breadcrumb";
 import Catalogo from "./components/Catalogo";
 import Cinta from "./components/Cinta";
 import DetalleModal from "./components/DetalleModal";
+import FavoritosModal from "./components/FavoritosModal";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import AuthModal from "./components/AuthModal";
@@ -30,6 +31,7 @@ function AppContent() {
   const [editando, setEditando] = useState<Producto | null>(null);
   const [aviso, setAviso] = useState<AvisoToast | null>(null);
   const [authModalAbierto, setAuthModalAbierto] = useState(false);
+  const [favoritosModalAbierto, setFavoritosModalAbierto] = useState(false);
 
   const notificar = (texto: string) => setAviso({ id: Date.now(), texto });
 
@@ -92,6 +94,14 @@ function AppContent() {
     setPanelAbierto(true);
   }
 
+  function handleFavoritosClick() {
+    if (!user) {
+      setAuthModalAbierto(true);
+      return;
+    }
+    setFavoritosModalAbierto(true);
+  }
+
   if (loading || loadingProductos) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-marfil-50">
@@ -116,6 +126,7 @@ function AppContent() {
         onToggleFavorito={handleToggleFavorito}
         onAuthClick={() => setAuthModalAbierto(true)}
         onLogout={manejarLogout}
+        onFavoritosClick={handleFavoritosClick}
       />
 
       <main>
@@ -170,6 +181,16 @@ function AppContent() {
       <AuthModal
         abierto={authModalAbierto}
         onClose={() => setAuthModalAbierto(false)}
+      />
+
+      <FavoritosModal
+        abierto={favoritosModalAbierto}
+        productos={productos}
+        favoritos={favoritos}
+        esFavorito={esFavorito}
+        onToggle={handleToggleFavorito}
+        onVerDetalle={setDetalle}
+        onClose={() => setFavoritosModalAbierto(false)}
       />
 
       <Toast aviso={aviso} />

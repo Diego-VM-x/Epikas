@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoUsuario } from "./icons";
+import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoCorazon, IconoUsuario } from "./icons";
 
 interface HeaderProps {
   user: User | null;
@@ -11,6 +11,7 @@ interface HeaderProps {
   onToggleFavorito: (id: string) => void;
   onAuthClick: () => void;
   onLogout: () => void;
+  onFavoritosClick: () => void;
 }
 
 const ENLACES = [
@@ -28,6 +29,7 @@ export default function Header({
   onToggleFavorito,
   onAuthClick,
   onLogout,
+  onFavoritosClick,
 }: HeaderProps) {
   const [scroll, setScroll] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -82,19 +84,24 @@ export default function Header({
         </nav>
 
         <div className="flex items-center gap-2.5">
-          {favoritos.length > 0 && (
-            <div className="relative">
-              <button
-                aria-label={`Tus ${favoritos.length} piezas favoritas`}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:bg-oro-400 hover:text-vino-950"
-              >
+          <div className="relative">
+            <button
+              onClick={onFavoritosClick}
+              aria-label={`Tus ${favoritos.length} piezas favoritas`}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:bg-oro-400 hover:text-vino-950"
+            >
+              {favoritos.length > 0 ? (
                 <IconoCorazonFill className="h-4.5 w-4.5" />
-              </button>
+              ) : (
+                <IconoCorazon className="h-4.5 w-4.5" />
+              )}
+            </button>
+            {favoritos.length > 0 && (
               <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-oro-400 text-[10px] font-bold text-vino-950">
                 {favoritos.length}
               </span>
-            </div>
-          )}
+            )}
+          </div>
 
           {user ? (
             <div className="flex items-center gap-2">
@@ -160,6 +167,20 @@ export default function Header({
                 {e.nombre}
               </button>
             ))}
+            <button
+              onClick={() => {
+                setMenu(false);
+                onFavoritosClick();
+              }}
+              className="mt-2 flex w-max items-center gap-2 rounded-full border border-oro-400/50 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-oro-300"
+            >
+              {favoritos.length > 0 ? (
+                <IconoCorazonFill className="h-3.5 w-3.5" />
+              ) : (
+                <IconoCorazon className="h-3.5 w-3.5" />
+              )}
+              Mis favoritos {favoritos.length > 0 && `(${favoritos.length})`}
+            </button>
             {!user && (
               <button
                 onClick={() => {

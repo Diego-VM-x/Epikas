@@ -29,8 +29,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const isAdmin =
-    perfil?.email === "diegoverde@epikas.ve" ||
-    perfil?.email === "norelysmontes@epikas.ve";
+    perfil?.email === "mjsdiegoverde@gmail.com" ||
+    perfil?.email === "scmontesnorelys@gmail.com";
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
