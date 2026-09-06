@@ -2,6 +2,8 @@
 
 Catálogo web de bisutería católica artesanal (rosarios, medallas, collares, anillos y pulseras) con panel de administración, modal de detalle y pedido por WhatsApp.
 
+> **Repositorio:** [github.com/Diego-VM-x/Epikas](https://github.com/Diego-VM-x/Epikas)
+
 ## ✨ Características
 
 - **Catálogo** con filtros por categoría, búsqueda y ordenamiento (5 opciones)
@@ -30,8 +32,8 @@ Catálogo web de bisutería católica artesanal (rosarios, medallas, collares, a
 
 ```bash
 # 1. Clonar el repositorio
-git clone <url-del-repositorio>
-cd Test-religious-jewelry-catalog-32690
+git clone https://github.com/Diego-VM-x/Epikas.git
+cd Epikas
 
 # 2. Instalar dependencias
 npm install

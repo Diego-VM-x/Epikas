@@ -1,4 +1,4 @@
-# CHANGELOG — Epikas · Bisutería Católica
+# CHANGELOG — Epikas
 
 > Historial de versiones del proyecto. Formato: `YYYY-MM-DD HH:mm | <tipo> | <descripción>`
 

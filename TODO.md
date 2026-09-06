@@ -1,4 +1,4 @@
-# TODO — Epikas · Bisutería Católica
+# TODO — Epikas
 
 ## 🔴 Bugs conocidos
 
