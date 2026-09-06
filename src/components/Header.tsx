@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill } from "./icons";
+import type { User } from "@supabase/supabase-js";
+import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoUsuario } from "./icons";
 
 interface HeaderProps {
+  user: User | null;
   esAdmin: boolean;
   onAdmin: () => void;
   irA: (id: string) => void;
   favoritos: string[];
   onToggleFavorito: (id: string) => void;
+  onAuthClick: () => void;
+  onLogout: () => void;
 }
 
 const ENLACES = [
@@ -16,11 +20,14 @@ const ENLACES = [
 ];
 
 export default function Header({
+  user,
   esAdmin,
   onAdmin,
   irA,
   favoritos,
   onToggleFavorito,
+  onAuthClick,
+  onLogout,
 }: HeaderProps) {
   const [scroll, setScroll] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -89,6 +96,29 @@ export default function Header({
             </div>
           )}
 
+          {user ? (
+            <div className="flex items-center gap-2">
+              <span className="hidden text-xs text-marfil-100/70 sm:inline">
+                {user.email}
+              </span>
+              <button
+                onClick={onLogout}
+                className="hidden items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300 transition sm:flex"
+                title="Cerrar sesión"
+              >
+                <IconoUsuario className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={onAuthClick}
+              className="hidden items-center gap-2 rounded-full border border-oro-400/50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300 transition hover:bg-oro-400 hover:text-vino-950 sm:flex"
+            >
+              <IconoUsuario className="h-3.5 w-3.5" />
+              Ingresar
+            </button>
+          )}
+
           <button
             onClick={onAdmin}
             className={`hidden items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] transition-all duration-300 sm:flex ${
@@ -130,6 +160,29 @@ export default function Header({
                 {e.nombre}
               </button>
             ))}
+            {!user && (
+              <button
+                onClick={() => {
+                  setMenu(false);
+                  onAuthClick();
+                }}
+                className="mt-2 flex w-max items-center gap-2 rounded-full border border-oro-400/50 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-oro-300"
+              >
+                <IconoUsuario className="h-3.5 w-3.5" />
+                Ingresar / Registrarse
+              </button>
+            )}
+            {user && (
+              <button
+                onClick={() => {
+                  setMenu(false);
+                  onLogout();
+                }}
+                className="mt-2 flex w-max items-center gap-2 rounded-full border border-oro-400/50 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-oro-300"
+              >
+                Cerrar sesión
+              </button>
+            )}
             <button
               onClick={() => {
                 setMenu(false);

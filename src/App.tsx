@@ -1,119 +1,104 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useState } from "react";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Breadcrumb from "./components/Breadcrumb";
 import Catalogo from "./components/Catalogo";
 import Cinta from "./components/Cinta";
 import DetalleModal from "./components/DetalleModal";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import AuthModal from "./components/AuthModal";
 import Nosotros from "./components/Nosotros";
 import Portada from "./components/Portada";
 import SchemaMarkup from "./components/SchemaMarkup";
 import ScrollProgress from "./components/ScrollProgress";
 import Toast, { type AvisoToast } from "./components/Toast";
-import { SEMILLA } from "./data/seed";
-import { useFavoritos } from "./hooks/useFavoritos";
+import { useProductos } from "./hooks/useProductos";
+import { useFavoritosSupabase } from "./hooks/useFavoritosSupabase";
 import type { Categoria, Producto } from "./types";
-import { CLAVE_ADMIN } from "./types";
 
 const AdminPanel = lazy(() => import("./components/AdminPanel"));
 
-const ALMACEN_PRODUCTOS = "epikas-catalogo-v1";
-const ALMACEN_SESION = "epikas-admin";
+function AppContent() {
+  const { user, isAdmin, signOut, loading } = useAuth();
+  const { productos, loading: loadingProductos, agregarProducto, actualizarProducto, eliminarProducto } = useProductos();
+  const { favoritos, toggle: toggleFavorito, esFavorito } = useFavoritosSupabase();
 
-function cargarProductos(): Producto[] {
-  try {
-    const crudo = localStorage.getItem(ALMACEN_PRODUCTOS);
-    if (crudo) {
-      const datos = JSON.parse(crudo);
-      if (Array.isArray(datos)) return datos as Producto[];
-    }
-  } catch {
-    /* datos dañados: usamos el catálogo demo */
-  }
-  return SEMILLA;
-}
-
-export default function App() {
-  const { favoritos, toggle: toggleFavorito, esFavorito } = useFavoritos();
-  const [productos, setProductos] = useState<Producto[]>(cargarProductos);
   const [categoria, setCategoria] = useState<Categoria | "todos">("todos");
   const [busqueda, setBusqueda] = useState("");
   const [detalle, setDetalle] = useState<Producto | null>(null);
   const [panelAbierto, setPanelAbierto] = useState(false);
   const [editando, setEditando] = useState<Producto | null>(null);
   const [aviso, setAviso] = useState<AvisoToast | null>(null);
-  const [esAdmin, setEsAdmin] = useState<boolean>(() => {
-    try {
-      return sessionStorage.getItem(ALMACEN_SESION) === "1";
-    } catch {
-      return false;
-    }
-  });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(ALMACEN_PRODUCTOS, JSON.stringify(productos));
-    } catch {
-      /* almacenamiento lleno: la sesión sigue funcionando en memoria */
-    }
-  }, [productos]);
-
-  useEffect(() => {
-    if (!aviso) return;
-    const t = setTimeout(() => setAviso(null), 2800);
-    return () => clearTimeout(t);
-  }, [aviso]);
+  const [authModalAbierto, setAuthModalAbierto] = useState(false);
 
   const notificar = (texto: string) => setAviso({ id: Date.now(), texto });
 
   const irA = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  const manejarLogin = (clave: string): boolean => {
-    if (clave.trim() === CLAVE_ADMIN) {
-      setEsAdmin(true);
-      try {
-        sessionStorage.setItem(ALMACEN_SESION, "1");
-      } catch {
-        /* sin almacenamiento disponible */
-      }
-      notificar("Bienvenido al panel de administración");
-      return true;
-    }
-    return false;
-  };
+  async function manejarLogout() {
+    await signOut();
+    notificar("Sesión cerrada");
+  }
 
-  const manejarLogout = () => {
-    setEsAdmin(false);
+  async function guardarProducto(p: Producto) {
     try {
-      sessionStorage.removeItem(ALMACEN_SESION);
+      if (p.id.includes("-")) {
+        await agregarProducto(p);
+      } else {
+        await actualizarProducto(p.id, p);
+      }
+      notificar("Pieza guardada");
     } catch {
-      /* sin almacenamiento disponible */
+      notificar("Error al guardar");
     }
-    notificar("Sesión de administrador cerrada");
-  };
+  }
 
-  const guardarProducto = (p: Producto) => {
-    setProductos((prev) =>
-      prev.some((x) => x.id === p.id) ? prev.map((x) => (x.id === p.id ? p : x)) : [p, ...prev]
-    );
-    notificar("Pieza guardada en el catálogo");
-  };
+  async function manejarEliminarProducto(id: string) {
+    try {
+      await eliminarProducto(id);
+      notificar("Pieza eliminada");
+    } catch {
+      notificar("Error al eliminar");
+    }
+  }
 
-  const eliminarProducto = (id: string) => {
-    setProductos((prev) => prev.filter((p) => p.id !== id));
-    notificar("La pieza se eliminó del catálogo");
-  };
-
-  const restaurarCatalogo = () => {
-    setProductos(SEMILLA);
-    notificar("Catálogo de demostración restaurado");
-  };
-
-  const editarDesdeTarjeta = (p: Producto) => {
+  function editarDesdeTarjeta(p: Producto) {
+    if (!isAdmin) {
+      setAuthModalAbierto(true);
+      return;
+    }
     setEditando(p);
     setPanelAbierto(true);
-  };
+  }
+
+  function handleToggleFavorito(productoId: string) {
+    if (!user) {
+      setAuthModalAbierto(true);
+      return;
+    }
+    toggleFavorito(productoId);
+  }
+
+  function handleAdminClick() {
+    if (!user) {
+      setAuthModalAbierto(true);
+      return;
+    }
+    if (!isAdmin) {
+      notificar("Solo administradores pueden acceder al panel");
+      return;
+    }
+    setPanelAbierto(true);
+  }
+
+  if (loading || loadingProductos) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-marfil-50">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-oro-400 border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen">
@@ -123,11 +108,14 @@ export default function App() {
       <ScrollProgress />
 
       <Header
-        esAdmin={esAdmin}
-        onAdmin={() => setPanelAbierto(true)}
+        user={user}
+        esAdmin={isAdmin}
+        onAdmin={handleAdminClick}
         irA={irA}
         favoritos={favoritos}
-        onToggleFavorito={toggleFavorito}
+        onToggleFavorito={handleToggleFavorito}
+        onAuthClick={() => setAuthModalAbierto(true)}
+        onLogout={manejarLogout}
       />
 
       <main>
@@ -140,11 +128,11 @@ export default function App() {
           busqueda={busqueda}
           onBusqueda={setBusqueda}
           onVer={setDetalle}
-          esAdmin={esAdmin}
+          esAdmin={isAdmin}
           onEditar={editarDesdeTarjeta}
-          onEliminar={eliminarProducto}
+          onEliminar={manejarEliminarProducto}
           favoritos={favoritos}
-          onToggleFavorito={toggleFavorito}
+          onToggleFavorito={handleToggleFavorito}
           esFavorito={esFavorito}
         />
         <Breadcrumb items={[{ label: "Catálogo" }]} />
@@ -152,12 +140,12 @@ export default function App() {
       </main>
 
       <Footer
-        esAdmin={esAdmin}
+        esAdmin={isAdmin}
         onCategoria={(c) => {
           setCategoria(c);
           irA("catalogo");
         }}
-        onAdmin={() => setPanelAbierto(true)}
+        onAdmin={handleAdminClick}
       />
 
       <DetalleModal producto={detalle} onClose={() => setDetalle(null)} />
@@ -165,23 +153,34 @@ export default function App() {
       <Suspense fallback={null}>
         <AdminPanel
           abierto={panelAbierto}
-          esAdmin={esAdmin}
+          esAdmin={isAdmin}
           productos={productos}
           editando={editando}
           onClose={() => {
             setPanelAbierto(false);
             setEditando(null);
           }}
-          onLogin={manejarLogin}
           onLogout={manejarLogout}
           onSave={guardarProducto}
-          onDelete={eliminarProducto}
-          onRestaurar={restaurarCatalogo}
+          onDelete={manejarEliminarProducto}
           onEditandoListo={() => setEditando(null)}
         />
       </Suspense>
 
+      <AuthModal
+        abierto={authModalAbierto}
+        onClose={() => setAuthModalAbierto(false)}
+      />
+
       <Toast aviso={aviso} />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
