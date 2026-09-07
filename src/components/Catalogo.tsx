@@ -392,6 +392,7 @@ function Tarjeta({
 }) {
   const { addItem } = useCart();
   const [confirmando, setConfirmando] = useState(false);
+  const [cantidadSeleccionada, setCantidadSeleccionada] = useState(1);
 
   useEffect(() => {
     if (!confirmando) return;
@@ -408,8 +409,8 @@ function Tarjeta({
   return (
     <article className="group flex flex-col justify-between rounded-2xl border border-stone-200 bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-xl">
       <div>
-        {/* Image with Cathedral Arch */}
-        <div className="relative cathedral-arch flex aspect-[4/5] items-center justify-center overflow-hidden bg-[#240815]">
+        {/* Product Image */}
+        <div className="relative overflow-hidden rounded-t-2xl bg-stone-100 aspect-[4/5] cursor-pointer" onClick={onVer}>
           <img
             src={producto.imagen}
             alt={producto.nombre}
@@ -484,7 +485,7 @@ function Tarjeta({
           <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-oro-600">
             {producto.material}
           </span>
-          <h3 className="font-display mt-0.5 text-base font-semibold tracking-wide text-stone-900 transition group-hover:text-oro-600">
+          <h3 onClick={(e) => { e.stopPropagation(); onVer(); }} className="font-display mt-0.5 text-base font-semibold tracking-wide text-stone-900 transition group-hover:text-oro-600 cursor-pointer">
             {producto.nombre.toUpperCase()}
           </h3>
           <p className="mt-1 text-xs text-stone-500">{producto.descripcion.slice(0, 70)}...</p>
@@ -505,24 +506,41 @@ function Tarjeta({
           <span className="font-serif text-[10px] italic text-stone-400">Bendición incluida</span>
         </div>
 
-        {/* Dual CTA */}
-        <div className="grid grid-cols-2 gap-2 pt-1">
-          <a
-            href={enlaceWhatsApp(`Hola Epikas, deseo pedir el ${producto.nombre} (${formatearPrecio(producto.precio)})`)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackEvent('Pedir por WhatsApp', { product: producto.nombre })}
-            className="inline-flex items-center justify-center space-x-1.5 rounded-xl bg-emerald-700 py-2.5 text-[11px] font-semibold text-white transition hover:bg-emerald-800"
-          >
-            <span className="text-xs">💬</span>
-            <span>Pedir por WhatsApp</span>
-          </a>
-          <button
-            onClick={() => addItem(producto)}
-            className="inline-flex items-center justify-center space-x-1 rounded-xl border border-oro-500/30 bg-vino-950 py-2.5 text-[11px] font-bold uppercase tracking-wider text-oro-300 transition hover:bg-oro-500 hover:text-vino-950"
-          >
-            <span>Compra Rápida</span>
-          </button>
+        {/* Add to Cart Section */}
+        <div className="space-y-2 pt-1">
+          <div className="flex items-center gap-2">
+            <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-500">Cant:</label>
+            <select
+              value={cantidadSeleccionada}
+              onChange={(e) => setCantidadSeleccionada(Number(e.target.value))}
+              className="rounded-lg border border-stone-200 bg-marfil-50 px-2 py-1.5 text-xs font-medium text-stone-700 focus:border-oro-500 focus:ring-1 focus:ring-oro-500"
+            >
+              {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <a
+              href={enlaceWhatsApp(`Hola Epikas, deseo pedir ${cantidadSeleccionada}x ${producto.nombre} (${formatearPrecio(producto.precio)})`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('Pedir por WhatsApp', { product: producto.nombre })}
+              className="inline-flex items-center justify-center space-x-1.5 rounded-xl bg-emerald-700 py-2.5 text-[11px] font-semibold text-white transition hover:bg-emerald-800"
+            >
+              <span className="text-xs">💬</span>
+              <span>Pedir por WhatsApp</span>
+            </a>
+            <button
+              onClick={() => {
+                for (let i = 0; i < cantidadSeleccionada; i++) addItem(producto);
+              }}
+              className="inline-flex items-center justify-center space-x-1 rounded-xl bg-oro-400 py-2.5 text-[11px] font-bold uppercase tracking-wider text-vino-950 transition hover:bg-oro-300"
+            >
+              <span>🛒</span>
+              <span>Agregar</span>
+            </button>
+          </div>
         </div>
       </div>
     </article>
