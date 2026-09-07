@@ -23,10 +23,10 @@ export const CATEGORIAS: { id: Categoria; nombre: string }[] = [
 export const nombreCategoria = (c: Categoria): string =>
   CATEGORIAS.find((x) => x.id === c)?.nombre ?? c;
 
-export const formatearPrecio = (n: number): string => `$${n.toLocaleString("es-MX")} MXN`;
+export const formatearPrecio = (n: number): string => `Bs. ${n.toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 export const CLAVE_ADMIN = "admin123";
-export const TELEFONO_WHATSAPP = "5215548901234";
+export const TELEFONO_WHATSAPP = "584241234567";
 
 export const enlaceWhatsApp = (texto: string): string =>
   `https://wa.me/${TELEFONO_WHATSAPP}?text=${encodeURIComponent(texto)}`;

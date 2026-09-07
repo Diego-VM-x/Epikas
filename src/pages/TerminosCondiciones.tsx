@@ -42,7 +42,7 @@ export default function TerminosCondiciones({ onClose }: TerminosCondicionesProp
           <section>
             <h2 className="mb-3 text-lg font-bold text-stone-900">3. Precios</h2>
             <p className="leading-relaxed text-stone-600">
-              Todos los precios se muestran en pesos mexicanos (MXN) e incluyen impuestos aplicables. Nos reservamos el derecho de modificar precios sin previo aviso, aunque los cambios no afectarán los pedidos ya confirmados. Los costos de envío se calculan por separado y se muestran antes de finalizar la compra.
+              Todos los precios se muestran en bolívares venezolanos (VES) e incluyen impuestos aplicables. Nos reservamos el derecho de modificar precios sin previo aviso, aunque los cambios no afectarán los pedidos ya confirmados. Los costos de envío se calculan por separado y se muestran antes de finalizar la compra.
             </p>
           </section>
 

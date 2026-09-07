@@ -56,7 +56,7 @@ export default function SchemaMarkup({ productos }: SchemaMarkupProps) {
     offers: {
       "@type": "Offer",
       price: producto.precio,
-      priceCurrency: "MXN",
+      priceCurrency: "VES",
       availability: "https://schema.org/InStock",
       seller: {
         "@type": "Store",

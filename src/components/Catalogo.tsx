@@ -500,7 +500,7 @@ function Tarjeta({
               {formatearPrecio(producto.precio)}
             </span>
             <span className="mt-0.5 block text-[10px] font-medium text-emerald-700">
-              3 MSI de ${Math.round(producto.precio / 3)} MXN
+              3 MSI de {formatearPrecio(Math.round(producto.precio / 3))}
             </span>
           </div>
           <span className="font-serif text-[10px] italic text-stone-400">Bendición incluida</span>

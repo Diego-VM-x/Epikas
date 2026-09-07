@@ -311,7 +311,7 @@ export default function Portada({ onExplorar, esAdmin, productos = [] }: Portada
                 background: "linear-gradient(to bottom, rgba(212,175,55,0.2), rgba(51,16,29,0.6) 50%, #14050b)",
               }}
             >
-              <div className="relative overflow-hidden bg-stone-950 aspect-[3/4]" style={{ borderRadius: "14.8rem 14.8rem 0.5rem 0.5rem" }}>
+              <div className="relative bg-stone-950 aspect-[3/4]" style={{ borderRadius: "14.8rem 14.8rem 0.5rem 0.5rem" }}>
                 <img
                   src={pieza.imagen}
                   alt={pieza.nombre}

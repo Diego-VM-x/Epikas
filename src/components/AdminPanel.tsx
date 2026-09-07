@@ -257,7 +257,7 @@ export default function AdminPanel({
                 </div>
 
                 <div>
-                  <label className={etiqueta}>Precio (MXN) *</label>
+                  <label className={etiqueta}>Precio (VES) *</label>
                   <input
                     type="number"
                     value={form.precio}
