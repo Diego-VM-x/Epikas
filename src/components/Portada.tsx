@@ -13,24 +13,25 @@ export default function Portada({ onExplorar }: PortadaProps) {
 
   return (
     <section id="inicio" className="patron-cruces relative overflow-hidden bg-vino-950">
+      {/* Subtle gold glow */}
       <div
         className="pointer-events-none absolute -top-40 left-1/2 h-[560px] w-[900px] -translate-x-1/2 rounded-full opacity-60"
         style={{ background: "radial-gradient(closest-side, rgba(212,175,55,0.12), transparent)" }}
       />
 
-      <div className="mx-auto grid max-w-7xl items-center gap-16 px-5 pb-24 pt-32 lg:grid-cols-12 lg:px-8 lg:pb-32 lg:pt-40">
-        {/* Columna de palabra */}
+      <div className="mx-auto grid max-w-7xl items-center gap-16 px-5 pb-24 pt-36 lg:grid-cols-12 lg:px-8 lg:pb-32 lg:pt-44">
+        {/* Left: Copy */}
         <div className="relative z-10 lg:col-span-6">
           <div className="flex items-center gap-3">
             <IconoRombo className="h-2 w-2 text-oro-400" />
             <span className="h-px w-12 bg-oro-400/60" />
             <p className="text-[11px] font-medium uppercase tracking-[0.38em] text-oro-300">
-              Bisutería católica artesanal
+              Atelier de bisutería católica
             </p>
           </div>
 
-          <h1 className="mt-7 font-display text-5xl font-semibold leading-[1.04] text-marfil-50 sm:text-6xl xl:text-7xl">
-            Tu fe,
+          <h1 className="mt-7 font-display text-5xl font-bold leading-[1.04] text-marfil-50 sm:text-6xl xl:text-7xl">
+            La fe,
             <br />
             hecha{" "}
             <span className="font-quote font-medium italic text-oro-300">joya</span>
@@ -50,7 +51,7 @@ export default function Portada({ onExplorar }: PortadaProps) {
               onClick={onExplorar}
               className="group flex items-center gap-3 rounded-full bg-oro-400 px-8 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-vino-950 shadow-xl shadow-oro-400/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-oro-300 hover:shadow-oro-300/30"
             >
-              Explorar catálogo
+              Explorar colección
               <IconoFlecha className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
             </button>
             <a
@@ -76,7 +77,7 @@ export default function Portada({ onExplorar }: PortadaProps) {
           </ul>
         </div>
 
-        {/* Columna de vitral */}
+        {/* Right: Cathedral Arch Showcase */}
         <div className="relative lg:col-span-6">
           <div className="rayos absolute -inset-24 rounded-full" aria-hidden="true" />
           <div
@@ -86,7 +87,9 @@ export default function Portada({ onExplorar }: PortadaProps) {
           />
 
           <figure className="relative mx-auto w-full max-w-[430px]">
+            {/* Outer arch border */}
             <div className="arco absolute inset-0 translate-x-5 translate-y-5 border border-oro-400/25" aria-hidden="true" />
+            {/* Inner arch frame */}
             <div className="arco relative border border-oro-400/45 bg-vino-900/50 p-3">
               <div className="arco overflow-hidden">
                 <img
@@ -102,6 +105,7 @@ export default function Portada({ onExplorar }: PortadaProps) {
               {pieza.nombre} · {pieza.material}
             </figcaption>
 
+            {/* Floating card: Blessing */}
             <div className="animar-flotar absolute -left-4 top-24 flex items-center gap-3 rounded-xl bg-marfil-50 px-4 py-3 shadow-2xl shadow-vino-950/50 sm:-left-10">
               <IconoBendicion className="h-7 w-7 text-oro-500" />
               <span>
@@ -110,6 +114,7 @@ export default function Portada({ onExplorar }: PortadaProps) {
               </span>
             </div>
 
+            {/* Floating card: Handmade */}
             <div className="animar-flotar-lento absolute -right-2 bottom-24 flex items-center gap-3 rounded-xl border border-oro-400/40 bg-vino-900/90 px-4 py-3 shadow-2xl shadow-vino-950/60 sm:-right-8">
               <IconoGema className="h-6 w-6 text-oro-300" />
               <span className="text-sm font-medium text-marfil-50">

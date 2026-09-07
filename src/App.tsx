@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Breadcrumb from "./components/Breadcrumb";
 import Catalogo from "./components/Catalogo";
 import Cinta from "./components/Cinta";
+import Colecciones from "./components/Colecciones";
 import DetalleModal from "./components/DetalleModal";
 import FavoritosModal from "./components/FavoritosModal";
 import Footer from "./components/Footer";
@@ -10,8 +11,10 @@ import Header from "./components/Header";
 import AuthModal from "./components/AuthModal";
 import Nosotros from "./components/Nosotros";
 import Portada from "./components/Portada";
+import Sacramentos from "./components/Sacramentos";
 import SchemaMarkup from "./components/SchemaMarkup";
 import ScrollProgress from "./components/ScrollProgress";
+import Taller from "./components/Taller";
 import Toast, { type AvisoToast } from "./components/Toast";
 import { useProductos } from "./hooks/useProductos";
 import { useFavoritosSupabase } from "./hooks/useFavoritosSupabase";
@@ -132,6 +135,7 @@ function AppContent() {
       <main>
         <Portada onExplorar={() => irA("catalogo")} />
         <Cinta />
+        <Colecciones onCategoria={(c) => { setCategoria(c); irA("catalogo"); }} irA={irA} />
         <Catalogo
           productos={productos}
           categoria={categoria}
@@ -146,7 +150,8 @@ function AppContent() {
           onToggleFavorito={handleToggleFavorito}
           esFavorito={esFavorito}
         />
-        <Breadcrumb items={[{ label: "Catálogo" }]} />
+        <Taller />
+        <Sacramentos />
         <Nosotros />
       </main>
 

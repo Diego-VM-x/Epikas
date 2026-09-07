@@ -15,22 +15,26 @@
   --color-vino-700: #632034;
   --color-vino-800: #481728;
   --color-vino-900: #33101d;
-  --color-vino-950: #200a13;
+  --color-vino-950: #14050b;
 
   --color-oro-100: #f9efcd;
   --color-oro-200: #f0dd9d;
   --color-oro-300: #e5c878;
-  --color-oro-400: #d4af37;
+  --color-oro-400: #D4AF37;
   --color-oro-500: #b8932c;
   --color-oro-600: #97741f;
   --color-oro-700: #75591a;
 
-  --color-marfil-50: #f8f2e3;
+  --color-marfil-50: #FDFBF7;
   --color-marfil-100: #f3ead3;
   --color-marfil-200: #e9dcbb;
   --color-marfil-300: #d8c69a;
 
   --color-tinta: #3a222c;
+
+  --color-pearl: #FDFBF7;
+  --color-burgundy-900: #33101d;
+  --color-burgundy-950: #14050b;
 }
 
 html {
@@ -54,7 +58,7 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--color-oro-600); border-radius: 8px; border: 3px solid var(--color-vino-950); }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-oro-400); }
 
-/* ---------- Animaciones ---------- */
+/* ---------- Animations ---------- */
 @keyframes flotar {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-11px); }
@@ -78,14 +82,28 @@ body {
   12% { transform: scale(1.25); }
   24% { transform: scale(1); }
 }
+@keyframes shimmer {
+  0% { transform: translateX(-130%) skewX(-14deg); }
+  100% { transform: translateX(130%) skewX(-14deg); }
+}
+@keyframes pulse-urgency {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(1deg); }
+}
 
 .animar-flotar { animation: flotar 6s ease-in-out infinite; }
 .animar-flotar-lento { animation: flotar 8.5s ease-in-out infinite; }
 .animar-halo { animation: halo 4.5s ease-in-out infinite; }
 .animar-latido { animation: latido 2.4s ease-in-out infinite; transform-origin: center; }
 .animar-toast { animation: aparecerToast 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-pulse-urgency { animation: pulse-urgency 2s ease-in-out infinite; }
+.animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
 
-/* ---------- Revelado al hacer scroll ---------- */
+/* ---------- Scroll Reveal ---------- */
 .revelar {
   opacity: 0;
   transform: translateY(30px);
@@ -96,10 +114,10 @@ body {
   transform: translateY(0);
 }
 
-/* ---------- Arcos de vitral ---------- */
+/* ---------- Cathedral Arch ---------- */
 .arco { border-radius: 999px 999px 16px 16px; }
 
-/* ---------- Rayos de luz giratorios ---------- */
+/* ---------- Light rays ---------- */
 .rayos {
   background: repeating-conic-gradient(
     from 0deg at 50% 50%,
@@ -111,18 +129,18 @@ body {
   animation: girar 140s linear infinite;
 }
 
-/* ---------- Patrón de cruces ---------- */
+/* ---------- Cross pattern ---------- */
 .patron-cruces {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M32 22v20M22 32h20' stroke='%23d4af37' stroke-opacity='0.13' stroke-width='1.3'/%3E%3C/svg%3E");
 }
 
-/* ---------- Grano sutil ---------- */
+/* ---------- Subtle grain ---------- */
 .ruido {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   opacity: 0.035;
 }
 
-/* ---------- Cinta corrediza ---------- */
+/* ---------- Marquee ---------- */
 .marquesina-pista {
   animation: marquesina 32s linear infinite;
 }
@@ -130,7 +148,7 @@ body {
   animation-play-state: paused;
 }
 
-/* ---------- Destello sobre tarjetas ---------- */
+/* ---------- Card shimmer ---------- */
 .destello::after {
   content: "";
   position: absolute;
@@ -142,4 +160,58 @@ body {
 }
 .tarjeta:hover .destello::after {
   transform: translateX(130%) skewX(-14deg);
+}
+
+/* ---------- Reference: bg pattern for cream sections ---------- */
+.bg-cream-pattern {
+  background-color: #FDFBF7;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M32 22v20M22 32h20' stroke='%23d4af37' stroke-opacity='0.06' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* ---------- Reference: cathedral arch clip for product cards ---------- */
+.cathedral-arch {
+  border-radius: 50% 50% 0 0 / 20% 20% 0 0;
+  overflow: hidden;
+}
+
+/* ---------- Reference: italic gold text ---------- */
+.italic-gold {
+  font-family: var(--font-quote);
+  font-style: italic;
+  color: #D4AF37;
+}
+
+/* ---------- Reference: gold text shadow ---------- */
+.text-gold-shadow {
+  text-shadow: 0 2px 12px rgba(212, 175, 55, 0.25);
+}
+
+/* ---------- No scrollbar utility ---------- */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ---------- Reference: premium product card hover ---------- */
+.product-card-hover {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.product-card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(20, 5, 11, 0.25);
+}
+
+/* ---------- Reference: gold border badge ---------- */
+.gold-badge {
+  background: linear-gradient(135deg, #D4AF37 0%, #b8932c 100%);
+  color: #14050b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.6rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+}
+
+/* ---------- Reference: dark section gradient ---------- */
+.dark-section {
+  background: linear-gradient(180deg, #14050b 0%, #33101d 100%);
 }

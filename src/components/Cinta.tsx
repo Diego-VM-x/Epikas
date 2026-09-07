@@ -1,12 +1,11 @@
 import { IconoDestello } from "./icons";
 
 const FRASES = [
-  "Rosarios",
+  "Rosarios artesanales",
   "Medallas milagrosas",
-  "Collares",
+  "Collares de fe",
   "Anillos de promesa",
-  "Pulseras",
-  "Crucifijos",
+  "Pulseras bendecidas",
   "Bendición incluida",
   "Hecho a mano",
   "Envío a todo México",
@@ -14,11 +13,11 @@ const FRASES = [
 
 function Fila() {
   return (
-    <div className="flex shrink-0 items-center gap-9">
+    <div className="flex shrink-0 items-center gap-8">
       {FRASES.map((f) => (
-        <span key={f} className="flex items-center gap-9">
-          <span className="font-display text-sm font-bold uppercase tracking-[0.28em]">{f}</span>
-          <IconoDestello className="h-3 w-3 opacity-70" />
+        <span key={f} className="flex items-center gap-8">
+          <span className="font-display text-[11px] font-bold uppercase tracking-[0.25em]">{f}</span>
+          <IconoDestello className="h-2.5 w-2.5 opacity-60" />
         </span>
       ))}
     </div>
@@ -27,7 +26,7 @@ function Fila() {
 
 export default function Cinta() {
   return (
-    <div className="relative overflow-hidden border-y-4 border-vino-950 bg-oro-400 py-3.5 text-vino-950">
+    <div className="relative overflow-hidden border-y border-oro-400/40 bg-oro-400 py-3 text-vino-950">
       <div className="marquesina-pista flex w-max items-center">
         <Fila />
         <Fila />

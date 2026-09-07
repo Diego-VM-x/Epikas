@@ -1,5 +1,6 @@
+import { useState } from "react";
 import type { Categoria } from "../types";
-import { CATEGORIAS, enlaceWhatsApp, TELEFONO_WHATSAPP } from "../types";
+import { CATEGORIAS, enlaceWhatsApp } from "../types";
 import Reveal from "./Reveal";
 import {
   IconoCorreo,
@@ -10,6 +11,7 @@ import {
   IconoReloj,
   IconoRombo,
   IconoWhatsApp,
+  IconoCheck,
 } from "./icons";
 
 interface FooterProps {
@@ -19,43 +21,77 @@ interface FooterProps {
 }
 
 export default function Footer({ esAdmin, onCategoria, onAdmin }: FooterProps) {
+  const [email, setEmail] = useState("");
+  const [suscrito, setSuscrito] = useState(false);
+
+  function manejarNewsletter(e: React.FormEvent) {
+    e.preventDefault();
+    if (email.trim()) {
+      setSuscrito(true);
+      setEmail("");
+    }
+  }
+
   return (
     <footer id="contacto" className="relative border-t border-oro-400/20 bg-vino-950 text-marfil-50">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-10 px-5 py-20 lg:px-8">
-        <Reveal className="max-w-xl">
-          <div className="flex items-center gap-3">
-            <IconoRombo className="h-2 w-2 text-oro-400" />
-            <span className="h-px w-12 bg-oro-400/60" />
-            <p className="text-[11px] font-medium uppercase tracking-[0.38em] text-oro-300">
-              Encargos especiales
-            </p>
-          </div>
-          <h2 className="mt-5 font-display text-3xl font-bold leading-tight sm:text-4xl">
-            ¿Buscas una pieza para un{" "}
-            <span className="font-quote font-medium italic text-oro-300">sacramento</span>?
-          </h2>
-          <p className="mt-4 leading-relaxed text-marfil-100/60">
-            Bautizos, primeras comuniones, confirmaciones, bodas y aniversarios: creamos piezas por
-            encargo, con grabados y bendición especial.
-          </p>
-        </Reveal>
-
-        <Reveal delay={150}>
-          <a
-            href={enlaceWhatsApp(
-              "Hola Epikas, me gustaría cotizar una pieza por encargo para un sacramento."
-            )}
-            target="_blank"
-            rel="noreferrer"
-            className="group flex items-center gap-3 rounded-full bg-oro-400 px-8 py-4 text-sm font-semibold uppercase tracking-[0.16em] text-vino-950 shadow-xl shadow-oro-400/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-oro-300"
-          >
-            <IconoWhatsApp className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
-            Escríbenos por WhatsApp
-          </a>
-        </Reveal>
+      {/* Trust Badges Bar */}
+      <div className="border-b border-oro-400/15">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-5 py-12 sm:grid-cols-4 lg:px-8">
+          {TRUST_BADGES.map((badge) => (
+            <div key={badge.titulo} className="flex flex-col items-center text-center">
+              <badge.Icono className="h-8 w-8 text-oro-400" />
+              <span className="mt-3 font-display text-sm font-bold text-marfil-50">
+                {badge.titulo}
+              </span>
+              <span className="mt-1 text-[11px] text-marfil-100/50">
+                {badge.subtitulo}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-12 border-t border-oro-400/15 px-5 py-16 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1.2fr_1fr] lg:px-8">
+      {/* Newsletter Section */}
+      <div className="border-b border-oro-400/15">
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 px-5 py-16 text-center lg:flex-row lg:text-left lg:px-8">
+          <div className="max-w-lg">
+            <h3 className="font-display text-2xl font-bold text-marfil-50">
+              Únete a nuestra{" "}
+              <span className="italic-gold">comunidad</span>
+            </h3>
+            <p className="mt-2 text-sm text-marfil-100/55">
+              Recibe ofertas exclusivas, nuevas colecciones y contenido de fe directo en tu correo.
+            </p>
+          </div>
+          <form onSubmit={manejarNewsletter} className="flex w-full max-w-md gap-2">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Tu correo electrónico"
+              required
+              className="flex-1 rounded-full border border-oro-400/30 bg-vino-900/50 px-5 py-3.5 text-sm text-marfil-50 outline-none transition placeholder:text-marfil-100/40 focus:border-oro-400 focus:ring-4 focus:ring-oro-400/20"
+            />
+            <button
+              type="submit"
+              className="rounded-full bg-oro-400 px-6 py-3.5 text-[11px] font-bold uppercase tracking-[0.15em] text-vino-950 transition-all duration-300 hover:bg-oro-300"
+            >
+              {suscrito ? (
+                <span className="flex items-center gap-2">
+                  <IconoCheck className="h-4 w-4" />
+                  Suscrito
+                </span>
+              ) : (
+                "Suscribirme"
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* Main Footer Grid */}
+      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1.2fr_1fr] lg:px-8">
+        {/* Brand */}
         <div>
           <div className="flex items-center gap-3">
             <IconoLogo className="h-11 w-11 text-oro-400" />
@@ -64,7 +100,7 @@ export default function Footer({ esAdmin, onCategoria, onAdmin }: FooterProps) {
                 EPIKAS
               </span>
               <span className="mt-1 block text-[10px] font-medium uppercase tracking-[0.32em] text-oro-300">
-                Bisutería católica
+                Atelier · Bisutería Católica
               </span>
             </span>
           </div>
@@ -101,6 +137,7 @@ export default function Footer({ esAdmin, onCategoria, onAdmin }: FooterProps) {
           </div>
         </div>
 
+        {/* Collections Nav */}
         <nav>
           <h3 className="text-[11px] font-semibold uppercase tracking-[0.3em] text-oro-300">
             Colecciones
@@ -119,6 +156,7 @@ export default function Footer({ esAdmin, onCategoria, onAdmin }: FooterProps) {
           </ul>
         </nav>
 
+        {/* Contact */}
         <div>
           <h3 className="text-[11px] font-semibold uppercase tracking-[0.3em] text-oro-300">
             Contacto
@@ -147,6 +185,7 @@ export default function Footer({ esAdmin, onCategoria, onAdmin }: FooterProps) {
           </ul>
         </div>
 
+        {/* Admin Access */}
         <div>
           <h3 className="text-[11px] font-semibold uppercase tracking-[0.3em] text-oro-300">
             Para el dueño
@@ -170,6 +209,28 @@ export default function Footer({ esAdmin, onCategoria, onAdmin }: FooterProps) {
         </div>
       </div>
 
+      {/* Payment Methods */}
+      <div className="border-t border-oro-400/15">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-6 lg:px-8">
+          <div className="flex items-center gap-6">
+            <span className="text-[10px] uppercase tracking-[0.15em] text-marfil-100/40">
+              Métodos de pago:
+            </span>
+            <div className="flex items-center gap-3">
+              {["Visa", "Mastercard", "Amex", "OXXO", "SPEI"].map((m) => (
+                <span
+                  key={m}
+                  className="rounded border border-oro-400/20 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-marfil-100/50"
+                >
+                  {m}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Copyright */}
       <div className="border-t border-oro-400/15">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-6 text-xs text-marfil-100/45 lg:px-8">
           <p>© 2026 Epikas · Bisutería católica. Todos los derechos reservados.</p>
@@ -183,3 +244,26 @@ export default function Footer({ esAdmin, onCategoria, onAdmin }: FooterProps) {
     </footer>
   );
 }
+
+const TRUST_BADGES = [
+  {
+    Icono: IconoCheck,
+    titulo: "Envío gratis",
+    subtitulo: "En pedidos +$1,500",
+  },
+  {
+    Icono: IconoCheck,
+    titulo: "Bendición incluida",
+    subtitulo: "En cada pieza",
+  },
+  {
+    Icono: IconoCheck,
+    titulo: "Hecho a mano",
+    subtitulo: "Cuenta por cuenta",
+  },
+  {
+    Icono: IconoCheck,
+    titulo: "Garantía 30 días",
+    subtitulo: "Devolución gratis",
+  },
+];
