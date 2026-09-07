@@ -311,7 +311,7 @@ export default function Portada({ onExplorar, esAdmin, productos = [] }: Portada
                 background: "linear-gradient(to bottom, rgba(212,175,55,0.2), rgba(51,16,29,0.6) 50%, #14050b)",
               }}
             >
-              <div className="relative bg-stone-950 aspect-[3/4]" style={{ borderRadius: "14.8rem 14.8rem 0.5rem 0.5rem" }}>
+              <div className="relative overflow-hidden bg-stone-950 aspect-[3/4]" style={{ borderRadius: "14.8rem 14.8rem 0.5rem 0.5rem" }}>
                 <img
                   src={pieza.imagen}
                   alt={pieza.nombre}
@@ -319,21 +319,22 @@ export default function Portada({ onExplorar, esAdmin, productos = [] }: Portada
                   loading="eager"
                 />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#14050B]/90 via-transparent to-black/30" />
+              </div>
 
-                {/* Top Left Badge */}
-                <div className="absolute left-4 top-5 flex items-center space-x-2 rounded-full border border-oro-500/40 bg-marfil-50/95 px-3 py-1.5 text-[10px] font-bold text-vino-950 shadow-lg">
-                  <span className="text-oro-600">🏆</span>
-                  <span>Bendecida antes de enviar</span>
-                </div>
+              {/* Top Left Badge */}
+              <div className="absolute left-6 top-7 z-10 flex items-center space-x-2 rounded-full border border-oro-500/40 bg-marfil-50/95 px-3 py-1.5 text-[10px] font-bold text-vino-950 shadow-lg">
+                <span className="text-oro-600">🏆</span>
+                <span>Bendecida antes de enviar</span>
+              </div>
 
-                {/* Top Right Zoom */}
-                <div className="absolute right-4 top-5 flex items-center space-x-1 rounded-full border border-oro-500/30 bg-black/60 px-2.5 py-1 text-[10px] text-oro-300 backdrop-blur-sm">
-                  <span>🔍</span>
-                  <span>Zoom Detalle</span>
-                </div>
+              {/* Top Right Zoom */}
+              <div className="absolute right-6 top-7 z-10 flex items-center space-x-1 rounded-full border border-oro-500/30 bg-black/60 px-2.5 py-1 text-[10px] text-oro-300 backdrop-blur-sm">
+                <span>🔍</span>
+                <span>Zoom Detalle</span>
+              </div>
 
-                {/* Bottom Overlay Card */}
-                <div className="absolute bottom-4 inset-x-4 rounded-xl border border-oro-500/40 bg-vino-950/85 p-3 text-left backdrop-blur-md">
+              {/* Bottom Overlay Card */}
+              <div className="absolute bottom-6 inset-x-6 z-10 rounded-xl border border-oro-500/40 bg-vino-950/85 p-3 text-left backdrop-blur-md">
                   <div className="flex items-start justify-between">
                     <div>
                       <span className="block text-[9px] font-bold uppercase tracking-[0.25em] text-oro-400">Pieza Maestra del Mes</span>
@@ -360,7 +361,6 @@ export default function Portada({ onExplorar, esAdmin, productos = [] }: Portada
                       <span>Pedir por WhatsApp</span>
                       <span>→</span>
                     </a>
-                  </div>
                 </div>
               </div>
             </div>
