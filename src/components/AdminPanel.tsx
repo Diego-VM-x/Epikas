@@ -6,9 +6,9 @@ import {
   IconoCerrar,
   IconoEditar,
   IconoMas,
-  IconoSubir,
   IconoCruz,
 } from "./icons";
+import ImageUpload from "./ImageUpload";
 
 interface AdminPanelProps {
   abierto: boolean;
@@ -153,23 +153,6 @@ export default function AdminPanel({
     setIdEditando(null);
   }
 
-  function manejarSubida(e: React.ChangeEvent<HTMLInputElement>) {
-    const archivo = e.target.files?.[0];
-    if (!archivo) return;
-
-    if (archivo.size > 2.5 * 1024 * 1024) {
-      alert("La imagen debe ser menor a 2.5 MB");
-      return;
-    }
-
-    const lector = new FileReader();
-    lector.onload = (ev) => {
-      const resultado = ev.target?.result as string;
-      setForm((prev) => ({ ...prev, imagen: resultado }));
-    };
-    lector.readAsDataURL(archivo);
-  }
-
   function iniciarEdicion(p: Producto) {
     setIdEditando(p.id);
     setForm({
@@ -308,24 +291,13 @@ export default function AdminPanel({
               </div>
 
               <div className="mt-5">
-                <label className={etiqueta}>Imagen (máx. 2.5 MB)</label>
-                <label className="mt-1.5 flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-stone-300 bg-stone-50 px-4 py-6 text-sm text-stone-400 transition hover:border-oro-500 hover:text-oro-600">
-                  <IconoSubir className="h-5 w-5" />
-                  {form.imagen ? "Cambiar imagen" : "Subir imagen"}
-                  <input type="file" accept="image/*" onChange={manejarSubida} className="hidden" />
-                </label>
-                {form.imagen && (
-                  <div className="mt-3 flex items-center gap-4">
-                    <img src={form.imagen} alt="Preview" className="h-20 w-20 rounded-lg object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => setForm((p) => ({ ...p, imagen: "" }))}
-                      className="text-xs text-vino-600 underline"
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                )}
+                <label className={etiqueta}>Imagen</label>
+                <ImageUpload
+                  productoId={form.id || crypto.randomUUID()}
+                  imagenActual={form.imagen}
+                  onImagenSubida={(url) => setForm((p) => ({ ...p, imagen: url }))}
+                  onImagenEliminada={() => setForm((p) => ({ ...p, imagen: "" }))}
+                />
               </div>
 
               <div className="mt-5 flex flex-wrap gap-6">

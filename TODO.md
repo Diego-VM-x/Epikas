@@ -7,11 +7,11 @@
 ## 🟡 Sugerencias de mejora
 
 - [ ] **Sistema de pedidos/carrito** — Actualmente solo se puede pedir por WhatsApp. Un carrito con múltiples productos y checkout sería una mejora significativa.
-- [ ] **Tests unitarios** — No hay tests. Agregar al menos tests para `ordenarProductos`, `guardarProducto`, `eliminarProducto` y lógica del `AdminPanel`.
-- [ ] **Paginación** — Si el catálogo crece a >50 productos, la grilla se volvería lenta. Implementar paginación o infinite scroll.
-- [ ] **Internacionalización (i18n)** — Todo está en español fijo. Preparar estructura para traducir a otros idiomas.
-- [ ] **Analíticas** — Sin Google Analytics ni ningún tracker. Evaluar agregar una solución respetuosa de privacidad (Plausible, Umami).
-- [ ] **Gestión de imágenes** — Las fotos se codifican en base64 (límite 2.5MB). Un sistema de upload a Supabase Storage sería más robusto.
+- [x] **Tests unitarios** — Vitest con tests para `ordenarProductos`, operaciones CRUD de productos y mock de Supabase.
+- [x] **Paginación** — Paginación responsive en el catálogo: 12 items/página, controles numerados en desktop, "Anterior/Siguiente" en mobile.
+- [x] **Internacionalización (i18n)** — Sistema context-based con `useI18n` hook, traducciones ES/EN, toggle de idioma en header.
+- [x] **Analíticas** — Plausible Analytics integrado: script en index.html, helper `trackEvent`/`trackPageView`, tracking en Portada, Catalogo, Sacramentos y Header.
+- [x] **Gestión de imágenes** — Supabase Storage: componente `ImageUpload` con drag & drop, AdminPanel actualizado.
 
 ## 🟢 Tareas pendientes (TODO)
 
@@ -40,3 +40,9 @@
 - [x] **Scroll progress indicator** — Componente `ScrollProgress` en la barra superior.
 - [x] **Favicon y meta tags** — Configurados en `index.html`.
 - [x] **README.md** — Documentación completa de instalación y despliegue.
+- [x] **Sistema de carrito** — CartContext con useReducer, persistencia localStorage, CarritoModal slide-over, integrado en Header y Catalogo.
+- [x] **Tests unitarios** — Vitest configurado, 12 tests pasando: ordenarProductos (7) y Supabase CRUD (5).
+- [x] **Paginación** — 12 items/página, controles responsive, reset automático al cambiar filtros.
+- [x] **i18n** — Context-based con locales ES/EN, toggle en header, persistencia localStorage.
+- [x] **Analíticas** — Plausible Analytics con trackEvent en CTAs principales.
+- [x] **Gestión de imágenes** — Supabase Storage con ImageUpload component, drag & drop, preview.

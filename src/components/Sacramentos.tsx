@@ -2,6 +2,7 @@ import { useState } from "react";
 import Reveal from "./Reveal";
 import { IconoWhatsApp } from "./icons";
 import { enlaceWhatsApp } from "../types";
+import { trackEvent } from "../lib/analytics";
 
 const CHECKLIST = [
   "Grabado conmemorativo en láser de alta precisión",
@@ -39,6 +40,7 @@ export default function Sacramentos() {
 
   function enviarFormulario(e: React.FormEvent) {
     e.preventDefault();
+    trackEvent('Solicitud Sacramental', { sacramento, material, cantidad });
     const texto = `Hola Epikas, solicito cotización para un encargo sacramental:\n\nSacramento: ${sacramento}\nMaterial: ${material}\nCantidad: ${cantidad}\nGrabado: ${grabado}\nWhatsApp: ${whatsapp}`;
     window.open(enlaceWhatsApp(texto), "_blank");
   }

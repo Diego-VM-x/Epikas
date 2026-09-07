@@ -1,6 +1,7 @@
 import { SEMILLA } from "../data/seed";
 import { enlaceWhatsApp, formatearPrecio } from "../types";
 import { IconoFlecha, IconoWhatsApp } from "./icons";
+import { trackEvent } from "../lib/analytics";
 
 interface PortadaProps {
   onExplorar: () => void;
@@ -10,7 +11,7 @@ export default function Portada({ onExplorar }: PortadaProps) {
   const pieza = SEMILLA[0];
 
   return (
-    <section id="inicio" className="bg-pattern-crosses relative overflow-hidden border-b border-oro-500/20 py-12 text-white lg:py-20">
+    <section id="inicio" className="bg-pattern-crosses relative overflow-hidden border-b border-oro-500/20 pt-32 pb-12 text-white lg:pt-36 lg:pb-20">
       {/* Ambient glows */}
       <div className="pointer-events-none absolute -top-32 left-1/4 h-[500px] w-[500px] rounded-full bg-oro-600/10 blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 right-10 h-96 w-96 rounded-full bg-vino-700/25 blur-3xl" />
@@ -57,7 +58,10 @@ export default function Portada({ onExplorar }: PortadaProps) {
           <div className="space-y-4 pt-3">
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
               <button
-                onClick={onExplorar}
+                onClick={() => {
+                  trackEvent('Explorar Catálogo');
+                  onExplorar();
+                }}
                 className="inline-flex w-full items-center justify-center space-x-3 rounded-full bg-gradient-to-r from-oro-500 via-oro-400 to-oro-500 px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] text-vino-950 shadow-lg shadow-oro-500/25 transition hover:brightness-110 sm:w-auto"
               >
                 <span>Explorar Catálogo Sacro</span>

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoCorazon, IconoUsuario, IconoWhatsApp, IconoBuscar, IconoBolsa } from "./icons";
+import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoCorazon, IconoUsuario, IconoWhatsApp, IconoBuscar } from "./icons";
+import BotonCarrito from "./BotonCarrito";
+import { trackEvent } from "../lib/analytics";
+import LanguageToggle from "./LanguageToggle";
 
 interface HeaderProps {
   user: User | null;
@@ -130,6 +133,9 @@ export default function Header({
 
           {/* Right: Actions */}
           <div className="flex items-center space-x-4 text-marfil-100 sm:space-x-6">
+            {/* Language Toggle */}
+            <LanguageToggle />
+
             {/* Search */}
             <button
               onClick={() => navegar("catalogo")}
@@ -154,16 +160,15 @@ export default function Header({
               )}
             </button>
 
-            {/* Shopping Bag */}
-            <button className="relative flex items-center space-x-2 p-1 transition hover:text-oro-400" aria-label="Bolsa de compra">
-              <IconoBolsa className="h-[18px] w-[18px]" />
-            </button>
+            {/* Shopping Cart */}
+            <BotonCarrito />
 
             {/* WhatsApp Concierge */}
             <a
               href="https://wa.me/5215548901234?text=Hola%20Epikas%2C%20quisiera%20información."
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent('Asesor Sacro')}
               className="hidden items-center space-x-2 rounded-full border border-emerald-500/40 bg-emerald-600/20 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-emerald-300 transition hover:bg-emerald-600/30 sm:inline-flex"
             >
               <IconoWhatsApp className="h-4 w-4" />

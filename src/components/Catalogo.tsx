@@ -1,6 +1,9 @@
-import { useEffect, useState, type ComponentType } from "react";
+import { useEffect, useMemo, useState, type ComponentType } from "react";
 import type { Categoria, Producto } from "../types";
 import { CATEGORIAS, formatearPrecio, nombreCategoria, enlaceWhatsApp } from "../types";
+import { ordenarProductos, type TipoOrden, OPCIONES_ORDEN } from "../lib/utils";
+import { trackEvent } from "../lib/analytics";
+import { useCart } from "../contexts/CartContext";
 import Reveal from "./Reveal";
 import {
   IconoAnillo,
@@ -26,33 +29,6 @@ const ICONO: Record<Categoria, ComponentType<{ className?: string }>> = {
   pulseras: IconoPulsera,
   medallas: IconoMedalla,
 };
-
-export type TipoOrden = "nuevos" | "precio-asc" | "precio-desc" | "nombre-asc" | "nombre-desc";
-
-export const OPCIONES_ORDEN: { id: TipoOrden; label: string }[] = [
-  { id: "nuevos", label: "Nuevos primero" },
-  { id: "precio-asc", label: "Menor precio" },
-  { id: "precio-desc", label: "Mayor precio" },
-  { id: "nombre-asc", label: "A → Z" },
-  { id: "nombre-desc", label: "Z → A" },
-];
-
-export function ordenarProductos(lista: Producto[], tipo: TipoOrden): Producto[] {
-  return [...lista].sort((a, b) => {
-    switch (tipo) {
-      case "nuevos":
-        return Number(Boolean(b.nuevo)) - Number(Boolean(a.nuevo));
-      case "precio-asc":
-        return a.precio - b.precio;
-      case "precio-desc":
-        return b.precio - a.precio;
-      case "nombre-asc":
-        return a.nombre.localeCompare(b.nombre, "es");
-      case "nombre-desc":
-        return b.nombre.localeCompare(a.nombre, "es");
-    }
-  });
-}
 
 interface CatalogoProps {
   productos: Producto[];
@@ -84,6 +60,11 @@ export default function Catalogo({
   esFavorito,
 }: CatalogoProps) {
   const [orden, setOrden] = useState<TipoOrden>("nuevos");
+  const [pagina, setPagina] = useState(1);
+
+  useEffect(() => {
+    setPagina(1);
+  }, [categoria, busqueda]);
 
   const texto = busqueda.trim().toLowerCase();
   const filtrados = productos.filter((p) => {
@@ -96,6 +77,36 @@ export default function Catalogo({
     return porCategoria && porTexto;
   });
   const visibles = ordenarProductos(filtrados, orden);
+
+  const POR_PAGINA = 12;
+  const totalPaginas = Math.max(1, Math.ceil(visibles.length / POR_PAGINA));
+  const paginaActual = Math.min(pagina, totalPaginas);
+  const inicio = (paginaActual - 1) * POR_PAGINA;
+  const fin = inicio + POR_PAGINA;
+  const paginados = visibles.slice(inicio, fin);
+
+  const rangoDesde = visibles.length === 0 ? 0 : inicio + 1;
+  const rangoHasta = Math.min(fin, visibles.length);
+
+  const paginasNumeradas = useMemo(() => {
+    const nums: (number | "...")[] = [];
+    if (totalPaginas <= 5) {
+      for (let i = 1; i <= totalPaginas; i++) nums.push(i);
+    } else {
+      nums.push(1);
+      if (paginaActual > 3) nums.push("...");
+      for (
+        let i = Math.max(2, paginaActual - 1);
+        i <= Math.min(totalPaginas - 1, paginaActual + 1);
+        i++
+      ) {
+        nums.push(i);
+      }
+      if (paginaActual < totalPaginas - 2) nums.push("...");
+      nums.push(totalPaginas);
+    }
+    return nums;
+  }, [totalPaginas, paginaActual]);
 
   const conteo = (c: Categoria) => productos.filter((p) => p.categoria === c).length;
 
@@ -202,7 +213,7 @@ export default function Catalogo({
                 ))}
               </div>
               <div className="text-[11px] font-medium text-stone-500">
-                Mostrando <strong>{visibles.length} de {productos.length} piezas</strong> consagradas
+                Mostrando <strong>{rangoDesde}–{rangoHasta} de {visibles.length} piezas</strong> consagradas
               </div>
             </div>
           </div>
@@ -229,8 +240,9 @@ export default function Catalogo({
             </button>
           </div>
         ) : (
+          <>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {visibles.map((p, i) => (
+            {paginados.map((p, i) => (
               <Reveal key={p.id} delay={(i % 3) * 100}>
                 <Tarjeta
                   producto={p}
@@ -244,6 +256,90 @@ export default function Catalogo({
               </Reveal>
             ))}
           </div>
+
+          {/* Pagination */}
+          {totalPaginas > 1 && (
+            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-between sm:gap-0">
+              <p className="text-xs text-stone-500">
+                Mostrando <strong>{rangoDesde}–{rangoHasta}</strong> de <strong>{visibles.length}</strong> piezas
+              </p>
+
+              {/* Mobile: prev / next */}
+              <div className="flex items-center gap-2 sm:hidden">
+                <button
+                  onClick={() => setPagina((p) => Math.max(1, p - 1))}
+                  disabled={paginaActual <= 1}
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
+                    paginaActual <= 1
+                      ? "opacity-40 cursor-not-allowed border border-stone-200 text-stone-400"
+                      : "border border-stone-200 text-stone-600 hover:border-oro-400"
+                  }`}
+                >
+                  ← Anterior
+                </button>
+                <span className="text-xs font-medium text-stone-500">
+                  {paginaActual} / {totalPaginas}
+                </span>
+                <button
+                  onClick={() => setPagina((p) => Math.min(totalPaginas, p + 1))}
+                  disabled={paginaActual >= totalPaginas}
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
+                    paginaActual >= totalPaginas
+                      ? "opacity-40 cursor-not-allowed border border-stone-200 text-stone-400"
+                      : "border border-stone-200 text-stone-600 hover:border-oro-400"
+                  }`}
+                >
+                  Siguiente →
+                </button>
+              </div>
+
+              {/* Desktop: page numbers */}
+              <nav className="hidden items-center gap-1.5 sm:flex">
+                <button
+                  onClick={() => setPagina((p) => Math.max(1, p - 1))}
+                  disabled={paginaActual <= 1}
+                  className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-semibold transition ${
+                    paginaActual <= 1
+                      ? "opacity-40 cursor-not-allowed border border-stone-200 text-stone-400"
+                      : "border border-stone-200 text-stone-600 hover:border-oro-400"
+                  }`}
+                >
+                  ‹
+                </button>
+                {paginasNumeradas.map((n, i) =>
+                  n === "..." ? (
+                    <span key={`e${i}`} className="px-1 text-sm text-stone-400">
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={n}
+                      onClick={() => setPagina(n)}
+                      className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-semibold transition ${
+                        n === paginaActual
+                          ? "bg-oro-400 text-vino-950"
+                          : "border border-stone-200 text-stone-600 hover:border-oro-400"
+                      }`}
+                    >
+                      {n}
+                    </button>
+                  )
+                )}
+                <button
+                  onClick={() => setPagina((p) => Math.min(totalPaginas, p + 1))}
+                  disabled={paginaActual >= totalPaginas}
+                  className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-semibold transition ${
+                    paginaActual >= totalPaginas
+                      ? "opacity-40 cursor-not-allowed border border-stone-200 text-stone-400"
+                      : "border border-stone-200 text-stone-600 hover:border-oro-400"
+                  }`}
+                >
+                  ›
+                </button>
+              </nav>
+            </div>
+          )}
+          </>
         )}
 
         {/* Assurance Ribbon */}
@@ -294,6 +390,7 @@ function Tarjeta({
   favorito: boolean;
   onToggleFavorito: () => void;
 }) {
+  const { addItem } = useCart();
   const [confirmando, setConfirmando] = useState(false);
 
   useEffect(() => {
@@ -414,13 +511,14 @@ function Tarjeta({
             href={enlaceWhatsApp(`Hola Epikas, deseo pedir el ${producto.nombre} (${formatearPrecio(producto.precio)})`)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackEvent('Pedir por WhatsApp', { product: producto.nombre })}
             className="inline-flex items-center justify-center space-x-1.5 rounded-xl bg-emerald-700 py-2.5 text-[11px] font-semibold text-white transition hover:bg-emerald-800"
           >
             <span className="text-xs">💬</span>
             <span>Pedir por WhatsApp</span>
           </a>
           <button
-            onClick={onVer}
+            onClick={() => addItem(producto)}
             className="inline-flex items-center justify-center space-x-1 rounded-xl border border-oro-500/30 bg-vino-950 py-2.5 text-[11px] font-bold uppercase tracking-wider text-oro-300 transition hover:bg-oro-500 hover:text-vino-950"
           >
             <span>Compra Rápida</span>

@@ -1,5 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { CartProvider } from "./contexts/CartContext";
+import { I18nProvider } from "./i18n";
 import Catalogo from "./components/Catalogo";
 import Cinta from "./components/Cinta";
 import Colecciones from "./components/Colecciones";
@@ -217,8 +219,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <I18nProvider>
+      <CartProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </CartProvider>
+    </I18nProvider>
   );
 }
