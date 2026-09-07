@@ -47,8 +47,8 @@ const FORM_VACIO: Formulario = {
 };
 
 const campo =
-  "mt-1.5 w-full rounded-lg border border-tinta/15 bg-marfil-50/70 px-4 py-3 text-sm text-vino-900 outline-none transition placeholder:text-tinta/35 focus:border-oro-500 focus:ring-4 focus:ring-oro-400/20";
-const etiqueta = "mt-4 block text-[11px] font-semibold uppercase tracking-[0.2em] text-tinta/50";
+  "mt-1.5 w-full rounded-lg border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-oro-500 focus:ring-4 focus:ring-oro-400/20";
+const etiqueta = "mt-4 block text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-500";
 
 export default function AdminPanel({
   abierto,
@@ -101,14 +101,14 @@ export default function AdminPanel({
     return (
       <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
         <button onClick={onClose} className="absolute inset-0 cursor-default bg-vino-950/85 backdrop-blur-sm" />
-        <div className="relative w-full max-w-sm rounded-xl bg-marfil-50 p-8 text-center shadow-2xl">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-vino-900/10">
-            <IconoCruz className="h-8 w-8 text-vino-900/50" />
+        <div className="relative w-full max-w-sm rounded-xl bg-white p-8 text-center shadow-2xl">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stone-100">
+            <IconoCruz className="h-8 w-8 text-stone-400" />
           </div>
           <h3 className="font-display text-xl font-bold text-vino-900">
             Acceso restringido
           </h3>
-          <p className="mt-3 text-sm text-tinta/60">
+          <p className="mt-3 text-sm text-stone-500">
             Solo los administradores de Epikas pueden acceder a este panel.
           </p>
           <button
@@ -225,16 +225,16 @@ export default function AdminPanel({
           {formMostrar ? (
             <form
               onSubmit={manejarEnvio}
-              className="rounded-xl border border-oro-400/20 bg-marfil-50 p-8"
+              className="rounded-xl border border-stone-200 bg-white p-8"
             >
               <h3 className="font-display text-xl font-bold text-vino-900">
                 {form.id ? "Editar producto" : "Nuevo producto"}
               </h3>
 
               {errores.length > 0 && (
-                <div className="mt-4 rounded-lg bg-vino-600/10 p-4">
+                <div className="mt-4 rounded-lg bg-red-50 p-4">
                   {errores.map((err, i) => (
-                    <p key={i} className="text-sm text-vino-600">
+                    <p key={i} className="text-sm text-red-600">
                       {err}
                     </p>
                   ))}
@@ -309,7 +309,7 @@ export default function AdminPanel({
 
               <div className="mt-5">
                 <label className={etiqueta}>Imagen (máx. 2.5 MB)</label>
-                <label className="mt-1.5 flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-tinta/25 bg-white/50 px-4 py-6 text-sm text-tinta/50 transition hover:border-oro-500 hover:text-oro-600">
+                <label className="mt-1.5 flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-stone-300 bg-stone-50 px-4 py-6 text-sm text-stone-400 transition hover:border-oro-500 hover:text-oro-600">
                   <IconoSubir className="h-5 w-5" />
                   {form.imagen ? "Cambiar imagen" : "Subir imagen"}
                   <input type="file" accept="image/*" onChange={manejarSubida} className="hidden" />
@@ -359,7 +359,7 @@ export default function AdminPanel({
                 <button
                   type="button"
                   onClick={cancelarEdicion}
-                  className="rounded-full border border-tinta/20 px-8 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-tinta/60 transition hover:border-tinta/40"
+                  className="rounded-full border border-stone-300 px-8 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-stone-500 transition hover:border-stone-400"
                 >
                   Cancelar
                 </button>
@@ -402,7 +402,7 @@ export default function AdminPanel({
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-oro-400/10 bg-marfil-50">
+                  <tbody className="divide-y divide-stone-200 bg-white">
                     {productos.map((p) => (
                       <tr key={p.id} className="group">
                         <td className="px-5 py-4">
@@ -416,11 +416,11 @@ export default function AdminPanel({
                             )}
                             <div>
                               <p className="font-medium text-vino-900">{p.nombre}</p>
-                              <p className="text-xs text-tinta/50">{p.material}</p>
+                              <p className="text-xs text-stone-500">{p.material}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-5 py-4 text-sm text-tinta/70">
+                        <td className="px-5 py-4 text-sm text-stone-600">
                           {nombreCategoria(p.categoria)}
                         </td>
                         <td className="px-5 py-4 text-sm font-semibold text-vino-800">
@@ -444,7 +444,7 @@ export default function AdminPanel({
                           <div className="flex justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
                             <button
                               onClick={() => iniciarEdicion(p)}
-                              className="flex h-9 w-9 items-center justify-center rounded-full bg-vino-900/10 text-vino-900 transition hover:bg-oro-400 hover:text-vino-950"
+                              className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-700 transition hover:bg-oro-400 hover:text-vino-950"
                               title="Editar"
                             >
                               <IconoEditar className="h-4 w-4" />
@@ -462,7 +462,7 @@ export default function AdminPanel({
                             ) : (
                               <button
                                 onClick={() => setIdBorrando(p.id)}
-                                className="flex h-9 w-9 items-center justify-center rounded-full bg-vino-900/10 text-vino-700 transition hover:bg-vino-600 hover:text-white"
+                                className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-600 transition hover:bg-vino-600 hover:text-white"
                                 title="Eliminar"
                               >
                                 <IconoBorrar className="h-4 w-4" />
@@ -476,7 +476,7 @@ export default function AdminPanel({
                 </table>
                 {productos.length === 0 && (
                   <div className="py-16 text-center">
-                    <p className="text-tinta/50">No hay productos en el catálogo.</p>
+                    <p className="text-stone-500">No hay productos en el catálogo.</p>
                   </div>
                 )}
               </div>
