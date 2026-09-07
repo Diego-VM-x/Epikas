@@ -103,7 +103,7 @@ export default function Catalogo({
     <section id="catalogo" className="bg-pearl-pattern py-14 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <Reveal className="mb-10 text-center max-w-2xl mx-auto" id="catalogo-busqueda">
+        <Reveal className="mb-10 text-center max-w-2xl mx-auto">
           <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-oro-600">
             — ATELIER CATALOGUE
           </span>

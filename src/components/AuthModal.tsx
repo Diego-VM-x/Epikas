@@ -160,7 +160,7 @@ export default function AuthModal({ abierto, modoInicial = "login", onClose }: A
 
           <button
             type="submit"
-            disabled={loading || oauthLoading}
+            disabled={loading || !!oauthLoading}
             className="w-full rounded-full bg-oro-400 py-4 text-sm font-semibold uppercase tracking-[0.16em] text-vino-950 shadow-xl transition-all hover:-translate-y-0.5 hover:bg-oro-300 disabled:opacity-50"
           >
             {loading ? "Cargando..." : modo === "login" ? "Iniciar sesión" : "Crear cuenta"}
@@ -169,7 +169,7 @@ export default function AuthModal({ abierto, modoInicial = "login", onClose }: A
           <div className="mt-4">
             <button
               onClick={handleGoogle}
-              disabled={loading || oauthLoading}
+              disabled={loading || !!oauthLoading}
               className="w-full rounded-full bg-white py-3 text-sm font-medium text-vino-900 border border-tinta/15 hover:bg-gray-50 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {oauthLoading === "google" ? (
