@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { IconoCerrar, IconoCorreo, IconoLlave, IconoUsuario } from "./icons";
-import { IconoGoogle, IconoApple } from "./icons";
+import { IconoGoogle } from "./icons";
 
 interface AuthModalProps {
   abierto: boolean;
@@ -10,7 +10,7 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ abierto, modoInicial = "login", onClose }: AuthModalProps) {
-  const { signIn, signUp, signInWithGoogle, signInWithApple } = useAuth();
+  const { signIn, signUp, signInWithGoogle } = useAuth();
   const [modo, setModo] = useState<"login" | "registro">(modoInicial);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +18,7 @@ export default function AuthModal({ abierto, modoInicial = "login", onClose }: A
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [oauthLoading, setOauthLoading] = useState<"google" | "apple" | null>(null);
+  const [oauthLoading, setOauthLoading] = useState<"google" | null>(null);
 
   if (!abierto) return null;
 
@@ -55,19 +55,6 @@ export default function AuthModal({ abierto, modoInicial = "login", onClose }: A
       if (error) throw error;
     } catch (err: any) {
       setError(err.message || "No se pudo conectar con Google");
-    } finally {
-      setOauthLoading(null);
-    }
-  }
-
-  async function handleApple() {
-    setError(null);
-    setOauthLoading("apple");
-    try {
-      const { error } = await signInWithApple();
-      if (error) throw error;
-    } catch (err: any) {
-      setError(err.message || "No se pudo conectar con Apple");
     } finally {
       setOauthLoading(null);
     }
@@ -171,10 +158,6 @@ export default function AuthModal({ abierto, modoInicial = "login", onClose }: A
             <p className="rounded-lg bg-vino-600/10 p-3 text-sm text-vino-600">Conectando con Google...</p>
           )}
 
-          {oauthLoading === "apple" && (
-            <p className="rounded-lg bg-vino-600/10 p-3 text-sm text-vino-600">Conectando con Apple...</p>
-          )}
-
           <button
             type="submit"
             disabled={loading || oauthLoading}
@@ -200,23 +183,6 @@ export default function AuthModal({ abierto, modoInicial = "login", onClose }: A
                 <IconoGoogle className="h-4 w-4" />
               )}
               {oauthLoading === "google" ? "Conectando..." : "Google"}
-            </button>
-          </div>
-
-          <div className="mt-3">
-            <button
-              onClick={handleApple}
-              disabled={loading || oauthLoading}
-              className="w-full rounded-full bg-black py-3 text-sm font-medium text-white border border-tinta/15 hover:bg-gray-800 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {oauthLoading === "apple" ? (
-                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.05 20.28c-.98.95-2.05.88-3.08.38-.4-.24-.77-.42-1.16-.64-.01 0-.02-.01-.03-.01-.01 0-.02.01-.03.01-.39.23-.81.42-1.24.64-.98.4-1.95.36-3.08-.4-1.06-.68-1.76-1.88-1.76-3.21 0-1.28.64-2.42 1.64-3.17-.16-.4-.72-1.98.16-4.14 0 0 1.3-.41 4.28 1.58 1.24-.34 2.56-.52 3.88-.53 1.33.01 2.66.19 3.89.53 2.98-1.99 4.28-1.58 4.28-1.58.88 2.16.32 3.74.16 4.14 1 .75 1.64 1.89 1.64 3.17 0 1.34-.7 2.53-1.77 3.21-.01.01-.02.01-.03.02z" />
-                </svg>
-              ) : (
-                <IconoApple className="h-4 w-4" />
-              )}
-              {oauthLoading === "apple" ? "Conectando..." : "Apple"}
             </button>
           </div>
         </form>
