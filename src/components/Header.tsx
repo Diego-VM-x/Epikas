@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoCorazon, IconoUsuario, IconoWhatsApp, IconoBuscar } from "./icons";
-import BotonCarrito from "./BotonCarrito";
+import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoCorazon, IconoUsuario, IconoWhatsApp, IconoBuscar, IconoBolsa } from "./icons";
+import { useCart } from "../contexts/CartContext";
 import { trackEvent } from "../lib/analytics";
 
 interface HeaderProps {
@@ -14,6 +14,7 @@ interface HeaderProps {
   onAuthClick: () => void;
   onLogout: () => void;
   onFavoritosClick: () => void;
+  onCarritoClick: () => void;
 }
 
 const ENLACES = [
@@ -33,7 +34,9 @@ export default function Header({
   onAuthClick,
   onLogout,
   onFavoritosClick,
+  onCarritoClick,
 }: HeaderProps) {
+  const { totalItems } = useCart();
   const [scroll, setScroll] = useState(false);
   const [menu, setMenu] = useState(false);
 
@@ -157,7 +160,18 @@ export default function Header({
             </button>
 
             {/* Shopping Cart */}
-            <BotonCarrito />
+            <button
+              onClick={onCarritoClick}
+              className="relative flex items-center space-x-2 p-1 transition hover:text-oro-400"
+              aria-label="Carrito de compras"
+            >
+              <IconoBolsa className="h-[18px] w-[18px]" />
+              {totalItems > 0 && (
+                <span className="absolute -right-1.5 -top-1 flex h-4 w-4 items-center justify-center rounded-full border border-oro-400 bg-oro-500 text-[9px] font-bold text-vino-950">
+                  {totalItems}
+                </span>
+              )}
+            </button>
 
             {/* WhatsApp Concierge */}
             <a

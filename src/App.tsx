@@ -23,6 +23,8 @@ import type { Categoria, Producto } from "./types";
 const AdminPanel = lazy(() => import("./components/AdminPanel"));
 const PoliticaPrivacidad = lazy(() => import("./pages/PoliticaPrivacidad"));
 const TerminosCondiciones = lazy(() => import("./pages/TerminosCondiciones"));
+import CarritoModal from "./components/CarritoModal";
+import { useCart } from "./contexts/CartContext";
 
 function AppContent() {
   const { user, isAdmin, signOut, loading } = useAuth();
@@ -37,6 +39,7 @@ function AppContent() {
   const [aviso, setAviso] = useState<AvisoToast | null>(null);
   const [authModalAbierto, setAuthModalAbierto] = useState(false);
   const [favoritosModalAbierto, setFavoritosModalAbierto] = useState(false);
+  const [carritoModalAbierto, setCarritoModalAbierto] = useState(false);
   const [paginaLegal, setPaginaLegal] = useState<"privacidad" | "terminos" | null>(null);
 
   const notificar = (texto: string) => setAviso({ id: Date.now(), texto });
@@ -108,6 +111,10 @@ function AppContent() {
     setFavoritosModalAbierto(true);
   }
 
+  function handleCarritoClick() {
+    setCarritoModalAbierto(true);
+  }
+
   if (loading || loadingProductos) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-marfil-50">
@@ -133,6 +140,7 @@ function AppContent() {
         onAuthClick={() => setAuthModalAbierto(true)}
         onLogout={manejarLogout}
         onFavoritosClick={handleFavoritosClick}
+        onCarritoClick={handleCarritoClick}
       />
 
       <main>
@@ -200,6 +208,11 @@ function AppContent() {
         onToggle={handleToggleFavorito}
         onVerDetalle={setDetalle}
         onClose={() => setFavoritosModalAbierto(false)}
+      />
+
+      <CarritoModal
+        abierto={carritoModalAbierto}
+        onClose={() => setCarritoModalAbierto(false)}
       />
 
       <Suspense fallback={null}>
