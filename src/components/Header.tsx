@@ -115,22 +115,23 @@ export default function Header({
           {/* Center: Brand Crest & Logo */}
           <button
             onClick={() => navegar("inicio")}
-            className="group flex flex-col items-center py-2"
+            className="group flex items-center space-x-2 py-2"
             aria-label="Epikas, ir al inicio"
           >
-            <div className="flex items-center space-x-2">
-              <span className="hidden h-px w-6 bg-oro-400/60 sm:block" />
-              <div className="flex h-7 w-7 items-center justify-center rounded-full border border-oro-400/80 text-oro-400 transition duration-300 group-hover:bg-oro-400/20 group-hover:scale-105">
-                <span className="text-xs">✝</span>
-              </div>
-              <span className="hidden h-px w-6 bg-oro-400/60 sm:block" />
+            <img
+              src="/logo.png"
+              alt="Epikas"
+              className="h-8 w-auto sm:h-10"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
+            <div className="flex flex-col items-start">
+              <span className="font-display text-xl font-bold tracking-[0.32em] text-white sm:text-2xl text-gold-shadow">
+                EPIKAS
+              </span>
+              <span className="-mt-0.5 hidden text-[8px] font-medium uppercase tracking-[0.38em] text-oro-400 sm:block">
+                Atelier & Alta Joyería Devocional
+              </span>
             </div>
-            <span className="mt-1 font-display text-xl font-bold tracking-[0.32em] text-white sm:text-2xl text-gold-shadow">
-              EPIKAS
-            </span>
-            <span className="-mt-0.5 hidden text-[8px] font-medium uppercase tracking-[0.38em] text-oro-400 sm:block">
-              Atelier & Alta Joyería Devocional
-            </span>
           </button>
 
           {/* Right: Actions */}
