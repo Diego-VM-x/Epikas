@@ -136,7 +136,7 @@ export default function AdminPanel({
     if (!validar()) return;
 
     const producto: Producto = {
-      id: form.id || crypto.randomUUID(),
+      id: form.id,
       nombre: form.nombre.trim(),
       categoria: form.categoria,
       precio: Number(form.precio),
@@ -293,7 +293,7 @@ export default function AdminPanel({
               <div className="mt-5">
                 <label className={etiqueta}>Imagen</label>
                 <ImageUpload
-                  productoId={form.id || crypto.randomUUID()}
+                  productoId={form.id || "nuevo-" + Date.now()}
                   imagenActual={form.imagen}
                   onImagenSubida={(url) => setForm((p) => ({ ...p, imagen: url }))}
                   onImagenEliminada={() => setForm((p) => ({ ...p, imagen: "" }))}

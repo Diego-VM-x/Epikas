@@ -28,7 +28,7 @@ import { useCart } from "./contexts/CartContext";
 
 function AppContent() {
   const { user, isAdmin, signOut, loading } = useAuth();
-  const { productos, loading: loadingProductos, agregarProducto, actualizarProducto, eliminarProducto } = useProductos();
+  const { productos, loading: loadingProductos, agregarProducto, actualizarProducto, eliminarProducto, refetch } = useProductos();
   const { favoritos, toggle: toggleFavorito, esFavorito } = useFavoritosSupabase();
 
   const [categoria, setCategoria] = useState<Categoria | "todos">("todos");
@@ -54,11 +54,12 @@ function AppContent() {
 
   async function guardarProducto(p: Producto) {
     try {
-      if (p.id.includes("-")) {
+      if (!p.id) {
         await agregarProducto(p);
       } else {
         await actualizarProducto(p.id, p);
       }
+      await refetch();
       notificar("Pieza guardada");
     } catch {
       notificar("Error al guardar");
@@ -68,6 +69,7 @@ function AppContent() {
   async function manejarEliminarProducto(id: string) {
     try {
       await eliminarProducto(id);
+      await refetch();
       notificar("Pieza eliminada");
     } catch {
       notificar("Error al eliminar");
