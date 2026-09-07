@@ -20,6 +20,8 @@ import { useFavoritosSupabase } from "./hooks/useFavoritosSupabase";
 import type { Categoria, Producto } from "./types";
 
 const AdminPanel = lazy(() => import("./components/AdminPanel"));
+const PoliticaPrivacidad = lazy(() => import("./pages/PoliticaPrivacidad"));
+const TerminosCondiciones = lazy(() => import("./pages/TerminosCondiciones"));
 
 function AppContent() {
   const { user, isAdmin, signOut, loading } = useAuth();
@@ -34,6 +36,7 @@ function AppContent() {
   const [aviso, setAviso] = useState<AvisoToast | null>(null);
   const [authModalAbierto, setAuthModalAbierto] = useState(false);
   const [favoritosModalAbierto, setFavoritosModalAbierto] = useState(false);
+  const [paginaLegal, setPaginaLegal] = useState<"privacidad" | "terminos" | null>(null);
 
   const notificar = (texto: string) => setAviso({ id: Date.now(), texto });
 
@@ -161,6 +164,7 @@ function AppContent() {
           irA("catalogo");
         }}
         onAdmin={handleAdminClick}
+        onVerLegal={setPaginaLegal}
       />
 
       <DetalleModal producto={detalle} onClose={() => setDetalle(null)} />
@@ -196,6 +200,15 @@ function AppContent() {
         onVerDetalle={setDetalle}
         onClose={() => setFavoritosModalAbierto(false)}
       />
+
+      <Suspense fallback={null}>
+        {paginaLegal === "privacidad" && (
+          <PoliticaPrivacidad onClose={() => setPaginaLegal(null)} />
+        )}
+        {paginaLegal === "terminos" && (
+          <TerminosCondiciones onClose={() => setPaginaLegal(null)} />
+        )}
+      </Suspense>
 
       <Toast aviso={aviso} />
     </div>

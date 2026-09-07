@@ -15,13 +15,19 @@
 
 ## 🟢 Tareas pendientes (TODO)
 
-- [ ] Agregar página de política de privacidad
-- [ ] Agregar página de términos y condiciones
-- [ ] Implementar lazy loading de imágenes con blur placeholder
-- [ ] Configurar CI/CD (GitHub Actions) para build y deploy automático
+- [x] Agregar página de política de privacidad
+- [x] Agregar página de términos y condiciones
+- [x] Implementar lazy loading de imágenes con blur placeholder
+- [x] Configurar CI/CD (GitHub Actions) para build y deploy automático
 
 ## ✅ Completados
 
+- [x] **Diseño Atelier** — Rediseño completo del sitio con paleta burgundy/gold/pearl, header con announcement bar, hero con cathedral arch, catálogo con toolbar, taller, sacramentos, footer con trust badges.
+- [x] **Refactor modales** — DetalleModal, FavoritosModal, AdminPanel y ScrollProgress actualizados al tema atelier.
+- [x] **Páginas legales** — Política de Privacidad y Términos y Condiciones como componentes modales accesibles desde el footer.
+- [x] **Lazy loading mejorado** — LazyImage con shimmer skeleton y transición blur→sharp.
+- [x] **CI/CD** — GitHub Actions workflows para build (PR checks) y deploy (push a test/master → Vercel).
+- [x] **.gitignore** — Actualizado con archivos de entorno, IDE, OS y secretos.
 - [x] **Conectar Supabase** — Cliente Supabase configurado, tablas de perfiles, productos, favoritos y pedidos.
 - [x] **Autenticación real del admin** — Admins verificados por email en `AuthContext` y políticas RLS en Supabase.
 - [x] **Favicon personalizado** — SVG con diseño de cruz en `public/favicon.svg`.

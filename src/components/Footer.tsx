@@ -8,6 +8,7 @@ interface FooterProps {
   esAdmin: boolean;
   onCategoria: (c: Categoria) => void;
   onAdmin: () => void;
+  onVerLegal?: (pagina: "privacidad" | "terminos") => void;
 }
 
 const TRUST_BADGES = [
@@ -25,7 +26,7 @@ const CATALOGO_LINKS = [
   "Encargos a Medida",
 ];
 
-export default function Footer({ esAdmin, onCategoria, onAdmin }: FooterProps) {
+export default function Footer({ esAdmin, onCategoria, onAdmin, onVerLegal }: FooterProps) {
   const [email, setEmail] = useState("");
   const [suscrito, setSuscrito] = useState(false);
 
@@ -175,7 +176,12 @@ export default function Footer({ esAdmin, onCategoria, onAdmin }: FooterProps) {
         <div className="flex flex-col items-center justify-between gap-4 pt-8 text-[11px] text-stone-500 md:flex-row">
           <div>
             <p>© 2026 Epikas Atelier · Alta Joyería Devocional. Todos los derechos reservados.</p>
-            <p className="mt-0.5 text-[10px] text-stone-600">Hecho con fe y devoción en México 🇲🇽</p>
+            <p className="mt-0.5 text-[10px] text-stone-600">
+              Hecho con fe y devoción en México 🇲🇽 ·{" "}
+              <button onClick={() => onVerLegal?.("privacidad")} className="hover:text-stone-400 transition">Política de Privacidad</button>
+              {" · "}
+              <button onClick={() => onVerLegal?.("terminos")} className="hover:text-stone-400 transition">Términos y Condiciones</button>
+            </p>
           </div>
           <div className="flex items-center space-x-3 text-lg text-stone-400">
             <span className="mr-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-500">
