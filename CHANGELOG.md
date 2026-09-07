@@ -4,6 +4,35 @@
 
 ---
 
+## v2.1.0 — 2026-09-07
+
+| Campo | Detalle |
+|-------|---------|
+| **Tipo** | Patch |
+| **Commits** | `9c10ce5` → `159a323` (test + master) |
+
+**Descripción:** Fix mobile header, portada showcase, currency change MXN → VES, logo image support.
+
+### Bug fixes
+- Fix: Header subtitle overflow on mobile — oculto en <640px
+- Fix: Showcase image overflow — overflow-hidden restaurado, badges movidos fuera del clip area
+- Fix: Showcase text cutoff — badges posicionados con z-10 sobre el marco
+- Fix: WhatsApp hardcoded to Venezuela format
+
+### Currency change
+- formatearPrecio: `$XX MXN` → `Bs. X.XX` (locale es-VE)
+- Header: "MXN ($) · Envíos asegurados" → "VES (Bs.) · Envíos asegurados"
+- SchemaMarkup: priceCurrency "MXN" → "VES"
+- AdminPanel: "Precio (MXN)" → "Precio (VES)"
+- TerminosCondiciones: "pesos mexicanos (MXN)" → "bolívares venezolanos (VES)"
+- Catalogo: MSI text usa formatearPrecio() en vez de string hardcoded
+
+### Header redesign
+- Logo: `<img src="/logo.png">` antes del texto EPIKAS (fallback si no existe)
+- Eliminados badges "Bendecida antes de enviar" y "Zoom Detalle" del showcase
+
+---
+
 ## v2.0.0 — 2026-09-07
 
 | Campo | Detalle |
