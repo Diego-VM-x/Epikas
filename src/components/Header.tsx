@@ -54,8 +54,8 @@ export default function Header({
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      {/* Announcement Bar */}
-      <div className="bg-gradient-to-r from-vino-950 via-vino-900 to-vino-950 border-b border-oro-400/25">
+      {/* Announcement Bar - hidden on very small screens */}
+      <div className="hidden bg-gradient-to-r from-vino-950 via-vino-900 to-vino-950 border-b border-oro-400/25 sm:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
           {/* Left: Blessings */}
           <div className="hidden items-center space-x-4 text-[11px] text-marfil-100/70 sm:flex">
@@ -98,7 +98,7 @@ export default function Header({
             : "bg-vino-900/80 backdrop-blur-sm"
         }`}
       >
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8">
           {/* Left: Navigation Links */}
           <nav className="hidden items-center space-x-7 text-[11px] font-semibold uppercase tracking-[0.2em] text-marfil-100 lg:flex">
             {ENLACES.map((e) => (
