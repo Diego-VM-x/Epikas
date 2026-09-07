@@ -96,7 +96,7 @@ export default function CarritoModal({ abierto, onClose }: CarritoModalProps) {
   ].join("\n");
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center overflow-hidden p-4">
       {/* Toast Container */}
       <div className="pointer-events-none fixed left-1/2 top-6 z-[100] flex -translate-x-1/2 flex-col items-center gap-2">
         {toasts.map((t) => (
@@ -119,11 +119,11 @@ export default function CarritoModal({ abierto, onClose }: CarritoModalProps) {
       {/* Backdrop */}
       <button
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-vino-950/85 backdrop-blur-sm"
+        className="absolute inset-0 z-0 cursor-default bg-vino-950/85 backdrop-blur-sm"
       />
 
       {/* Panel */}
-      <div className="relative max-h-[85vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl">
+      <div className="relative z-10 max-h-[85vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl">
         {/* Header */}
         <div className="flex flex-shrink-0 items-center justify-between border-b border-stone-200 bg-vino-900 px-6 py-5">
           <div className="flex items-center gap-3">

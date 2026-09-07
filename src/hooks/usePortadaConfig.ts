@@ -11,6 +11,7 @@ export interface PortadaConfig {
   taller_texto: string;
   badge1: string;
   badge2: string;
+  producto_destacado_id: string | null;
 }
 
 const DEFAULTS: PortadaConfig = {
@@ -25,6 +26,7 @@ const DEFAULTS: PortadaConfig = {
   taller_texto: "Taller activo: Solo 14 piezas disponibles esta semana",
   badge1: "Colección Sacra 2026",
   badge2: "Bendecida en el Taller",
+  producto_destacado_id: null,
 };
 
 const STORAGE_KEY = "epikas_portada_config";
@@ -66,6 +68,7 @@ export function usePortadaConfig() {
             taller_texto: data.taller_texto ?? DEFAULTS.taller_texto,
             badge1: data.badge1 ?? DEFAULTS.badge1,
             badge2: data.badge2 ?? DEFAULTS.badge2,
+            producto_destacado_id: data.producto_destacado_id ?? DEFAULTS.producto_destacado_id,
           };
           setConfig(remote);
           saveLocal(remote);
@@ -83,7 +86,7 @@ export function usePortadaConfig() {
   }, []);
 
   const updateField = useCallback(
-    async (field: keyof PortadaConfig, value: string) => {
+    async (field: keyof PortadaConfig, value: string | null) => {
       const next = { ...config, [field]: value };
       setConfig(next);
       saveLocal(next);

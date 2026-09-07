@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SEMILLA } from "../data/seed";
-import { enlaceWhatsApp, formatearPrecio } from "../types";
+import { enlaceWhatsApp, formatearPrecio, type Producto } from "../types";
 import { IconoFlecha, IconoWhatsApp } from "./icons";
 import { trackEvent } from "../lib/analytics";
 import { usePortadaConfig } from "../hooks/usePortadaConfig";
@@ -8,6 +8,7 @@ import { usePortadaConfig } from "../hooks/usePortadaConfig";
 interface PortadaProps {
   onExplorar: () => void;
   esAdmin?: boolean;
+  productos?: Producto[];
 }
 
 function EditButton({ onClick }: { onClick: () => void }) {
@@ -80,10 +81,13 @@ function InlineEdit({
   );
 }
 
-export default function Portada({ onExplorar, esAdmin }: PortadaProps) {
-  const pieza = SEMILLA[0];
+export default function Portada({ onExplorar, esAdmin, productos = [] }: PortadaProps) {
   const { config, updateField } = usePortadaConfig();
   const [editing, setEditing] = useState<string | null>(null);
+
+  const pieza = config.producto_destacado_id
+    ? productos.find((p) => p.id === config.producto_destacado_id) || SEMILLA[0]
+    : SEMILLA[0];
 
   function handleSave(field: string, value: string) {
     updateField(field as keyof import("../hooks/usePortadaConfig").PortadaConfig, value);
@@ -256,7 +260,46 @@ export default function Portada({ onExplorar, esAdmin }: PortadaProps) {
         </div>
 
         {/* Right: Cathedral Arch Showcase */}
-        <div className="flex justify-center lg:col-span-6 lg:justify-end">
+        <div className="relative flex justify-center pt-8 lg:col-span-6 lg:justify-end">
+          {esAdmin && (
+            <div className="absolute right-0 top-0 z-20">
+              <button
+                onClick={() => setEditing(editing === "producto_destacado" ? null : "producto_destacado")}
+                className="inline-flex h-7 items-center gap-1.5 rounded-full border border-oro-500/30 bg-vino-900/90 px-3 text-[10px] font-semibold text-oro-300 shadow-md transition hover:border-oro-400 hover:text-oro-200"
+              >
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                </svg>
+                Cambiar pieza
+              </button>
+              {editing === "producto_destacado" && (
+                <div className="mt-2 w-64 rounded-lg border border-oro-500/30 bg-vino-950/95 p-3 shadow-xl backdrop-blur-sm">
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-oro-400">Pieza destacada</p>
+                  <select
+                    value={config.producto_destacado_id || ""}
+                    onChange={(e) => {
+                      updateField("producto_destacado_id", e.target.value || null);
+                      setEditing(null);
+                    }}
+                    className="w-full rounded-lg border border-oro-500/40 bg-vino-900/80 px-2.5 py-2 text-xs text-white outline-none focus:border-oro-400 focus:ring-1 focus:ring-oro-400/50"
+                  >
+                    <option value="">Por defecto (SEMILLA)</option>
+                    {productos.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.nombre} — {formatearPrecio(p.precio)}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={() => setEditing(null)}
+                    className="mt-2 w-full rounded-md border border-stone-600 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-stone-300 hover:border-stone-400 hover:text-white"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
           <div className="relative w-full max-w-md">
             {/* Outer halo */}
             <div className="pointer-events-none absolute -inset-2 rounded-b-3xl border border-gold-400/30 blur-[1px]" style={{ borderRadius: "16rem 16rem 0.75rem 0.75rem" }} />

@@ -136,7 +136,7 @@ function AppContent() {
       />
 
       <main>
-        <Portada onExplorar={() => irA("catalogo")} esAdmin={isAdmin} />
+        <Portada onExplorar={() => irA("catalogo")} esAdmin={isAdmin} productos={productos} />
         <Cinta />
         <Colecciones onCategoria={(c) => { setCategoria(c); irA("catalogo"); }} irA={irA} />
         <Catalogo
