@@ -162,16 +162,31 @@ body {
   transform: translateX(130%) skewX(-14deg);
 }
 
-/* ---------- Reference: bg pattern for cream sections ---------- */
-.bg-cream-pattern {
+/* ---------- Reference: bg pattern for cream sections (dots) ---------- */
+.bg-pearl-pattern {
   background-color: #FDFBF7;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M32 22v20M22 32h20' stroke='%23d4af37' stroke-opacity='0.06' stroke-width='1'/%3E%3C/svg%3E");
+  background-image: radial-gradient(#d8ccba 0.85px, transparent 0.85px);
+  background-size: 26px 26px;
+}
+
+/* ---------- Reference: bg pattern for dark sections (crosses) ---------- */
+.bg-pattern-crosses {
+  background-color: #1A0810;
+  background-image: radial-gradient(rgba(212, 175, 55, 0.14) 1px, transparent 0),
+                    radial-gradient(rgba(212, 175, 55, 0.06) 1px, #1A0810 0);
+  background-size: 36px 36px;
+  background-position: 0 0, 18px 18px;
 }
 
 /* ---------- Reference: cathedral arch clip for product cards ---------- */
 .cathedral-arch {
-  border-radius: 50% 50% 0 0 / 20% 20% 0 0;
-  overflow: hidden;
+  border-top-left-radius: 9999px;
+  border-top-right-radius: 9999px;
+}
+
+/* ---------- Reference: shimmer gold gradient ---------- */
+.shimmer-gold {
+  background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #E5C158 100%);
 }
 
 /* ---------- Reference: italic gold text ---------- */

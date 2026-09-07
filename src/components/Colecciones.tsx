@@ -1,75 +1,61 @@
 import type { Categoria } from "../types";
 import { CATEGORIAS } from "../types";
-import Reveal from "./Reveal";
-import { IconoRosario, IconoCollar, IconoAnillo, IconoPulsera, IconoMedalla, IconoRombo } from "./icons";
-import { type ComponentType } from "react";
+import { SEMILLA } from "../data/seed";
 
 interface ColeccionesProps {
   onCategoria: (c: Categoria) => void;
   irA: (id: string) => void;
 }
 
-const ICONO_MAP: Record<Categoria, ComponentType<{ className?: string }>> = {
-  rosarios: IconoRosario,
-  collares: IconoCollar,
-  anillos: IconoAnillo,
-  pulseras: IconoPulsera,
-  medallas: IconoMedalla,
-};
-
-const COLORES: Record<Categoria, string> = {
-  rosarios: "from-vino-800 to-vino-950",
-  collares: "from-oro-600 to-oro-700",
-  anillos: "from-vino-700 to-vino-800",
-  pulseras: "from-oro-500 to-oro-600",
-  medallas: "from-vino-900 to-vino-950",
-};
+const COLECCIONES: { id: Categoria; nombre: string; subtitulo: string; imagen: string }[] = [
+  { id: "rosarios", nombre: "Rosarios de Gala", subtitulo: "Cristal Checo & Oro", imagen: SEMILLA[0].imagen },
+  { id: "medallas", nombre: "Medallas Sacras", subtitulo: "Milagrosa y San Benito", imagen: SEMILLA[1].imagen },
+  { id: "anillos", nombre: "Plata .925 Fina", subtitulo: "Anillos y Cruces", imagen: SEMILLA[2].imagen },
+  { id: "pulseras", nombre: "Perlas de Río", subtitulo: "Nazaret & Comunión", imagen: SEMILLA[3].imagen },
+  { id: "collares", nombre: "Collares de Fe", subtitulo: "Sagrado Corazón", imagen: SEMILLA[4].imagen },
+];
 
 export default function Colecciones({ onCategoria, irA }: ColeccionesProps) {
   return (
-    <section className="relative overflow-hidden bg-marfil-50 py-20 lg:py-24">
-      <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <Reveal className="text-center">
-          <div className="flex items-center justify-center gap-3">
-            <span className="h-px w-12 bg-oro-400/60" />
-            <IconoRombo className="h-2 w-2 text-oro-500" />
-            <span className="h-px w-12 bg-oro-400/60" />
-          </div>
-          <h2 className="mt-5 font-display text-3xl font-bold text-vino-900 sm:text-4xl">
-            Nuestras <span className="italic-gold">Colecciones</span>
-          </h2>
-          <p className="mt-3 text-sm text-tinta/60">
-            Cada categoría, una devoción distinta
-          </p>
-        </Reveal>
+    <section className="border-b border-oro-500/25 bg-gradient-to-b from-vino-950 to-vino-900 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-6 text-center">
+          <span className="block text-[10px] font-semibold uppercase tracking-[0.3em] text-oro-400">
+            Explora por Devoción y Tipo
+          </span>
+          <h3 className="mt-1 font-display text-xl tracking-wide text-white">
+            Colecciones Destacadas del Atelier
+          </h3>
+        </div>
 
-        <Reveal delay={120}>
-          <div className="mt-14 flex justify-center gap-8 overflow-x-auto no-scrollbar pb-4 sm:gap-12 md:gap-16 lg:gap-20">
-            {CATEGORIAS.map((c, i) => {
-              const Icono = ICONO_MAP[c.id];
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => {
-                    onCategoria(c.id);
-                    irA("catalogo");
-                  }}
-                  className="group flex flex-col items-center gap-4"
-                  style={{ animationDelay: `${i * 80}ms` }}
-                >
-                  <div
-                    className={`flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br ${COLORES[c.id]} shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-oro-400/20 sm:h-24 sm:w-24`}
-                  >
-                    <Icono className="h-8 w-8 text-oro-300 transition-colors duration-300 group-hover:text-oro-100 sm:h-10 sm:w-10" />
-                  </div>
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-vino-800 transition-colors duration-300 group-hover:text-oro-600">
-                    {c.nombre}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </Reveal>
+        {/* Circle Grid */}
+        <div className="grid grid-cols-2 gap-4 text-center sm:grid-cols-3 lg:grid-cols-5 sm:gap-6">
+          {COLECCIONES.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => {
+                onCategoria(c.id);
+                irA("catalogo");
+              }}
+              className="group flex flex-col items-center rounded-2xl border border-transparent p-2 transition hover:border-oro-500/30 hover:bg-vino-900/60"
+            >
+              <div className="h-20 w-20 overflow-hidden rounded-full border-2 border-oro-500/40 bg-vino-950 p-1 shadow-lg transition duration-300 group-hover:border-oro-400 group-hover:scale-105 sm:h-24 sm:w-24">
+                <img
+                  src={c.imagen}
+                  alt={c.nombre}
+                  className="h-full w-full rounded-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <span className="mt-2.5 font-display text-xs font-semibold tracking-wide text-marfil-100 group-hover:text-oro-300">
+                {c.nombre}
+              </span>
+              <span className="font-serif text-[10px] italic text-stone-400">
+                {c.subtitulo}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
     </section>
   );

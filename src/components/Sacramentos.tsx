@@ -1,177 +1,221 @@
 import { useState } from "react";
 import Reveal from "./Reveal";
-import { IconoRombo, IconoCheck, IconoWhatsApp, IconoCruz, IconoGema, IconoBendicion } from "./icons";
+import { IconoWhatsApp } from "./icons";
 import { enlaceWhatsApp } from "../types";
 
-const PASOS = [
-  {
-    num: 1,
-    Icono: IconoCruz,
-    titulo: "Elige tu sacramento",
-    descripcion: "Bautizo, comunión, confirmación, boda o aniversario",
-  },
-  {
-    num: 2,
-    Icono: IconoGema,
-    titulo: "Personaliza tu pieza",
-    descripcion: "Grabados, materiales, colores y detalles especiales",
-  },
-  {
-    num: 3,
-    Icono: IconoBendicion,
-    titulo: "Recibe bendecida",
-    descripcion: "Cada pieza sale del taller con bendición y oración",
-  },
+const CHECKLIST = [
+  "Grabado conmemorativo en láser de alta precisión",
+  "Descuento preferencial a partir de 12 piezas para padrinos",
+  "Tarjeta bendecida personalizada con la oración elegida",
+];
+
+const SACRAMENTOS_OPTIONS = [
+  { id: "bautizo", label: "Bautizo", icono: "💧" },
+  { id: "comunion", label: "Comunión", icono: "✝" },
+  { id: "matrimonio", label: "Matrimonio", icono: "💍" },
+  { id: "aniversario", label: "Aniversario", icono: "❤" },
+];
+
+const MATERIALES = [
+  "Baño de Oro 18k con Cristal Checo",
+  "Plata Fina .925 Maciza",
+  "Perla de Río y Oro Laminado",
+  "Madera Santa de Olivo",
+];
+
+const CANTIDADES = [
+  "1 pieza conmemorativa",
+  "Lote de 5 a 11 piezas (Padrinos)",
+  "Lote de 12 a 30 piezas (Eventos)",
+  "Más de 30 piezas (Mayoreo Sacro)",
 ];
 
 export default function Sacramentos() {
-  const [formulario, setFormulario] = useState({
-    nombre: "",
-    email: "",
-    sacramento: "",
-    mensaje: "",
-  });
+  const [sacramento, setSacramento] = useState("bautizo");
+  const [material, setMaterial] = useState(MATERIALES[0]);
+  const [cantidad, setCantidad] = useState(CANTIDADES[0]);
+  const [grabado, setGrabado] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
 
-  const enviarWhatsApp = (e: React.FormEvent) => {
+  function enviarFormulario(e: React.FormEvent) {
     e.preventDefault();
-    const texto = `Hola Epikas, me gustaría cotizar un encargo para un sacramento.\n\nNombre: ${formulario.nombre}\nEmail: ${formulario.email}\nTipo de sacramento: ${formulario.sacramento}\nDetalles: ${formulario.mensaje}`;
+    const texto = `Hola Epikas, solicito cotización para un encargo sacramental:\n\nSacramento: ${sacramento}\nMaterial: ${material}\nCantidad: ${cantidad}\nGrabado: ${grabado}\nWhatsApp: ${whatsapp}`;
     window.open(enlaceWhatsApp(texto), "_blank");
-  };
+  }
 
   return (
-    <section id="sacramentos" className="relative overflow-hidden bg-marfil-50 py-24 lg:py-28">
-      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
-        {/* Section Header */}
-        <Reveal className="max-w-2xl">
-          <div className="flex items-center gap-3">
-            <IconoRombo className="h-2 w-2 text-oro-500" />
-            <span className="h-px w-12 bg-oro-500/60" />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-oro-600">
-              Encargos especiales
-            </p>
-          </div>
-          <h2 className="mt-5 font-display text-4xl font-bold leading-tight text-vino-900 sm:text-5xl">
-            Sacramentos{" "}
-            <span className="font-quote font-medium italic text-oro-500">a medida</span>
-          </h2>
-          <p className="mt-4 max-w-lg leading-relaxed text-tinta/60">
-            Creamos piezas por encargo para los momentos más importantes de tu vida de fe.
-            Cada grabado, cada material, cada detalle se hace pensando en ti.
-          </p>
-        </Reveal>
+    <section id="sacramentos" className="relative border-y border-stone-300/70 bg-stone-100 py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
+          {/* Left: Info */}
+          <div className="space-y-4 lg:col-span-5">
+            <Reveal>
+              <span className="block text-[10px] font-bold uppercase tracking-[0.3em] text-oro-700">
+                — SERVICIO DE ATELIER A MEDIDA
+              </span>
+              <h2 className="mt-2 font-display text-3xl tracking-tight leading-tight text-stone-900 sm:text-4xl">
+                ENCARGOS SACRAMENTALES{" "}
+                <span className="italic-gold font-serif lowercase text-oro-600">personalizados</span>
+              </h2>
+              <p className="mt-2 text-xs font-light leading-relaxed text-stone-600 sm:text-sm">
+                Diseñamos piezas únicas para{" "}
+                <strong>Bautizos, Primeras Comuniones, Confirmaciones, Bodas Católicas y Recuerdos de Familia</strong>.
+                Grabamos nombres, fechas sagradas e intenciones particulares.
+              </p>
 
-        {/* 3-Step Process */}
-        <Reveal delay={100}>
-          <div className="mt-16 grid gap-8 sm:grid-cols-3">
-            {PASOS.map((paso, i) => (
-              <div
-                key={paso.num}
-                className="relative flex flex-col items-center text-center"
+              <div className="space-y-2 pt-2 text-xs text-stone-700">
+                {CHECKLIST.map((item) => (
+                  <div key={item} className="flex items-center space-x-2.5">
+                    <span className="text-oro-600">✓</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-3">
+                <a
+                  href={enlaceWhatsApp("Hola Epikas, me gustaría cotizar un encargo sacramental personalizado.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-3 rounded-xl bg-emerald-700 px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition hover:bg-emerald-800"
+                >
+                  <span className="text-base">💬</span>
+                  <span>Hablar directo con Diseñador Sacro</span>
+                </a>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Right: 3-Step Guided Form */}
+          <div className="lg:col-span-7">
+            <Reveal delay={120}>
+              <form
+                onSubmit={enviarFormulario}
+                className="rounded-3xl border border-stone-200 bg-white p-6 shadow-xl sm:p-8"
               >
-                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-oro-400/30 bg-vino-950 text-oro-300 transition-all duration-500 hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950">
-                  <paso.Icono className="h-8 w-8" />
+                {/* Form Header */}
+                <div className="mb-6 flex items-center justify-between border-b border-stone-100 pb-4">
+                  <div>
+                    <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-oro-600">
+                      Configurador Sacro en 3 Pasos
+                    </span>
+                    <h3 className="font-display text-base font-semibold text-stone-900 sm:text-lg">
+                      Cotiza tu Encargo Especial
+                    </h3>
+                  </div>
+                  <span className="rounded-full bg-vino-900 px-3 py-1 text-xs font-bold text-oro-300">
+                    Paso 1 de 3
+                  </span>
                 </div>
-                {i < PASOS.length - 1 && (
-                  <div className="absolute left-[calc(50%+40px)] top-10 hidden h-px w-[calc(100%-80px)] bg-oro-400/30 sm:block" />
-                )}
-                <span className="mt-4 font-display text-[11px] font-bold uppercase tracking-[0.3em] text-oro-500">
-                  Paso {paso.num}
-                </span>
-                <h3 className="mt-2 font-display text-lg font-bold text-vino-900">
-                  {paso.titulo}
-                </h3>
-                <p className="mt-2 max-w-[220px] text-sm text-tinta/55">
-                  {paso.descripcion}
-                </p>
-              </div>
-            ))}
+
+                {/* Step 1: Sacramento Selector */}
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-stone-700">
+                    1. Selecciona el Sacramento o Devoción
+                  </label>
+                  <div className="grid grid-cols-2 gap-2 text-center text-xs sm:grid-cols-4">
+                    {SACRAMENTOS_OPTIONS.map((s) => (
+                      <label
+                        key={s.id}
+                        className={`flex cursor-pointer flex-col items-center rounded-xl border p-2.5 font-medium transition ${
+                          sacramento === s.id
+                            ? "border-oro-500 bg-oro-50/50 text-stone-900"
+                            : "border-stone-200 text-stone-700 hover:border-oro-500"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="sacramento"
+                          value={s.id}
+                          checked={sacramento === s.id}
+                          onChange={() => setSacramento(s.id)}
+                          className="sr-only"
+                        />
+                        <span className="mb-1 text-sm text-oro-600">{s.icono}</span>
+                        <span>{s.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Step 2: Material & Quantity */}
+                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-stone-700">
+                      2. Metal o Material Deseado
+                    </label>
+                    <select
+                      value={material}
+                      onChange={(e) => setMaterial(e.target.value)}
+                      className="w-full rounded-xl border border-stone-200 bg-marfil-50 py-2.5 text-xs text-stone-800 focus:ring-1 focus:ring-oro-500"
+                    >
+                      {MATERIALES.map((m) => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-stone-700">
+                      Cantidad aproximada
+                    </label>
+                    <select
+                      value={cantidad}
+                      onChange={(e) => setCantidad(e.target.value)}
+                      className="w-full rounded-xl border border-stone-200 bg-marfil-50 py-2.5 text-xs text-stone-800 focus:ring-1 focus:ring-oro-500"
+                    >
+                      {CANTIDADES.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Step 3: Name & WhatsApp */}
+                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-stone-700">
+                      3. Nombre o Grabado Deseado
+                    </label>
+                    <input
+                      type="text"
+                      value={grabado}
+                      onChange={(e) => setGrabado(e.target.value)}
+                      placeholder="Ej. 'Santiago · 12.Oct.2026'"
+                      className="w-full rounded-xl border border-stone-200 bg-marfil-50 py-2.5 text-xs text-stone-800 focus:ring-1 focus:ring-oro-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-stone-700">
+                      Tu WhatsApp para enviar propuesta
+                    </label>
+                    <input
+                      type="tel"
+                      value={whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      placeholder="+52 55..."
+                      className="w-full rounded-xl border border-stone-200 bg-marfil-50 py-2.5 text-xs text-stone-800 focus:ring-1 focus:ring-oro-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Submit */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="mt-2 flex w-full items-center justify-center space-x-2 rounded-xl border border-oro-500/40 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-oro-300 shadow-lg transition hover:bg-vino-800"
+                    style={{ background: "linear-gradient(to right, #14050b, #33101d, #14050b)" }}
+                  >
+                    <span>Enviar Solicitud al Atelier</span>
+                    <span className="text-xs">→</span>
+                  </button>
+                  <p className="mt-2 text-center text-[11px] text-stone-500">
+                    Respuesta en menos de 2 horas vía WhatsApp con catálogo de tipografías y boceto digital sin costo.
+                  </p>
+                </div>
+              </form>
+            </Reveal>
           </div>
-        </Reveal>
-
-        {/* Commission Form */}
-        <Reveal delay={150}>
-          <form
-            onSubmit={enviarWhatsApp}
-            className="mx-auto mt-20 max-w-2xl rounded-2xl border border-oro-400/20 bg-white p-8 shadow-xl shadow-vino-900/5 sm:p-12"
-          >
-            <h3 className="font-display text-2xl font-bold text-vino-900">
-              Solicita tu cotización
-            </h3>
-            <p className="mt-2 text-sm text-tinta/55">
-              Cuéntanos sobre la pieza que deseas y te responderemos por WhatsApp.
-            </p>
-
-            <div className="mt-8 grid gap-6 sm:grid-cols-2">
-              <div>
-                <label className="block text-[11px] font-semibold uppercase tracking-[0.2em] text-tinta/50">
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formulario.nombre}
-                  onChange={(e) => setFormulario({ ...formulario, nombre: e.target.value })}
-                  className="mt-2 w-full rounded-full border border-tinta/12 bg-marfil-50 px-5 py-3 text-sm text-vino-900 outline-none transition placeholder:text-tinta/30 focus:border-oro-500 focus:ring-4 focus:ring-oro-400/20"
-                  placeholder="Tu nombre"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-semibold uppercase tracking-[0.2em] text-tinta/50">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={formulario.email}
-                  onChange={(e) => setFormulario({ ...formulario, email: e.target.value })}
-                  className="mt-2 w-full rounded-full border border-tinta/12 bg-marfil-50 px-5 py-3 text-sm text-vino-900 outline-none transition placeholder:text-tinta/30 focus:border-oro-500 focus:ring-4 focus:ring-oro-400/20"
-                  placeholder="tu@email.com"
-                />
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <label className="block text-[11px] font-semibold uppercase tracking-[0.2em] text-tinta/50">
-                Tipo de sacramento
-              </label>
-              <select
-                required
-                value={formulario.sacramento}
-                onChange={(e) => setFormulario({ ...formulario, sacramento: e.target.value })}
-                className="mt-2 w-full rounded-full border border-tinta/12 bg-marfil-50 px-5 py-3 text-sm text-vino-900 outline-none transition focus:border-oro-500 focus:ring-4 focus:ring-oro-400/20"
-              >
-                <option value="">Selecciona un sacramento</option>
-                <option value="Bautizo">Bautizo</option>
-                <option value="Primera Comunión">Primera Comunión</option>
-                <option value="Confirmación">Confirmación</option>
-                <option value="Boda">Boda</option>
-                <option value="Aniversario">Aniversario</option>
-                <option value="Otro">Otro</option>
-              </select>
-            </div>
-
-            <div className="mt-6">
-              <label className="block text-[11px] font-semibold uppercase tracking-[0.2em] text-tinta/50">
-                Detalles del encargo
-              </label>
-              <textarea
-                rows={4}
-                value={formulario.mensaje}
-                onChange={(e) => setFormulario({ ...formulario, mensaje: e.target.value })}
-                className="mt-2 w-full resize-none rounded-2xl border border-tinta/12 bg-marfil-50 px-5 py-3 text-sm text-vino-900 outline-none transition placeholder:text-tinta/30 focus:border-oro-500 focus:ring-4 focus:ring-oro-400/20"
-                placeholder="Cuéntanos sobre el diseño, materiales, grabados, cantidades..."
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="mt-8 flex w-full items-center justify-center gap-3 rounded-full bg-oro-400 px-8 py-4 text-sm font-bold uppercase tracking-[0.16em] text-vino-950 shadow-xl shadow-oro-400/20 transition-all duration-300 hover:bg-oro-300 hover:shadow-oro-300/30"
-            >
-              <IconoWhatsApp className="h-5 w-5" />
-              Enviar por WhatsApp
-            </button>
-          </form>
-        </Reveal>
+        </div>
       </div>
     </section>
   );

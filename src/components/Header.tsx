@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoCorazon, IconoUsuario, IconoWhatsApp } from "./icons";
+import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoCorazon, IconoUsuario, IconoWhatsApp, IconoBuscar, IconoBolsa } from "./icons";
 
 interface HeaderProps {
   user: User | null;
@@ -50,117 +50,133 @@ export default function Header({
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       {/* Announcement Bar */}
-      <div className="bg-vino-950 border-b border-oro-400/20">
-        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-5 py-2 text-center">
-          <span className="text-[11px] font-medium tracking-[0.18em] text-marfil-100/80">
-            Envío gratis en pedidos superiores a $1,500 MXN
-          </span>
-          <span className="hidden sm:inline text-oro-400/60">·</span>
-          <span className="hidden sm:inline text-[11px] font-medium tracking-[0.18em] text-marfil-100/80">
-            Hecho a mano en nuestro taller
-          </span>
+      <div className="bg-gradient-to-r from-vino-950 via-vino-900 to-vino-950 border-b border-oro-400/25">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
+          {/* Left: Blessings */}
+          <div className="hidden items-center space-x-4 text-[11px] text-marfil-100/70 sm:flex">
+            <span className="inline-flex items-center space-x-1">
+              <span className="text-oro-400">✦</span>
+              <span>Piezas con Bendición Incluida</span>
+            </span>
+            <span className="text-vino-700">|</span>
+            <span className="flex items-center space-x-1">
+              <span className="text-oro-400">🌎</span>
+              <span>MXN ($) · Envíos asegurados</span>
+            </span>
+          </div>
+
+          {/* Center: Main Highlight */}
+          <div className="flex-1 text-center">
+            <span className="mr-1 text-[10px] font-bold uppercase tracking-[0.2em] text-oro-400">✦ Cuaresma & Pascua:</span>
+            <span className="text-[11px] text-marfil-100/90">Envíos a todo México con tarjeta bendecida incluida y estuche de terciopelo</span>
+          </div>
+
+          {/* Right: WhatsApp */}
+          <div className="hidden items-center space-x-4 text-[11px] text-marfil-100/70 md:flex">
+            <a href="https://wa.me/5215548901234" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-1.5 transition hover:text-oro-400">
+              <span className="text-emerald-400">💬</span>
+              <span>Atención Personal: +52 1 55 4890 1234</span>
+            </a>
+            <span className="text-vino-700">|</span>
+            <button onClick={onAdmin} className="text-[10px] uppercase tracking-[0.2em] text-marfil-100/50 transition hover:text-oro-400">
+              Admin
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Main Header */}
       <div
-        className={`transition-all duration-500 ${
+        className={`border-b border-oro-400/25 transition-all duration-500 ${
           scroll
-            ? "bg-vino-950/95 py-3 shadow-lg shadow-vino-950/50 backdrop-blur-md"
-            : "bg-vino-950/80 py-4 backdrop-blur-sm"
+            ? "bg-vino-900/95 shadow-xl backdrop-blur-md"
+            : "bg-vino-900/80 backdrop-blur-sm"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 lg:px-8">
-          {/* Brand */}
-          <button
-            onClick={() => navegar("inicio")}
-            className="group flex items-center gap-3 text-left"
-            aria-label="Epikas, ir al inicio"
-          >
-            <IconoLogo className="h-10 w-10 text-oro-400 transition-transform duration-700 group-hover:rotate-90" />
-            <span>
-              <span className="block font-display text-lg font-bold leading-none tracking-[0.08em] text-marfil-50">
-                EPIKAS
-              </span>
-              <span className="mt-1 block text-[10px] font-medium uppercase tracking-[0.32em] text-oro-300">
-                Atelier · Bisutería Católica
-              </span>
-            </span>
-          </button>
-
-          {/* Desktop Nav */}
-          <nav className="hidden items-center gap-8 lg:flex">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          {/* Left: Navigation Links */}
+          <nav className="hidden items-center space-x-7 text-[11px] font-semibold uppercase tracking-[0.2em] text-marfil-100 lg:flex">
             {ENLACES.map((e) => (
               <button
                 key={e.id}
                 onClick={() => navegar(e.id)}
-                className="border-b border-transparent pb-0.5 text-[11px] font-medium uppercase tracking-[0.22em] text-marfil-100/70 transition-colors duration-300 hover:border-oro-400 hover:text-oro-200"
+                className="border-b border-transparent pb-1 transition hover:border-oro-400 hover:text-oro-300"
               >
                 {e.nombre}
               </button>
             ))}
           </nav>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2.5">
-            {/* Favorites */}
-            <div className="relative">
-              <button
-                onClick={onFavoritosClick}
-                aria-label={`Tus ${favoritos.length} piezas favoritas`}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:bg-oro-400 hover:text-vino-950"
-              >
-                {favoritos.length > 0 ? (
-                  <IconoCorazonFill className="h-4.5 w-4.5" />
-                ) : (
-                  <IconoCorazon className="h-4.5 w-4.5" />
-                )}
-              </button>
+          {/* Center: Brand Crest & Logo */}
+          <button
+            onClick={() => navegar("inicio")}
+            className="group flex flex-col items-center py-2"
+            aria-label="Epikas, ir al inicio"
+          >
+            <div className="flex items-center space-x-2">
+              <span className="hidden h-px w-6 bg-oro-400/60 sm:block" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-full border border-oro-400/80 text-oro-400 transition duration-300 group-hover:bg-oro-400/20 group-hover:scale-105">
+                <span className="text-xs">✝</span>
+              </div>
+              <span className="hidden h-px w-6 bg-oro-400/60 sm:block" />
+            </div>
+            <span className="mt-1 font-display text-xl font-bold tracking-[0.32em] text-white sm:text-2xl text-gold-shadow">
+              EPIKAS
+            </span>
+            <span className="-mt-0.5 text-[8px] font-medium uppercase tracking-[0.38em] text-oro-400">
+              Atelier & Alta Joyería Devocional
+            </span>
+          </button>
+
+          {/* Right: Actions */}
+          <div className="flex items-center space-x-4 text-marfil-100 sm:space-x-6">
+            {/* Search */}
+            <button
+              onClick={() => navegar("catalogo")}
+              className="flex items-center space-x-1.5 text-xs font-medium tracking-wider transition hover:text-oro-400"
+              aria-label="Buscar en catálogo"
+            >
+              <IconoBuscar className="h-4 w-4" />
+              <span className="hidden text-[11px] uppercase tracking-[0.15em] text-marfil-100/60 xl:inline">Buscar</span>
+            </button>
+
+            {/* Wishlist */}
+            <button
+              onClick={onFavoritosClick}
+              className="relative p-1 transition hover:text-oro-400"
+              aria-label="Favoritos"
+            >
+              <IconoCorazon className="h-[18px] w-[18px]" />
               {favoritos.length > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-oro-400 text-[10px] font-bold text-vino-950">
+                <span className="absolute -right-1.5 -top-1 flex h-4 w-4 items-center justify-center rounded-full border border-oro-400 bg-vino-700 text-[9px] font-bold text-oro-300">
                   {favoritos.length}
                 </span>
               )}
-            </div>
+            </button>
+
+            {/* Shopping Bag */}
+            <button className="relative flex items-center space-x-2 p-1 transition hover:text-oro-400" aria-label="Bolsa de compra">
+              <IconoBolsa className="h-[18px] w-[18px]" />
+            </button>
 
             {/* WhatsApp Concierge */}
             <a
-              href="https://wa.me/5215548901234?text=Hola%20Epikas%2C%20quisiera%20informaci%C3%B3n%20sobre%20un%20encargo%20personalizado."
+              href="https://wa.me/5215548901234?text=Hola%20Epikas%2C%20quisiera%20información."
               target="_blank"
-              rel="noreferrer"
-              className="hidden items-center gap-2 rounded-full bg-oro-400 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.15em] text-vino-950 transition-all duration-300 hover:bg-oro-300 hover:shadow-lg hover:shadow-oro-400/25 sm:flex"
+              rel="noopener noreferrer"
+              className="hidden items-center space-x-2 rounded-full border border-emerald-500/40 bg-emerald-600/20 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-emerald-300 transition hover:bg-emerald-600/30 sm:inline-flex"
             >
               <IconoWhatsApp className="h-4 w-4" />
-              Concierge
+              <span>Asesor Sacro</span>
             </a>
-
-            {/* User/Admin */}
-            {user ? (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={onLogout}
-                  className="hidden items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300 transition sm:flex"
-                  title="Cerrar sesión"
-                >
-                  <IconoUsuario className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={onAuthClick}
-                className="hidden items-center gap-2 rounded-full border border-oro-400/50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300 transition hover:bg-oro-400 hover:text-vino-950 sm:flex"
-              >
-                <IconoUsuario className="h-3.5 w-3.5" />
-              </button>
-            )}
 
             {/* Admin */}
             <button
               onClick={onAdmin}
-              className={`hidden items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] transition-all duration-300 sm:flex ${
+              className={`hidden items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] transition-all duration-300 sm:flex ${
                 esAdmin
                   ? "bg-oro-400 text-vino-950 shadow-lg shadow-oro-400/25 hover:bg-oro-300"
-                  : "border border-oro-400/50 text-oro-300 hover:bg-oro-400 hover:text-vino-950"
+                  : "border border-oro-400/40 text-oro-300 hover:bg-oro-400 hover:text-vino-950"
               }`}
             >
               {esAdmin && <span className="animar-latido h-1.5 w-1.5 rounded-full bg-vino-900" />}
@@ -201,13 +217,13 @@ export default function Header({
             ))}
             <div className="mt-4 flex flex-col gap-3">
               <a
-                href="https://wa.me/5215548901234?text=Hola%20Epikas%2C%20quisiera%20informaci%C3%B3n."
+                href="https://wa.me/5215548901234?text=Hola%20Epikas%2C%20quisiera%20información."
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 rounded-full bg-oro-400 px-6 py-3.5 text-sm font-bold uppercase tracking-[0.15em] text-vino-950"
+                className="flex items-center justify-center gap-2 rounded-full bg-emerald-600/20 border border-emerald-500/40 px-6 py-3.5 text-sm font-bold uppercase tracking-[0.15em] text-emerald-300"
               >
                 <IconoWhatsApp className="h-4 w-4" />
-                Concierge WhatsApp
+                Asesor Sacro
               </a>
               <button
                 onClick={() => {

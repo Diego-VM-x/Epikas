@@ -1,6 +1,5 @@
 import { lazy, Suspense, useState } from "react";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import Breadcrumb from "./components/Breadcrumb";
 import Catalogo from "./components/Catalogo";
 import Cinta from "./components/Cinta";
 import Colecciones from "./components/Colecciones";
