@@ -7,5 +7,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
+    // Configuración para proveedores OAuth (necesitarás agregar URLs de redirección en Supabase Dashboard)
+    flowType: "pkce",
+    detectSessionInUrl: true,
   },
 });
