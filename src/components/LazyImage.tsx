@@ -27,7 +27,7 @@ export default function LazyImage({ src, alt, className = "" }: LazyImageProps) 
   }, []);
 
   return (
-    <div ref={ref} className={`overflow-hidden ${className}`}>
+    <div ref={ref} className={`relative overflow-hidden ${className}`}>
       {visible && (
         <img
           src={src}
@@ -35,12 +35,23 @@ export default function LazyImage({ src, alt, className = "" }: LazyImageProps) 
           loading="lazy"
           onLoad={() => setCargando(false)}
           className={`h-full w-full object-cover transition-all duration-700 ${
-            cargando ? "scale-105 blur-sm" : "scale-100 blur-0"
+            cargando ? "scale-105 blur-sm opacity-0" : "scale-100 blur-0 opacity-100"
           }`}
         />
       )}
       {!visible && (
-        <div className="h-full w-full animate-pulse bg-vino-900/20" />
+        <div className="h-full w-full bg-stone-200">
+          <div
+            className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent"
+          />
+        </div>
+      )}
+      {visible && cargando && (
+        <div className="absolute inset-0 bg-stone-200">
+          <div
+            className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent"
+          />
+        </div>
       )}
     </div>
   );

@@ -3,3 +3,21 @@ node_modules/
 dist/
 build/
 *.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+client_secret_*.json
