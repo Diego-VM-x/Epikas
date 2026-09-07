@@ -11,15 +11,21 @@ export function useProductos() {
     fetchProductos();
 
     const channel = supabase
-      .channel("productos-changes")
+      .channel("productos-realtime")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "productos" },
-        () => {
-          fetchProductos();
+        (payload) => {
+          if (payload.eventType === "INSERT" || payload.eventType === "UPDATE" || payload.eventType === "DELETE") {
+            fetchProductos();
+          }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === "CHANNEL_ERROR") {
+          console.warn("Productos realtime channel error, will retry on next mount");
+        }
+      });
 
     return () => {
       supabase.removeChannel(channel);

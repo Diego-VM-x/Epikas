@@ -13,6 +13,21 @@ export function useFavoritosSupabase() {
       return;
     }
     fetchFavoritos();
+
+    const channel = supabase
+      .channel("favoritos-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "favoritos", filter: `user_id=eq.${user.id}` },
+        () => {
+          fetchFavoritos();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user?.id]);
 
   async function fetchFavoritos() {

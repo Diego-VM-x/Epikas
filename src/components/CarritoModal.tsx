@@ -96,7 +96,7 @@ export default function CarritoModal({ abierto, onClose }: CarritoModalProps) {
   ].join("\n");
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-end">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
       {/* Toast Container */}
       <div className="pointer-events-none fixed left-1/2 top-6 z-[100] flex -translate-x-1/2 flex-col items-center gap-2">
         {toasts.map((t) => (
@@ -123,7 +123,7 @@ export default function CarritoModal({ abierto, onClose }: CarritoModalProps) {
       />
 
       {/* Panel */}
-      <div className="relative flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
+      <div className="relative max-h-[85vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl">
         {/* Header */}
         <div className="flex flex-shrink-0 items-center justify-between border-b border-stone-200 bg-vino-900 px-6 py-5">
           <div className="flex items-center gap-3">
@@ -144,7 +144,7 @@ export default function CarritoModal({ abierto, onClose }: CarritoModalProps) {
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="overflow-y-auto px-4 pb-4 pt-3" style={{ maxHeight: "calc(85vh - 80px)" }}>
           {items.length === 0 ? (
             /* Empty State */
             <div className="flex flex-col items-center justify-center px-6 py-20 text-center">

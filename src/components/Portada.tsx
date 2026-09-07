@@ -1,14 +1,94 @@
+import { useState } from "react";
 import { SEMILLA } from "../data/seed";
 import { enlaceWhatsApp, formatearPrecio } from "../types";
 import { IconoFlecha, IconoWhatsApp } from "./icons";
 import { trackEvent } from "../lib/analytics";
+import { usePortadaConfig } from "../hooks/usePortadaConfig";
 
 interface PortadaProps {
   onExplorar: () => void;
+  esAdmin?: boolean;
 }
 
-export default function Portada({ onExplorar }: PortadaProps) {
+function EditButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="ml-2 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-oro-500/30 bg-vino-900/80 text-oro-400 opacity-0 shadow-sm transition group-hover:opacity-100 hover:border-oro-400 hover:text-oro-300"
+      title="Editar"
+    >
+      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+      </svg>
+    </button>
+  );
+}
+
+function InlineEdit({
+  value,
+  onSave,
+  onCancel,
+  multiline = false,
+}: {
+  value: string;
+  onSave: (v: string) => void;
+  onCancel: () => void;
+  multiline?: boolean;
+}) {
+  const [draft, setDraft] = useState(value);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (draft.trim()) onSave(draft.trim());
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-2 space-y-2">
+      {multiline ? (
+        <textarea
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          rows={3}
+          autoFocus
+          className="w-full rounded-lg border border-oro-500/40 bg-vino-950/90 px-3 py-2 text-sm text-white placeholder-stone-400 outline-none focus:border-oro-400 focus:ring-1 focus:ring-oro-400/50"
+        />
+      ) : (
+        <input
+          type="text"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          autoFocus
+          className="w-full rounded-lg border border-oro-500/40 bg-vino-950/90 px-3 py-2 text-sm text-white placeholder-stone-400 outline-none focus:border-oro-400 focus:ring-1 focus:ring-oro-400/50"
+        />
+      )}
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          className="rounded-md bg-oro-500 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-vino-950 hover:bg-oro-400"
+        >
+          Guardar
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="rounded-md border border-stone-600 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-stone-300 hover:border-stone-400 hover:text-white"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  );
+}
+
+export default function Portada({ onExplorar, esAdmin }: PortadaProps) {
   const pieza = SEMILLA[0];
+  const { config, updateField } = usePortadaConfig();
+  const [editing, setEditing] = useState<string | null>(null);
+
+  function handleSave(field: string, value: string) {
+    updateField(field as keyof import("../hooks/usePortadaConfig").PortadaConfig, value);
+    setEditing(null);
+  }
 
   return (
     <section id="inicio" className="bg-pattern-crosses relative overflow-hidden border-b border-oro-500/20 pt-32 pb-12 text-white lg:pt-36 lg:pb-20">
@@ -20,37 +100,113 @@ export default function Portada({ onExplorar }: PortadaProps) {
         {/* Left: Typography & Sacred Value Proposition */}
         <div className="space-y-6 text-center lg:col-span-6 lg:text-left">
           {/* Badge pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
+          <div className="group relative flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
             <span className="inline-flex items-center space-x-2 rounded-full border border-oro-500/50 bg-vino-800/80 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-oro-400 shadow-sm">
               <span>✦</span>
-              <span>Colección Sacra 2026</span>
+              <span>{config.badge1}</span>
+              {esAdmin && <EditButton onClick={() => setEditing(editing === "badge1" ? null : "badge1")} />}
             </span>
+            {editing === "badge1" && (
+              <InlineEdit value={config.badge1} onSave={(v) => handleSave("badge1", v)} onCancel={() => setEditing(null)} />
+            )}
             <span className="inline-flex items-center space-x-1.5 rounded-full border border-oro-500/30 bg-oro-500/15 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-oro-300">
               <span className="text-oro-400">🙏</span>
-              <span>Bendecida en el Taller</span>
+              <span>{config.badge2}</span>
+              {esAdmin && <EditButton onClick={() => setEditing(editing === "badge2" ? null : "badge2")} />}
             </span>
+            {editing === "badge2" && (
+              <InlineEdit value={config.badge2} onSave={(v) => handleSave("badge2", v)} onCancel={() => setEditing(null)} />
+            )}
           </div>
 
           {/* Main Title */}
-          <h1 className="text-4xl font-display font-semibold leading-[1.05] tracking-wide text-white sm:text-6xl xl:text-7xl">
-            TU FE,
-            <br />
-            HECHA <span className="italic-gold font-serif lowercase tracking-normal text-oro-400">joya</span>
-          </h1>
+          <div className="group relative">
+            <h1 className="text-4xl font-display font-semibold leading-[1.05] tracking-wide text-white sm:text-6xl xl:text-7xl">
+              {config.titulo_linea1}
+              <br />
+              {config.titulo_linea2}{" "}
+              <span className="italic-gold font-serif lowercase tracking-normal text-oro-400">{config.titulo_joya}</span>
+            </h1>
+            {esAdmin && (
+              <EditButton onClick={() => setEditing(editing === "titulo" ? null : "titulo")} />
+            )}
+            {editing === "titulo" && (
+              <div className="mt-3 space-y-2">
+                <InlineEdit
+                  value={config.titulo_linea1}
+                  onSave={(v) => handleSave("titulo_linea1", v)}
+                  onCancel={() => setEditing(null)}
+                />
+                <input
+                  type="text"
+                  value={config.titulo_linea2}
+                  onChange={(e) => updateField("titulo_linea2", e.target.value)}
+                  placeholder="Línea 2"
+                  className="w-full rounded-lg border border-oro-500/40 bg-vino-950/90 px-3 py-2 text-sm text-white placeholder-stone-400 outline-none focus:border-oro-400 focus:ring-1 focus:ring-oro-400/50"
+                />
+                <input
+                  type="text"
+                  value={config.titulo_joya}
+                  onChange={(e) => updateField("titulo_joya", e.target.value)}
+                  placeholder="Palabra destacada"
+                  className="w-full rounded-lg border border-oro-500/40 bg-vino-950/90 px-3 py-2 text-sm text-white placeholder-stone-400 outline-none focus:border-oro-400 focus:ring-1 focus:ring-oro-400/50"
+                />
+                <button
+                  onClick={() => setEditing(null)}
+                  className="rounded-md bg-oro-500 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-vino-950 hover:bg-oro-400"
+                >
+                  Listo
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* Subtitle & Scripture */}
           <div className="space-y-3">
-            <p className="mx-auto max-w-xl text-sm font-light leading-relaxed text-marfil-100 sm:text-base lg:mx-0">
-              Piezas de orfebrería devocional forjadas a mano en plata .925 y oro de 18 quilates.
-              Cada pieza porta una historia sagrada y viaja consagrada en oración.
-            </p>
-            <div className="mx-auto max-w-lg border-l-2 border-oro-500/50 py-0.5 pl-3 lg:mx-0">
+            <div className="group relative mx-auto max-w-xl lg:mx-0">
+              <p className="text-sm font-light leading-relaxed text-marfil-100 sm:text-base">
+                {config.subtitulo}
+              </p>
+              {esAdmin && <EditButton onClick={() => setEditing(editing === "subtitulo" ? null : "subtitulo")} />}
+              {editing === "subtitulo" && (
+                <InlineEdit
+                  value={config.subtitulo}
+                  onSave={(v) => handleSave("subtitulo", v)}
+                  onCancel={() => setEditing(null)}
+                  multiline
+                />
+              )}
+            </div>
+            <div className="group relative mx-auto max-w-lg border-l-2 border-oro-500/50 py-0.5 pl-3 lg:mx-0">
               <p className="font-serif text-xs italic text-stone-300 sm:text-sm">
-                «Yo soy la luz del mundo; quien me sigue no caminará en tinieblas.»
+                {config.escritura}
               </p>
               <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-oro-400">
-                — San Juan 8, 12
+                {config.referencia}
               </span>
+              {esAdmin && <EditButton onClick={() => setEditing(editing === "escritura" ? null : "escritura")} />}
+              {editing === "escritura" && (
+                <div className="mt-2 space-y-2">
+                  <InlineEdit
+                    value={config.escritura}
+                    onSave={(v) => handleSave("escritura", v)}
+                    onCancel={() => setEditing(null)}
+                  />
+                  <input
+                    type="text"
+                    value={config.referencia}
+                    onChange={(e) => updateField("referencia", e.target.value)}
+                    placeholder="Referencia"
+                    className="w-full rounded-lg border border-oro-500/40 bg-vino-950/90 px-3 py-2 text-sm text-white placeholder-stone-400 outline-none focus:border-oro-400 focus:ring-1 focus:ring-oro-400/50"
+                  />
+                  <button
+                    onClick={() => setEditing(null)}
+                    className="rounded-md bg-oro-500 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-vino-950 hover:bg-oro-400"
+                  >
+                    Listo
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -79,13 +235,21 @@ export default function Portada({ onExplorar }: PortadaProps) {
             </div>
 
             {/* Urgency Badge */}
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-xs text-stone-300 lg:justify-start">
+            <div className="group relative flex flex-wrap items-center justify-center gap-4 pt-2 text-xs text-stone-300 lg:justify-start">
               <div className="inline-flex items-center space-x-2 rounded-lg border border-oro-500/20 bg-vino-950/70 px-3 py-1.5">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
                 <span className="text-[11px] font-medium text-marfil-200">
-                  Taller activo: <strong>Solo 14 piezas</strong> disponibles esta semana
+                  {config.taller_texto}
                 </span>
               </div>
+              {esAdmin && <EditButton onClick={() => setEditing(editing === "taller_texto" ? null : "taller_texto")} />}
+              {editing === "taller_texto" && (
+                <InlineEdit
+                  value={config.taller_texto}
+                  onSave={(v) => handleSave("taller_texto", v)}
+                  onCancel={() => setEditing(null)}
+                />
+              )}
               <span className="font-serif text-[11px] italic text-oro-400">Artesanía Mexicana de Fe 🇲🇽</span>
             </div>
           </div>

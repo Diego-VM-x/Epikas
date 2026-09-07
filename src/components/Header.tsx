@@ -3,7 +3,6 @@ import type { User } from "@supabase/supabase-js";
 import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoCorazon, IconoUsuario, IconoWhatsApp, IconoBuscar } from "./icons";
 import BotonCarrito from "./BotonCarrito";
 import { trackEvent } from "../lib/analytics";
-import LanguageToggle from "./LanguageToggle";
 
 interface HeaderProps {
   user: User | null;
@@ -132,10 +131,7 @@ export default function Header({
           </button>
 
           {/* Right: Actions */}
-          <div className="flex items-center space-x-4 text-marfil-100 sm:space-x-6">
-            {/* Language Toggle */}
-            <LanguageToggle />
-
+          <div className="flex items-center space-x-4 text-marfil-100 sm:space-x-5">
             {/* Search */}
             <button
               onClick={() => navegar("catalogo")}
@@ -154,7 +150,7 @@ export default function Header({
             >
               <IconoCorazon className="h-[18px] w-[18px]" />
               {favoritos.length > 0 && (
-                <span className="absolute -right-1.5 -top-1 flex h-4 w-4 items-center justify-center rounded-full border border-oro-400 bg-vino-700 text-[9px] font-bold text-oro-300">
+                <span className="absolute -right-1.5 -top-1 flex h-4 w-4 items-center justify-center rounded-full border border-oro-400 bg-oro-500 text-[9px] font-bold text-vino-950">
                   {favoritos.length}
                 </span>
               )}
@@ -175,19 +171,41 @@ export default function Header({
               <span>Asesor Sacro</span>
             </a>
 
-            {/* Admin */}
-            <button
-              onClick={onAdmin}
-              className={`hidden items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] transition-all duration-300 sm:flex ${
-                esAdmin
-                  ? "bg-oro-400 text-vino-950 shadow-lg shadow-oro-400/25 hover:bg-oro-300"
-                  : "border border-oro-400/40 text-oro-300 hover:bg-oro-400 hover:text-vino-950"
-              }`}
-            >
-              {esAdmin && <span className="animar-latido h-1.5 w-1.5 rounded-full bg-vino-900" />}
-              <IconoLlave className="h-3.5 w-3.5" />
-              {esAdmin ? "Panel" : ""}
-            </button>
+            {/* User Profile / Admin Panel */}
+            {esAdmin ? (
+              <button
+                onClick={onAdmin}
+                className="hidden items-center gap-2 rounded-full bg-oro-400 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-vino-950 shadow-lg shadow-oro-400/25 transition hover:bg-oro-300 sm:flex"
+              >
+                <span className="animar-latido h-1.5 w-1.5 rounded-full bg-vino-900" />
+                <IconoLlave className="h-3.5 w-3.5" />
+                Panel
+              </button>
+            ) : user ? (
+              <div className="hidden items-center gap-2 sm:flex">
+                <button
+                  onClick={() => {/* toggle user menu */}}
+                  className="flex items-center gap-2 rounded-full border border-oro-400/40 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-oro-300 transition hover:bg-oro-400 hover:text-vino-950"
+                >
+                  <IconoUsuario className="h-3.5 w-3.5" />
+                  <span className="max-w-[80px] truncate">{user.email?.split("@")[0]}</span>
+                </button>
+                <button
+                  onClick={onLogout}
+                  className="rounded-full border border-oro-400/20 px-2.5 py-1.5 text-[10px] font-medium text-marfil-100/50 transition hover:border-red-400 hover:text-red-400"
+                  title="Cerrar sesión"
+                >
+                  <IconoCerrar className="h-3 w-3" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onAuthClick}
+                className="hidden items-center gap-2 rounded-full border border-oro-400/40 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-oro-300 transition hover:bg-oro-400 hover:text-vino-950 sm:flex"
+              >
+                <IconoUsuario className="h-3.5 w-3.5" />
+              </button>
+            )}
 
             {/* Mobile Menu Toggle */}
             <button
@@ -267,16 +285,18 @@ export default function Header({
                   Cerrar sesión
                 </button>
               )}
-              <button
-                onClick={() => {
-                  setMenu(false);
-                  onAdmin();
-                }}
-                className="flex items-center justify-center gap-2 rounded-full border border-oro-400/50 px-6 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-oro-300"
-              >
-                <IconoLlave className="h-4 w-4" />
-                {esAdmin ? "Panel de administración" : "Acceso admin"}
-              </button>
+              {esAdmin && (
+                <button
+                  onClick={() => {
+                    setMenu(false);
+                    onAdmin();
+                  }}
+                  className="flex items-center justify-center gap-2 rounded-full border border-oro-400/50 px-6 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-oro-300"
+                >
+                  <IconoLlave className="h-4 w-4" />
+                  Panel de administración
+                </button>
+              )}
             </div>
           </nav>
         </div>
