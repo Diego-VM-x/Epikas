@@ -4,6 +4,7 @@ import { CATEGORIAS, formatearPrecio, nombreCategoria, enlaceWhatsApp } from "..
 import { ordenarProductos, type TipoOrden, OPCIONES_ORDEN } from "../lib/utils";
 import { trackEvent } from "../lib/analytics";
 import { useCart } from "../contexts/CartContext";
+import PrecioDual from "./PrecioDual";
 import Reveal from "./Reveal";
 import {
   IconoAnillo,
@@ -495,14 +496,7 @@ function Tarjeta({
       {/* Price & CTAs */}
       <div className="mt-5 border-t border-stone-100 pt-3">
         <div className="mb-2 flex items-baseline justify-between">
-          <div>
-            <span className="text-lg font-bold text-stone-900">
-              {formatearPrecio(producto.precio)}
-            </span>
-            <span className="mt-0.5 block text-[10px] font-medium text-emerald-700">
-              3 MSI de {formatearPrecio(Math.round(producto.precio / 3))}
-            </span>
-          </div>
+          <PrecioDual precioUSD={producto.precio} className="text-stone-900" />
           <span className="font-serif text-[10px] italic text-stone-400">Bendición incluida</span>
         </div>
 

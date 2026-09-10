@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { IconoCerrar, IconoLlave, IconoLogo, IconoCorazonFill, IconoCorazon, IconoUsuario, IconoWhatsApp, IconoBuscar, IconoBolsa } from "./icons";
 import { useCart } from "../contexts/CartContext";
+import { useCurrency } from "../contexts/CurrencyContext";
 import { trackEvent } from "../lib/analytics";
 
 interface HeaderProps {
@@ -37,6 +38,7 @@ export default function Header({
   onCarritoClick,
 }: HeaderProps) {
   const { totalItems } = useCart();
+  const { moneda, toggle, cargando } = useCurrency();
   const [scroll, setScroll] = useState(false);
   const [menu, setMenu] = useState(false);
 
@@ -64,10 +66,16 @@ export default function Header({
               <span>Piezas con Bendición Incluida</span>
             </span>
             <span className="text-vino-700">|</span>
-            <span className="flex items-center space-x-1">
+            <button
+              onClick={toggle}
+              disabled={cargando}
+              className="flex items-center space-x-1 transition hover:text-oro-400 disabled:opacity-50"
+              title="Cambiar moneda"
+            >
               <span className="text-oro-400">🌎</span>
-              <span>VES (Bs.) · Envíos asegurados</span>
-            </span>
+              <span>{moneda === "USD" ? "$ USD" : "Bs."} · Envíos asegurados</span>
+              <span className="text-[9px] text-oro-400/60">切换</span>
+            </button>
           </div>
 
           {/* Center: Main Highlight */}

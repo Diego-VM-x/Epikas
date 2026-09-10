@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
+import { CurrencyProvider } from "./contexts/CurrencyContext";
 import Catalogo from "./components/Catalogo";
 import Cinta from "./components/Cinta";
 import Colecciones from "./components/Colecciones";
@@ -233,10 +234,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <CartProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </CartProvider>
+    <CurrencyProvider>
+      <CartProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </CartProvider>
+    </CurrencyProvider>
   );
 }

@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useCart } from "../contexts/CartContext";
 import { formatearPrecio, enlaceWhatsApp } from "../types";
+import { useCurrency, formatearPrecioDual } from "../contexts/CurrencyContext";
 import { IconoCerrar, IconoBolsa } from "./icons";
+import PrecioDual from "./PrecioDual";
 
 interface CarritoModalProps {
   abierto: boolean;
@@ -198,9 +200,7 @@ export default function CarritoModal({ abierto, onClose }: CarritoModalProps) {
                                 {item.producto.material}
                               </p>
                             </div>
-                            <span className="flex-shrink-0 text-sm font-bold text-stone-900">
-                              {formatearPrecio(item.producto.precio * item.cantidad)}
-                            </span>
+                            <PrecioDual precioUSD={item.producto.precio * item.cantidad} className="flex-shrink-0 text-sm text-stone-900" />
                           </div>
 
                           {/* Stock badge */}
@@ -251,9 +251,7 @@ export default function CarritoModal({ abierto, onClose }: CarritoModalProps) {
                             <span className="text-[11px] text-stone-500">
                               Subtotal ({item.cantidad} {item.cantidad === 1 ? "pieza" : "piezas"})
                             </span>
-                            <span className="text-xs font-bold text-stone-900">
-                              {formatearPrecio(item.producto.precio * item.cantidad)}
-                            </span>
+                            <PrecioDual precioUSD={item.producto.precio * item.cantidad} className="text-xs text-stone-900" />
                           </div>
 
                           {/* Remove */}
@@ -278,9 +276,7 @@ export default function CarritoModal({ abierto, onClose }: CarritoModalProps) {
                   <span className="text-sm font-semibold text-stone-700">
                     Subtotal ({totalItems} {totalItems === 1 ? "artículo" : "artículos"})
                   </span>
-                  <span className="text-lg font-bold text-stone-900">
-                    {formatearPrecio(totalPrice)}
-                  </span>
+                  <PrecioDual precioUSD={totalPrice} className="text-lg text-stone-900" />
                 </div>
                 <p className="mt-1 text-[11px] text-stone-500">
                   Envío y impuestos calculados al enviar por WhatsApp
@@ -348,9 +344,7 @@ export default function CarritoModal({ abierto, onClose }: CarritoModalProps) {
                         {s.producto.nombre}
                       </p>
                       <p className="text-xs text-stone-500">{s.producto.material}</p>
-                      <p className="mt-0.5 text-xs font-semibold text-stone-900">
-                        {formatearPrecio(s.producto.precio)}
-                      </p>
+                      <PrecioDual precioUSD={s.producto.precio} className="mt-0.5 text-xs text-stone-900" />
 
                       <div className="mt-1.5 flex items-center gap-3">
                         <button

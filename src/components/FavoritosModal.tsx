@@ -1,6 +1,7 @@
 import { IconoCerrar, IconoCorazonFill } from "./icons";
 import type { Producto } from "../types";
 import { formatearPrecio } from "../types";
+import PrecioDual from "./PrecioDual";
 
 interface FavoritosModalProps {
   abierto: boolean;
@@ -102,9 +103,7 @@ export default function FavoritosModal({
                     >
                       {p.nombre}
                     </button>
-                    <p className="mt-0.5 text-sm font-bold text-oro-600">
-                      {formatearPrecio(p.precio)}
-                    </p>
+                    <PrecioDual precioUSD={p.precio} className="mt-0.5 text-oro-600" />
                   </div>
 
                   <button

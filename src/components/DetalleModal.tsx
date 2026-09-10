@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "../contexts/CartContext";
 import type { Producto } from "../types";
 import { enlaceWhatsApp, formatearPrecio, nombreCategoria } from "../types";
+import PrecioDual from "./PrecioDual";
 import {
   IconoBendicion,
   IconoCerrar,
@@ -105,9 +106,9 @@ export default function DetalleModal({ producto, onClose }: DetalleModalProps) {
 
           <p className="mt-5 leading-relaxed text-stone-700">{producto.descripcion}</p>
 
-          <p className="mt-7 font-display text-4xl font-bold text-vino-800">
-            {formatearPrecio(producto.precio)}
-          </p>
+          <div className="mt-7">
+            <PrecioDual precioUSD={producto.precio} className="text-vino-800 text-4xl font-display" classNamePequeno="text-stone-400" />
+          </div>
 
           <div className="mt-7 flex flex-wrap items-center gap-4">
             <div className="flex items-center overflow-hidden rounded-full border border-stone-200 bg-white">

@@ -3,6 +3,7 @@ import { SEMILLA } from "../data/seed";
 import { enlaceWhatsApp, formatearPrecio, type Producto } from "../types";
 import { IconoFlecha, IconoWhatsApp } from "./icons";
 import { trackEvent } from "../lib/analytics";
+import PrecioDual from "./PrecioDual";
 import { usePortadaConfig } from "../hooks/usePortadaConfig";
 
 interface PortadaProps {
@@ -332,7 +333,7 @@ export default function Portada({ onExplorar, esAdmin, productos = [] }: Portada
                       <p className="mt-0.5 text-[11px] text-stone-300">{pieza.descripcion.slice(0, 60)}...</p>
                     </div>
                     <div className="text-right">
-                      <span className="block text-sm font-bold text-oro-300">{formatearPrecio(pieza.precio)}</span>
+                      <PrecioDual precioUSD={pieza.precio} className="text-right text-oro-300" classNamePequeno="text-stone-400" />
                     </div>
                   </div>
                   <div className="mt-2.5 flex items-center justify-between border-t border-oro-500/20 pt-2 text-[10px]">
