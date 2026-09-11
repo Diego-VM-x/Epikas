@@ -2,23 +2,19 @@ import { lazy, Suspense, useState } from "react";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { CurrencyProvider } from "./contexts/CurrencyContext";
-import Catalogo from "./components/Catalogo";
-import Cinta from "./components/Cinta";
-import Colecciones from "./components/Colecciones";
 import DetalleModal from "./components/DetalleModal";
 import FavoritosModal from "./components/FavoritosModal";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import AuthModal from "./components/AuthModal";
-import Nosotros from "./components/Nosotros";
-import Portada from "./components/Portada";
-import Sacramentos from "./components/Sacramentos";
 import SchemaMarkup from "./components/SchemaMarkup";
 import ScrollProgress from "./components/ScrollProgress";
-import Taller from "./components/Taller";
 import Toast, { type AvisoToast } from "./components/Toast";
+import EpikasDynamicPage from "./components/EpikasDynamicPage";
 import { useProductos } from "./hooks/useProductos";
 import { useFavoritosSupabase } from "./hooks/useFavoritosSupabase";
+import { useEpikasTheme } from "./hooks/useEpikasTheme";
+import { usePageSections } from "./hooks/usePageSections";
 import type { Categoria, Producto } from "./types";
 
 const AdminPanel = lazy(() => import("./components/AdminPanel"));
@@ -31,6 +27,8 @@ function AppContent() {
   const { user, isAdmin, signOut, loading } = useAuth();
   const { productos, loading: loadingProductos, agregarProducto, actualizarProducto, eliminarProducto, refetch } = useProductos();
   const { favoritos, toggle: toggleFavorito, esFavorito } = useFavoritosSupabase();
+  const { config: siteConfig, loading: loadingTheme, updateConfig: updateSiteConfig } = useEpikasTheme();
+  const { sections, loading: loadingSections, toggleSection, reorderSections } = usePageSections();
 
   const [categoria, setCategoria] = useState<Categoria | "todos">("todos");
   const [busqueda, setBusqueda] = useState("");
@@ -118,7 +116,7 @@ function AppContent() {
     setCarritoModalAbierto(true);
   }
 
-  if (loading || loadingProductos) {
+  if (loading || loadingProductos || loadingTheme || loadingSections) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-marfil-50">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-oro-400 border-t-transparent" />
@@ -147,26 +145,23 @@ function AppContent() {
       />
 
       <main>
-        <Portada onExplorar={() => irA("catalogo")} esAdmin={isAdmin} productos={productos} />
-        <Cinta />
-        <Colecciones onCategoria={(c) => { setCategoria(c); irA("catalogo"); }} irA={irA} />
-        <Catalogo
+        <EpikasDynamicPage
+          sections={sections}
+          onExplorar={() => irA("catalogo")}
+          esAdmin={isAdmin}
           productos={productos}
           categoria={categoria}
           onCategoria={setCategoria}
           busqueda={busqueda}
           onBusqueda={setBusqueda}
           onVer={setDetalle}
-          esAdmin={isAdmin}
           onEditar={editarDesdeTarjeta}
           onEliminar={manejarEliminarProducto}
           favoritos={favoritos}
           onToggleFavorito={handleToggleFavorito}
           esFavorito={esFavorito}
+          irA={irA}
         />
-        <Taller />
-        <Sacramentos />
-        <Nosotros />
       </main>
 
       <Footer
@@ -195,6 +190,11 @@ function AppContent() {
           onSave={guardarProducto}
           onDelete={manejarEliminarProducto}
           onEditandoListo={() => setEditando(null)}
+          siteConfig={siteConfig}
+          onSiteConfigSave={updateSiteConfig}
+          sections={sections}
+          onSectionToggle={toggleSection}
+          onSectionReorder={reorderSections}
         />
       </Suspense>
 

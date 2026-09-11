@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Producto } from "../types";
+import type { Producto, SiteConfigMap, PageSection } from "../types";
 import { CATEGORIAS, formatearPrecio, nombreCategoria } from "../types";
 import {
   IconoBorrar,
@@ -9,6 +9,10 @@ import {
   IconoCruz,
 } from "./icons";
 import ImageUpload from "./ImageUpload";
+import ThemeEditor from "./ThemeEditor";
+import SectionManager from "./SectionManager";
+
+type TabId = "productos" | "tema" | "secciones";
 
 interface AdminPanelProps {
   abierto: boolean;
@@ -20,6 +24,11 @@ interface AdminPanelProps {
   onSave: (p: Producto) => void;
   onDelete: (id: string) => void;
   onEditandoListo: () => void;
+  siteConfig: SiteConfigMap;
+  onSiteConfigSave: (updates: Partial<SiteConfigMap>) => Promise<void>;
+  sections: PageSection[];
+  onSectionToggle: (id: string) => void;
+  onSectionReorder: (sections: PageSection[]) => void;
 }
 
 interface Formulario {
@@ -50,6 +59,12 @@ const campo =
   "mt-1.5 w-full rounded-lg border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-oro-500 focus:ring-4 focus:ring-oro-400/20";
 const etiqueta = "mt-4 block text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-500";
 
+const TABS: { id: TabId; label: string; icon: string }[] = [
+  { id: "productos", label: "Productos", icon: "✦" },
+  { id: "tema", label: "Tema Visual", icon: "◆" },
+  { id: "secciones", label: "Secciones", icon: "☰" },
+];
+
 export default function AdminPanel({
   abierto,
   esAdmin,
@@ -60,12 +75,17 @@ export default function AdminPanel({
   onSave,
   onDelete,
   onEditandoListo,
+  siteConfig,
+  onSiteConfigSave,
+  sections,
+  onSectionToggle,
+  onSectionReorder,
 }: AdminPanelProps) {
+  const [activeTab, setActiveTab] = useState<TabId>("productos");
   const [form, setForm] = useState<Formulario>(FORM_VACIO);
   const [formMostrar, setFormMostrar] = useState(false);
   const [errores, setErrores] = useState<string[]>([]);
   const [idBorrando, setIdBorrando] = useState<string | null>(null);
-  const [idEditando, setIdEditando] = useState<string | null>(null);
 
   useEffect(() => {
     if (abierto && esAdmin && editando) {
@@ -81,6 +101,7 @@ export default function AdminPanel({
         favorito: editando.favorito || false,
       });
       setFormMostrar(true);
+      setActiveTab("productos");
       onEditandoListo();
     }
   }, [abierto, esAdmin, editando, onEditandoListo]);
@@ -91,7 +112,7 @@ export default function AdminPanel({
       setErrores([]);
       setForm(FORM_VACIO);
       setIdBorrando(null);
-      setIdEditando(null);
+      setActiveTab("productos");
     }
   }, [abierto]);
 
@@ -150,11 +171,9 @@ export default function AdminPanel({
     onSave(producto);
     setFormMostrar(false);
     setForm(FORM_VACIO);
-    setIdEditando(null);
   }
 
   function iniciarEdicion(p: Producto) {
-    setIdEditando(p.id);
     setForm({
       id: p.id,
       nombre: p.nombre,
@@ -173,20 +192,20 @@ export default function AdminPanel({
   function cancelarEdicion() {
     setFormMostrar(false);
     setForm(FORM_VACIO);
-    setIdEditando(null);
   }
 
   return (
     <div className="fixed inset-0 z-[90] overflow-y-auto">
       <div className="min-h-full bg-vino-950/95 backdrop-blur-sm">
         <div className="mx-auto max-w-5xl px-5 py-8 lg:px-8">
-          <div className="mb-8 flex items-center justify-between">
+          {/* Header */}
+          <div className="mb-6 flex items-center justify-between">
             <div>
               <h2 className="font-display text-3xl font-bold text-marfil-50">
                 Panel de Administración
               </h2>
               <p className="mt-1 text-sm text-marfil-100/50">
-                Gestiona el catálogo de productos
+                Gestiona productos, tema visual y secciones
               </p>
             </div>
             <div className="flex gap-3">
@@ -205,254 +224,294 @@ export default function AdminPanel({
             </div>
           </div>
 
-          {formMostrar ? (
-            <form
-              onSubmit={manejarEnvio}
-              className="rounded-xl border border-stone-200 bg-white p-8"
-            >
-              <h3 className="font-display text-xl font-bold text-vino-900">
-                {form.id ? "Editar producto" : "Nuevo producto"}
-              </h3>
+          {/* Tabs */}
+          <div className="mb-8 flex gap-1 rounded-xl border border-oro-400/20 bg-vino-900/40 p-1">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  setFormMostrar(false);
+                }}
+                className={`flex-1 rounded-lg px-5 py-3 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+                  activeTab === tab.id
+                    ? "bg-oro-400 text-vino-950 shadow-lg"
+                    : "text-marfil-100/60 hover:text-marfil-50"
+                }`}
+              >
+                <span className="mr-2">{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
-              {errores.length > 0 && (
-                <div className="mt-4 rounded-lg bg-red-50 p-4">
-                  {errores.map((err, i) => (
-                    <p key={i} className="text-sm text-red-600">
-                      {err}
-                    </p>
-                  ))}
-                </div>
-              )}
-
-              <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label className={etiqueta}>Nombre *</label>
-                  <input
-                    type="text"
-                    value={form.nombre}
-                    onChange={(e) => setForm((p) => ({ ...p, nombre: e.target.value }))}
-                    className={campo}
-                    placeholder="Rosario Luz de María"
-                  />
-                </div>
-
-                <div>
-                  <label className={etiqueta}>Categoría</label>
-                  <select
-                    value={form.categoria}
-                    onChange={(e) =>
-                      setForm((p) => ({
-                        ...p,
-                        categoria: e.target.value as Producto["categoria"],
-                      }))
-                    }
-                    className={campo}
-                  >
-                    {CATEGORIAS.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className={etiqueta}>Precio (VES) *</label>
-                  <input
-                    type="number"
-                    value={form.precio}
-                    onChange={(e) => setForm((p) => ({ ...p, precio: e.target.value }))}
-                    className={campo}
-                    placeholder="549"
-                    min="1"
-                  />
-                </div>
-
-                <div>
-                  <label className={etiqueta}>Material</label>
-                  <input
-                    type="text"
-                    value={form.material}
-                    onChange={(e) => setForm((p) => ({ ...p, material: e.target.value }))}
-                    className={campo}
-                    placeholder="Plata .925 · baño de oro"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-5">
-                <label className={etiqueta}>Descripción</label>
-                <textarea
-                  value={form.descripcion}
-                  onChange={(e) => setForm((p) => ({ ...p, descripcion: e.target.value }))}
-                  className={`${campo} min-h-[100px] resize-y`}
-                  placeholder="Describe la pieza..."
-                />
-              </div>
-
-              <div className="mt-5">
-                <label className={etiqueta}>Imagen</label>
-                <ImageUpload
-                  productoId={form.id || "nuevo-" + Date.now()}
-                  imagenActual={form.imagen}
-                  onImagenSubida={(url) => setForm((p) => ({ ...p, imagen: url }))}
-                  onImagenEliminada={() => setForm((p) => ({ ...p, imagen: "" }))}
-                />
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-6">
-                <label className="flex cursor-pointer items-center gap-2 text-sm text-tinta/70">
-                  <input
-                    type="checkbox"
-                    checked={form.nuevo}
-                    onChange={(e) => setForm((p) => ({ ...p, nuevo: e.target.checked }))}
-                    className="h-4 w-4 rounded border-tinta/30 text-oro-500"
-                  />
-                  Marcar como nuevo
-                </label>
-                <label className="flex cursor-pointer items-center gap-2 text-sm text-tinta/70">
-                  <input
-                    type="checkbox"
-                    checked={form.favorito}
-                    onChange={(e) => setForm((p) => ({ ...p, favorito: e.target.checked }))}
-                    className="h-4 w-4 rounded border-tinta/30 text-oro-500"
-                  />
-                  Favorito del admin
-                </label>
-              </div>
-
-              <div className="mt-8 flex gap-4">
-                <button
-                  type="submit"
-                  className="rounded-full bg-oro-400 px-8 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-vino-950 shadow-lg transition hover:-translate-y-0.5 hover:bg-oro-300"
-                >
-                  {form.id ? "Guardar cambios" : "Agregar producto"}
-                </button>
-                <button
-                  type="button"
-                  onClick={cancelarEdicion}
-                  className="rounded-full border border-stone-300 px-8 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-stone-500 transition hover:border-stone-400"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
-          ) : (
+          {/* Tab Content */}
+          {activeTab === "productos" && (
             <>
-              <div className="mb-6 flex justify-end">
-                <button
-                  onClick={() => {
-                    setForm(FORM_VACIO);
-                    setFormMostrar(true);
-                    setErrores([]);
-                  }}
-                  className="flex items-center gap-2 rounded-full bg-oro-400 px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-vino-950 shadow-lg transition hover:-translate-y-0.5 hover:bg-oro-300"
+              {formMostrar ? (
+                <form
+                  onSubmit={manejarEnvio}
+                  className="rounded-xl border border-stone-200 bg-white p-8"
                 >
-                  <IconoMas className="h-4 w-4" />
-                  Nuevo producto
-                </button>
-              </div>
+                  <h3 className="font-display text-xl font-bold text-vino-900">
+                    {form.id ? "Editar producto" : "Nuevo producto"}
+                  </h3>
 
-              <div className="overflow-x-auto rounded-xl border border-oro-400/20">
-                <table className="w-full">
-                  <thead className="bg-vino-900/50">
-                    <tr>
-                      <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
-                        Producto
-                      </th>
-                      <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
-                        Categoría
-                      </th>
-                      <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
-                        Precio
-                      </th>
-                      <th className="px-5 py-4 text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
-                        Etiquetas
-                      </th>
-                      <th className="px-5 py-4 text-right text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
-                        Acciones
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stone-200 bg-white">
-                    {productos.map((p) => (
-                      <tr key={p.id} className="group">
-                        <td className="px-5 py-4">
-                          <div className="flex items-center gap-4">
-                            {p.imagen && (
-                              <img
-                                src={p.imagen}
-                                alt={p.nombre}
-                                className="h-12 w-12 rounded-lg object-cover"
-                              />
-                            )}
-                            <div>
-                              <p className="font-medium text-vino-900">{p.nombre}</p>
-                              <p className="text-xs text-stone-500">{p.material}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-5 py-4 text-sm text-stone-600">
-                          {nombreCategoria(p.categoria)}
-                        </td>
-                        <td className="px-5 py-4 text-sm font-semibold text-vino-800">
-                          {formatearPrecio(p.precio)}
-                        </td>
-                        <td className="px-5 py-4 text-center">
-                          <div className="flex justify-center gap-2">
-                            {p.nuevo && (
-                              <span className="rounded-full bg-oro-400 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-vino-950">
-                                Nuevo
-                              </span>
-                            )}
-                            {p.favorito && (
-                              <span className="rounded-full border border-oro-400/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-oro-600">
-                                Favorito
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-5 py-4 text-right">
-                          <div className="flex justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                            <button
-                              onClick={() => iniciarEdicion(p)}
-                              className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-700 transition hover:bg-oro-400 hover:text-vino-950"
-                              title="Editar"
-                            >
-                              <IconoEditar className="h-4 w-4" />
-                            </button>
-                            {idBorrando === p.id ? (
-                              <button
-                                onClick={() => {
-                                  onDelete(p.id);
-                                  setIdBorrando(null);
-                                }}
-                                className="rounded-full bg-vino-600 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-vino-500"
-                              >
-                                ¿Borrar?
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => setIdBorrando(p.id)}
-                                className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-600 transition hover:bg-vino-600 hover:text-white"
-                                title="Eliminar"
-                              >
-                                <IconoBorrar className="h-4 w-4" />
-                              </button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {productos.length === 0 && (
-                  <div className="py-16 text-center">
-                    <p className="text-stone-500">No hay productos en el catálogo.</p>
+                  {errores.length > 0 && (
+                    <div className="mt-4 rounded-lg bg-red-50 p-4">
+                      {errores.map((err, i) => (
+                        <p key={i} className="text-sm text-red-600">
+                          {err}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label className={etiqueta}>Nombre *</label>
+                      <input
+                        type="text"
+                        value={form.nombre}
+                        onChange={(e) => setForm((p) => ({ ...p, nombre: e.target.value }))}
+                        className={campo}
+                        placeholder="Rosario Luz de María"
+                      />
+                    </div>
+                    <div>
+                      <label className={etiqueta}>Categoría</label>
+                      <select
+                        value={form.categoria}
+                        onChange={(e) =>
+                          setForm((p) => ({
+                            ...p,
+                            categoria: e.target.value as Producto["categoria"],
+                          }))
+                        }
+                        className={campo}
+                      >
+                        {CATEGORIAS.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className={etiqueta}>Precio (VES) *</label>
+                      <input
+                        type="number"
+                        value={form.precio}
+                        onChange={(e) => setForm((p) => ({ ...p, precio: e.target.value }))}
+                        className={campo}
+                        placeholder="549"
+                        min="1"
+                      />
+                    </div>
+                    <div>
+                      <label className={etiqueta}>Material</label>
+                      <input
+                        type="text"
+                        value={form.material}
+                        onChange={(e) => setForm((p) => ({ ...p, material: e.target.value }))}
+                        className={campo}
+                        placeholder="Plata .925 · baño de oro"
+                      />
+                    </div>
                   </div>
-                )}
-              </div>
+
+                  <div className="mt-5">
+                    <label className={etiqueta}>Descripción</label>
+                    <textarea
+                      value={form.descripcion}
+                      onChange={(e) => setForm((p) => ({ ...p, descripcion: e.target.value }))}
+                      className={`${campo} min-h-[100px] resize-y`}
+                      placeholder="Describe la pieza..."
+                    />
+                  </div>
+
+                  <div className="mt-5">
+                    <label className={etiqueta}>Imagen</label>
+                    <ImageUpload
+                      productoId={form.id || "nuevo-" + Date.now()}
+                      imagenActual={form.imagen}
+                      onImagenSubida={(url) => setForm((p) => ({ ...p, imagen: url }))}
+                      onImagenEliminada={() => setForm((p) => ({ ...p, imagen: "" }))}
+                    />
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap gap-6">
+                    <label className="flex cursor-pointer items-center gap-2 text-sm text-tinta/70">
+                      <input
+                        type="checkbox"
+                        checked={form.nuevo}
+                        onChange={(e) => setForm((p) => ({ ...p, nuevo: e.target.checked }))}
+                        className="h-4 w-4 rounded border-tinta/30 text-oro-500"
+                      />
+                      Marcar como nuevo
+                    </label>
+                    <label className="flex cursor-pointer items-center gap-2 text-sm text-tinta/70">
+                      <input
+                        type="checkbox"
+                        checked={form.favorito}
+                        onChange={(e) => setForm((p) => ({ ...p, favorito: e.target.checked }))}
+                        className="h-4 w-4 rounded border-tinta/30 text-oro-500"
+                      />
+                      Favorito del admin
+                    </label>
+                  </div>
+
+                  <div className="mt-8 flex gap-4">
+                    <button
+                      type="submit"
+                      className="rounded-full bg-oro-400 px-8 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-vino-950 shadow-lg transition hover:-translate-y-0.5 hover:bg-oro-300"
+                    >
+                      {form.id ? "Guardar cambios" : "Agregar producto"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={cancelarEdicion}
+                      className="rounded-full border border-stone-300 px-8 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-stone-500 transition hover:border-stone-400"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <div className="mb-6 flex justify-end">
+                    <button
+                      onClick={() => {
+                        setForm(FORM_VACIO);
+                        setFormMostrar(true);
+                        setErrores([]);
+                      }}
+                      className="flex items-center gap-2 rounded-full bg-oro-400 px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-vino-950 shadow-lg transition hover:-translate-y-0.5 hover:bg-oro-300"
+                    >
+                      <IconoMas className="h-4 w-4" />
+                      Nuevo producto
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto rounded-xl border border-oro-400/20">
+                    <table className="w-full">
+                      <thead className="bg-vino-900/50">
+                        <tr>
+                          <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
+                            Producto
+                          </th>
+                          <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
+                            Categoría
+                          </th>
+                          <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
+                            Precio
+                          </th>
+                          <th className="px-5 py-4 text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
+                            Etiquetas
+                          </th>
+                          <th className="px-5 py-4 text-right text-[11px] font-semibold uppercase tracking-[0.2em] text-oro-300">
+                            Acciones
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-stone-200 bg-white">
+                        {productos.map((p) => (
+                          <tr key={p.id} className="group">
+                            <td className="px-5 py-4">
+                              <div className="flex items-center gap-4">
+                                {p.imagen && (
+                                  <img
+                                    src={p.imagen}
+                                    alt={p.nombre}
+                                    className="h-12 w-12 rounded-lg object-cover"
+                                  />
+                                )}
+                                <div>
+                                  <p className="font-medium text-vino-900">{p.nombre}</p>
+                                  <p className="text-xs text-stone-500">{p.material}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-5 py-4 text-sm text-stone-600">
+                              {nombreCategoria(p.categoria)}
+                            </td>
+                            <td className="px-5 py-4 text-sm font-semibold text-vino-800">
+                              {formatearPrecio(p.precio)}
+                            </td>
+                            <td className="px-5 py-4 text-center">
+                              <div className="flex justify-center gap-2">
+                                {p.nuevo && (
+                                  <span className="rounded-full bg-oro-400 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-vino-950">
+                                    Nuevo
+                                  </span>
+                                )}
+                                {p.favorito && (
+                                  <span className="rounded-full border border-oro-400/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-oro-600">
+                                    Favorito
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-5 py-4 text-right">
+                              <div className="flex justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                                <button
+                                  onClick={() => iniciarEdicion(p)}
+                                  className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-700 transition hover:bg-oro-400 hover:text-vino-950"
+                                  title="Editar"
+                                >
+                                  <IconoEditar className="h-4 w-4" />
+                                </button>
+                                {idBorrando === p.id ? (
+                                  <button
+                                    onClick={() => {
+                                      onDelete(p.id);
+                                      setIdBorrando(null);
+                                    }}
+                                    className="rounded-full bg-vino-600 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-vino-500"
+                                  >
+                                    ¿Borrar?
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => setIdBorrando(p.id)}
+                                    className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-600 transition hover:bg-vino-600 hover:text-white"
+                                    title="Eliminar"
+                                  >
+                                    <IconoBorrar className="h-4 w-4" />
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {productos.length === 0 && (
+                      <div className="py-16 text-center">
+                        <p className="text-stone-500">No hay productos en el catálogo.</p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </>
+          )}
+
+          {activeTab === "tema" && (
+            <ThemeEditor
+              config={siteConfig}
+              onSave={onSiteConfigSave}
+              onClose={() => {}}
+            />
+          )}
+
+          {activeTab === "secciones" && (
+            <SectionManager
+              sections={sections}
+              onToggle={onSectionToggle}
+              onReorder={onSectionReorder}
+              onClose={() => {}}
+            />
           )}
         </div>
       </div>

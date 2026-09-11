@@ -37,14 +37,28 @@
   --color-burgundy-950: #14050b;
 }
 
+/* ---------- Dynamic Theme Variables (injected by useEpikasTheme) ---------- */
+:root {
+  --epikas-accent: #D4AF37;
+  --epikas-primary: #33101d;
+  --epikas-bg: #FDFBF7;
+  --epikas-surface: #ffffff;
+  --epikas-text: #3a222c;
+  --epikas-font-heading: "Cinzel", "Georgia", serif;
+  --epikas-font-body: "Jost", "Trebuchet MS", sans-serif;
+  --epikas-radius: 12px;
+  --epikas-hero-overlay: 0.85;
+  --epikas-section-spacing: 80px;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: var(--color-marfil-50);
-  color: var(--color-tinta);
+  font-family: var(--epikas-font-body);
+  background-color: var(--epikas-bg);
+  color: var(--epikas-text);
   -webkit-font-smoothing: antialiased;
 }
 

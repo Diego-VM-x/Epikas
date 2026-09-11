@@ -52,6 +52,27 @@ CREATE TABLE IF NOT EXISTS public.pedidos (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Tabla de configuración del sitio (Design Tokens)
+CREATE TABLE IF NOT EXISTS public.epikas_site_config (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  key TEXT UNIQUE NOT NULL,
+  value JSONB NOT NULL,
+  category TEXT NOT NULL CHECK (category IN ('branding', 'layout', 'copywriting')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Tabla de secciones de la página (Layout Modular)
+CREATE TABLE IF NOT EXISTS public.epikas_page_sections (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  component_name TEXT NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  config_data JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- =============================================
 -- SEGURIDAD (RLS - Row Level Security)
 -- =============================================
@@ -61,6 +82,8 @@ ALTER TABLE public.perfiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.productos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.favoritos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.pedidos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.epikas_site_config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.epikas_page_sections ENABLE ROW LEVEL SECURITY;
 
 -- Políticas para perfiles
 CREATE POLICY "Usuarios pueden ver su propio perfil" ON public.perfiles
@@ -112,6 +135,24 @@ CREATE POLICY "Solo admins pueden actualizar pedidos" ON public.pedidos
     SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email IN ('mjsdiegoverde@gmail.com', 'scmontesnorelys@gmail.com')
   ));
 
+-- Políticas para site_config
+CREATE POLICY "Cualquiera puede ver site_config" ON public.epikas_site_config
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Solo admins pueden modificar site_config" ON public.epikas_site_config
+  FOR ALL USING (EXISTS (
+    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email IN ('mjsdiegoverde@gmail.com', 'scmontesnorelys@gmail.com')
+  ));
+
+-- Políticas para page_sections
+CREATE POLICY "Cualquiera puede ver page_sections" ON public.epikas_page_sections
+  FOR SELECT USING (TRUE);
+
+CREATE POLICY "Solo admins pueden modificar page_sections" ON public.epikas_page_sections
+  FOR ALL USING (EXISTS (
+    SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND email IN ('mjsdiegoverde@gmail.com', 'scmontesnorelys@gmail.com')
+  ));
+
 -- =============================================
 -- FUNCIONES Y TRIGGERS
 -- =============================================
@@ -150,6 +191,14 @@ CREATE TRIGGER pedidos_updated_at
   BEFORE UPDATE ON public.pedidos
   FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
+CREATE TRIGGER site_config_updated_at
+  BEFORE UPDATE ON public.epikas_site_config
+  FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+CREATE TRIGGER page_sections_updated_at
+  BEFORE UPDATE ON public.epikas_page_sections
+  FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
 -- =============================================
 -- DATOS DE EJEMPLO (opcional)
 -- =============================================
@@ -165,3 +214,32 @@ INSERT INTO public.productos (nombre, slug, categoria, precio, material, descrip
 ('Medalla San Benito', 'medalla-san-bento', 'medallas', 289, 'Plata .925', 'Medalla de San Benito grabada al buril con las letras de su oración protectora. 2.5 cm de diámetro.', 'https://picsum.photos/seed/medalla2/600/800', FALSE, FALSE),
 ('Pulsera Rosario Niño', 'pulsera-rosario-nino', 'pulseras', 279, 'Hilo encerado · dije mini rosario', 'Pulsera de hilo encerado negro con dije de mini rosario dorado. Ajustable a cualquier muñeca.', 'https://picsum.photos/seed/pulsera2/600/800', FALSE, FALSE)
 ON CONFLICT (slug) DO NOTHING;
+
+-- =============================================
+-- DATOS DE EJEMPLO: Configuración del sitio
+-- =============================================
+INSERT INTO public.epikas_site_config (key, value, category) VALUES
+  ('color_accent', '"#D4AF37"', 'branding'),
+  ('color_primary', '"#33101d"', 'branding'),
+  ('color_background', '"#FDFBF7"', 'branding'),
+  ('color_surface', '"#ffffff"', 'branding'),
+  ('color_text', '"#3a222c"', 'branding'),
+  ('font_heading', '"Cinzel, Georgia, serif"', 'branding'),
+  ('font_body', '"Jost, Trebuchet MS, sans-serif"', 'branding'),
+  ('border_radius', '12', 'layout'),
+  ('hero_overlay_opacity', '0.85', 'layout'),
+  ('section_spacing', '80', 'layout')
+ON CONFLICT (key) DO NOTHING;
+
+-- =============================================
+-- DATOS DE EJEMPLO: Secciones de la página
+-- =============================================
+INSERT INTO public.epikas_page_sections (component_name, is_active, order_index, config_data) VALUES
+  ('Portada', TRUE, 0, '{}'),
+  ('Cinta', TRUE, 1, '{}'),
+  ('Colecciones', TRUE, 2, '{}'),
+  ('Catalogo', TRUE, 3, '{}'),
+  ('Taller', TRUE, 4, '{}'),
+  ('Sacramentos', TRUE, 5, '{}'),
+  ('Nosotros', TRUE, 6, '{}')
+ON CONFLICT DO NOTHING;
