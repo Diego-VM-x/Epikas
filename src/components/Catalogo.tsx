@@ -368,7 +368,7 @@ export default function Catalogo({
               </div>
             </div>
             <a
-              href={enlaceWhatsApp("Hola Epikas, me gustaría personalizar un obsequio para un sacramento.")}
+              href={enlaceWhatsApp("👋 Hola Epikas, *me gustaría personalizar* un obsequio para un sacramento.")}
               target="_blank"
               rel="noopener noreferrer"
               className="shrink-0 rounded-full bg-oro-500 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-vino-950 transition hover:bg-oro-400"
@@ -524,7 +524,7 @@ function Tarjeta({
           </div>
           <div className="grid grid-cols-2 gap-2">
             <a
-              href={enlaceWhatsApp(`Hola Epikas, deseo pedir ${cantidadSeleccionada}x ${producto.nombre} (${formatearPrecio(producto.precio)})`)}
+              href={enlaceWhatsApp(`👋 Hola Epikas, *deseo pedir* ${cantidadSeleccionada}x ${producto.nombre} (${formatearPrecio(producto.precio)})`)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackEvent('Pedir por WhatsApp', { product: producto.nombre })}

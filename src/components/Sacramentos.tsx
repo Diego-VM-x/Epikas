@@ -49,7 +49,7 @@ export default function Sacramentos({ config_data }: SacramentosProps) {
   function enviarFormulario(e: React.FormEvent) {
     e.preventDefault();
     trackEvent('Solicitud Sacramental', { sacramento, material, cantidad });
-    const texto = `Hola Epikas, solicito cotización para un encargo sacramental:\n\nSacramento: ${sacramento}\nMaterial: ${material}\nCantidad: ${cantidad}\nGrabado: ${grabado}\nWhatsApp: ${whatsapp}`;
+    const texto = `🙏 Hola Epikas, *solicito cotización* para un encargo sacramental:\n\n• Sacramento: ${sacramento}\n• Material: ${material}\n• Cantidad: ${cantidad}\n• Grabado: ${grabado}\n• WhatsApp: ${whatsapp}`;
     window.open(enlaceWhatsApp(texto), "_blank");
   }
 
@@ -82,7 +82,7 @@ export default function Sacramentos({ config_data }: SacramentosProps) {
 
               <div className="pt-3">
                 <a
-                  href={enlaceWhatsApp("Hola Epikas, me gustaría cotizar un encargo sacramental personalizado.")}
+                  href={enlaceWhatsApp("🙏 Hola Epikas, *me gustaría cotizar* un encargo sacramental personalizado.")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center space-x-3 rounded-xl bg-emerald-700 px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition hover:bg-emerald-800"

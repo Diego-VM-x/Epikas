@@ -26,7 +26,7 @@ export const nombreCategoria = (c: Categoria): string =>
 export const formatearPrecio = (n: number): string => `Bs. ${n.toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 export const CLAVE_ADMIN = "admin123";
-export const TELEFONO_WHATSAPP = "584241234567";
+export const TELEFONO_WHATSAPP = "584245307377";
 
 export const enlaceWhatsApp = (texto: string): string =>
   `https://wa.me/${TELEFONO_WHATSAPP}?text=${encodeURIComponent(texto)}`;

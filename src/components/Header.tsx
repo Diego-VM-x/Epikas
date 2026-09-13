@@ -86,9 +86,9 @@ export default function Header({
 
           {/* Right: WhatsApp */}
           <div className="hidden items-center space-x-4 text-[11px] text-marfil-100/70 md:flex">
-            <a href="https://wa.me/584241234567" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-1.5 transition hover:text-oro-400">
+            <a href="https://wa.me/584245307377" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-1.5 transition hover:text-oro-400">
               <span className="text-emerald-400">💬</span>
-              <span>Atención Personal: +52 1 55 4890 1234</span>
+              <span>Atención Personal: +58 424 530 7377</span>
             </a>
             <span className="text-vino-700">|</span>
             <button onClick={onAdmin} className="text-[10px] uppercase tracking-[0.2em] text-marfil-100/50 transition hover:text-oro-400">
@@ -263,7 +263,7 @@ export default function Header({
             ))}
             <div className="mt-4 flex flex-col gap-3">
               <a
-                href="https://wa.me/584241234567?text=Hola%20Epikas%2C%20quisiera%20información."
+              href="https://wa.me/584245307377?text=%F0%9F%91%8B%20Hola%20Epikas%2C%20*quisiera%20informaci%C3%B3n*."
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2 rounded-full bg-emerald-600/20 border border-emerald-500/40 px-6 py-3.5 text-sm font-bold uppercase tracking-[0.15em] text-emerald-300"

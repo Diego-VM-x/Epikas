@@ -187,10 +187,12 @@ export function useEpikasTheme() {
               (remote as Record<string, unknown>)[row.key] = val;
             }
           }
-          setConfig(remote);
-          saveLocal(remote);
-          const remotePreset = THEME_PRESETS.find((p) => p.id === remote.active_theme_id);
-          applyCSSVariables(remote, remotePreset?.palette, hasCustomColors(remote));
+          const local = loadLocal();
+          const merged = local ? { ...remote, ...local } : remote;
+          setConfig(merged);
+          saveLocal(merged);
+          const remotePreset = THEME_PRESETS.find((p) => p.id === merged.active_theme_id);
+          applyCSSVariables(merged, remotePreset?.palette, hasCustomColors(merged));
         } else {
           const local = loadLocal();
           if (local) {
@@ -242,15 +244,18 @@ export function useEpikasTheme() {
 
       try {
         for (const [key, value] of Object.entries(updates)) {
-          await supabase
+          const { error } = await supabase
             .from("epikas_site_config")
             .upsert(
               { key, value: JSON.stringify(value), category: "branding" },
               { onConflict: "key" }
             );
+          if (error) {
+            console.warn("Supabase save failed for key:", key, error.message);
+          }
         }
-      } catch {
-        // localStorage already saved
+      } catch (e) {
+        console.warn("Supabase save failed (CORS or network):", e);
       }
     },
     [config]

@@ -229,7 +229,7 @@ export default function Portada({ onExplorar, esAdmin, productos = [] }: Portada
                 <IconoFlecha className="h-3.5 w-3.5" />
               </button>
               <a
-                href={enlaceWhatsApp("Hola Epikas, quisiera información sobre un encargo personalizado.")}
+                href={enlaceWhatsApp("👋 Hola Epikas, *quisiera información* sobre un encargo personalizado.")}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex w-full items-center justify-center space-x-2.5 rounded-full border border-oro-500/50 bg-vino-900/80 px-7 py-4 text-xs font-semibold uppercase tracking-[0.16em] text-stone-200 shadow transition hover:bg-vino-800 sm:w-auto"
@@ -342,7 +342,7 @@ export default function Portada({ onExplorar, esAdmin, productos = [] }: Portada
                       <span>Garantía de por vida</span>
                     </span>
                     <a
-                      href={enlaceWhatsApp(`Hola Epikas, me interesa: ${pieza.nombre}. ¿Podrían darme más información?`)}
+                      href={enlaceWhatsApp(`👋 Hola Epikas, *me interesa*: ${pieza.nombre}. ¿Podrían darme más información?`)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center space-x-1 font-bold uppercase tracking-wider text-oro-400 transition hover:text-white"

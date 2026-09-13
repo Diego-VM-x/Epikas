@@ -43,7 +43,7 @@ export default function DetalleModal({ producto, onClose }: DetalleModalProps) {
 
   if (!producto) return null;
 
-  const mensaje = `Hola Epikas, me interesa "${producto.nombre}" (${formatearPrecio(
+  const mensaje = `👋 Hola Epikas, *me interesa* "${producto.nombre}" (${formatearPrecio(
     producto.precio
   )}). Quisiera ${cantidad} ${cantidad === 1 ? "pieza" : "piezas"}. ¿Está disponible?`;
 
