@@ -201,33 +201,33 @@ export default function AdminPanel({
       <div className="min-h-full bg-vino-950/95 backdrop-blur-sm">
         <div className="mx-auto max-w-5xl px-5 py-8 lg:px-8">
           {/* Header */}
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="font-display text-3xl font-bold text-marfil-50">
+              <h2 className="font-display text-2xl font-bold text-marfil-50 sm:text-3xl">
                 Panel de Administración
               </h2>
-              <p className="mt-1 text-sm text-marfil-100/50">
+              <p className="mt-1 text-xs text-marfil-100/50 sm:text-sm">
                 Gestiona productos, tema visual y secciones
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2 self-end sm:gap-3">
               <button
                 onClick={onLogout}
-                className="rounded-full border border-oro-400/40 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-oro-300 transition hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950"
+                className="rounded-full border border-oro-400/40 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-oro-300 transition hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950 sm:px-5 sm:py-2.5 sm:text-xs sm:tracking-[0.16em]"
               >
                 Cerrar sesión
               </button>
               <button
                 onClick={onClose}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950 sm:h-11 sm:w-11"
               >
-                <IconoCerrar className="h-5 w-5" />
+                <IconoCerrar className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="mb-8 flex gap-1 rounded-xl border border-oro-400/20 bg-vino-900/40 p-1">
+          <div className="mb-6 flex gap-1 rounded-xl border border-oro-400/20 bg-vino-900/40 p-1 sm:mb-8">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -235,13 +235,13 @@ export default function AdminPanel({
                   setActiveTab(tab.id);
                   setFormMostrar(false);
                 }}
-                className={`flex-1 rounded-lg px-5 py-3 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+                className={`flex-1 rounded-lg px-2 py-2 text-[10px] font-semibold uppercase tracking-[0.08em] transition sm:px-5 sm:py-3 sm:text-sm sm:tracking-[0.12em] ${
                   activeTab === tab.id
                     ? "bg-oro-400 text-vino-950 shadow-lg"
                     : "text-marfil-100/60 hover:text-marfil-50"
                 }`}
               >
-                <span className="mr-2">{tab.icon}</span>
+                <span className="mr-1 sm:mr-2">{tab.icon}</span>
                 {tab.label}
               </button>
             ))}
@@ -253,7 +253,7 @@ export default function AdminPanel({
               {formMostrar ? (
                 <form
                   onSubmit={manejarEnvio}
-                  className="rounded-xl border border-stone-200 bg-white p-8"
+                  className="rounded-xl border border-stone-200 bg-white p-4 sm:p-8"
                 >
                   <h3 className="font-display text-xl font-bold text-vino-900">
                     {form.id ? "Editar producto" : "Nuevo producto"}
@@ -363,17 +363,17 @@ export default function AdminPanel({
                     </label>
                   </div>
 
-                  <div className="mt-8 flex gap-4">
+                  <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:gap-4">
                     <button
                       type="submit"
-                      className="rounded-full bg-oro-400 px-8 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-vino-950 shadow-lg transition hover:-translate-y-0.5 hover:bg-oro-300"
+                      className="rounded-full bg-oro-400 px-6 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-vino-950 shadow-lg transition hover:-translate-y-0.5 hover:bg-oro-300 sm:px-8 sm:text-sm"
                     >
                       {form.id ? "Guardar cambios" : "Agregar producto"}
                     </button>
                     <button
                       type="button"
                       onClick={cancelarEdicion}
-                      className="rounded-full border border-stone-300 px-8 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-stone-500 transition hover:border-stone-400"
+                      className="rounded-full border border-stone-300 px-6 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500 transition hover:border-stone-400 sm:px-8 sm:text-sm"
                     >
                       Cancelar
                     </button>
@@ -388,14 +388,15 @@ export default function AdminPanel({
                         setFormMostrar(true);
                         setErrores([]);
                       }}
-                      className="flex items-center gap-2 rounded-full bg-oro-400 px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-vino-950 shadow-lg transition hover:-translate-y-0.5 hover:bg-oro-300"
+                      className="flex items-center gap-2 rounded-full bg-oro-400 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-vino-950 shadow-lg transition hover:-translate-y-0.5 hover:bg-oro-300 sm:px-6 sm:py-3 sm:text-sm sm:tracking-[0.16em]"
                     >
-                      <IconoMas className="h-4 w-4" />
+                      <IconoMas className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       Nuevo producto
                     </button>
                   </div>
 
-                  <div className="overflow-x-auto rounded-xl border border-oro-400/20">
+                  {/* Desktop table */}
+                  <div className="hidden overflow-x-auto rounded-xl border border-oro-400/20 sm:block">
                     <table className="w-full">
                       <thead className="bg-vino-900/50">
                         <tr>
@@ -488,6 +489,52 @@ export default function AdminPanel({
                         ))}
                       </tbody>
                     </table>
+                    {productos.length === 0 && (
+                      <div className="py-16 text-center">
+                        <p className="text-stone-500">No hay productos en el catálogo.</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Mobile cards */}
+                  <div className="space-y-3 sm:hidden">
+                    {productos.map((p) => (
+                      <div key={p.id} className="rounded-xl border border-stone-200 bg-white p-4">
+                        <div className="flex items-start gap-3">
+                          {p.imagen && (
+                            <img src={p.imagen} alt={p.nombre} className="h-14 w-14 rounded-lg object-cover" />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-vino-900 truncate">{p.nombre}</p>
+                            <p className="text-xs text-stone-500">{p.material}</p>
+                            <div className="mt-1 flex items-center gap-2">
+                              <span className="text-sm font-semibold text-vino-800">{formatearPrecio(p.precio)}</span>
+                              <span className="text-[10px] text-stone-400">{nombreCategoria(p.categoria)}</span>
+                            </div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {p.nuevo && (
+                                <span className="rounded-full bg-oro-400 px-2 py-0.5 text-[9px] font-bold uppercase text-vino-950">Nuevo</span>
+                              )}
+                              {p.favorito && (
+                                <span className="rounded-full border border-oro-400/50 px-2 py-0.5 text-[9px] font-bold uppercase text-oro-600">Favorito</span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex gap-1.5">
+                            <button onClick={() => iniciarEdicion(p)} className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 text-stone-700" title="Editar">
+                              <IconoEditar className="h-3.5 w-3.5" />
+                            </button>
+                            {idBorrando === p.id ? (
+                              <button onClick={() => { onDelete(p.id); setIdBorrando(null); }} className="rounded-full bg-vino-600 px-2.5 py-1.5 text-[9px] font-bold uppercase text-white">¿Borrar?</button>
+                            ) : (
+                              <button onClick={() => setIdBorrando(p.id)} className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 text-stone-600" title="Eliminar">
+                                <IconoBorrar className="h-3.5 w-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                     {productos.length === 0 && (
                       <div className="py-16 text-center">
                         <p className="text-stone-500">No hay productos en el catálogo.</p>

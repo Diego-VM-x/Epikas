@@ -203,29 +203,29 @@ export default function SectionManager({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="font-display text-2xl font-bold text-marfil-50">
+          <h3 className="font-display text-xl font-bold text-marfil-50 sm:text-2xl">
             Administrador de Secciones
           </h3>
-          <p className="mt-1 text-sm text-marfil-100/50">
+          <p className="mt-1 text-xs text-marfil-100/50 sm:text-sm">
             Reordena y activa/desactiva las secciones de la landing
           </p>
         </div>
         <button
           onClick={onClose}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950 sm:h-10 sm:w-10"
         >
-          <IconoCerrar className="h-5 w-5" />
+          <IconoCerrar className="h-4 w-4 sm:h-5 sm:w-5" />
         </button>
       </div>
 
-      <p className="text-xs text-marfil-100/40">
-        Arrastra las tarjetas para reordenar o usa las flechas. El cambio se aplica al guardar.
+      <p className="text-[10px] text-marfil-100/40 sm:text-xs">
+        Arrastra las tarjetas para reordenar o usa las flechas.
       </p>
 
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {list.map((section, idx) => (
           <React.Fragment key={section.id}>
             <div
@@ -233,7 +233,7 @@ export default function SectionManager({
               onDragStart={() => handleDragStart(idx)}
               onDragOver={(e) => handleDragOver(e, idx)}
               onDragEnd={handleDragEnd}
-              className={`flex items-center gap-4 rounded-xl border p-4 transition ${
+              className={`flex items-center gap-2 rounded-xl border p-3 transition sm:gap-4 sm:p-4 ${
                 dragIdx === idx
                   ? "border-oro-400 bg-oro-400/10 opacity-80"
                   : "border-oro-400/20 bg-vino-900/30 hover:border-oro-400/40"
@@ -310,8 +310,8 @@ export default function SectionManager({
           </div>
 
           {editingId === section.id && (
-            <div className="mt-2 rounded-xl border border-oro-400/30 bg-vino-900/50 p-4 space-y-3">
-              <h4 className="text-sm font-semibold text-oro-300">
+            <div className="mt-2 rounded-xl border border-oro-400/30 bg-vino-900/50 p-3 space-y-3 sm:p-4">
+              <h4 className="text-xs font-semibold text-oro-300 sm:text-sm">
                 Configurar {SECTION_LABELS[section.component_name]}
               </h4>
               {CONFIG_FIELDS[section.component_name]?.map((field) => (
@@ -342,16 +342,16 @@ export default function SectionManager({
                   )}
                 </div>
               ))}
-              <div className="flex gap-3 pt-2">
+              <div className="flex gap-2 pt-2 sm:gap-3">
                 <button
                   onClick={handleSaveConfig}
-                  className="rounded-full bg-oro-400 px-6 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-vino-950 transition hover:bg-oro-300"
+                  className="rounded-full bg-oro-400 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-vino-950 transition hover:bg-oro-300 sm:px-6 sm:text-xs sm:tracking-[0.16em]"
                 >
                   Guardar
                 </button>
                 <button
                   onClick={() => setEditingId(null)}
-                  className="rounded-full border border-stone-600 px-6 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-marfil-100/60 transition hover:border-stone-400"
+                  className="rounded-full border border-stone-600 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-marfil-100/60 transition hover:border-stone-400 sm:px-6 sm:text-xs sm:tracking-[0.16em]"
                 >
                   Cancelar
                 </button>
