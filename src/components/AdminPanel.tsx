@@ -29,6 +29,7 @@ interface AdminPanelProps {
   sections: PageSection[];
   onSectionToggle: (id: string) => void;
   onSectionReorder: (sections: PageSection[]) => void;
+  onSectionUpdateConfig: (id: string, config_data: Record<string, unknown>) => void;
 }
 
 interface Formulario {
@@ -80,6 +81,7 @@ export default function AdminPanel({
   sections,
   onSectionToggle,
   onSectionReorder,
+  onSectionUpdateConfig,
 }: AdminPanelProps) {
   const [activeTab, setActiveTab] = useState<TabId>("productos");
   const [form, setForm] = useState<Formulario>(FORM_VACIO);
@@ -510,6 +512,7 @@ export default function AdminPanel({
               sections={sections}
               onToggle={onSectionToggle}
               onReorder={onSectionReorder}
+              onUpdateConfig={onSectionUpdateConfig}
               onClose={() => {}}
             />
           )}

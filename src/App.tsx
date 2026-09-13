@@ -28,7 +28,7 @@ function AppContent() {
   const { productos, loading: loadingProductos, agregarProducto, actualizarProducto, eliminarProducto, refetch } = useProductos();
   const { favoritos, toggle: toggleFavorito, esFavorito } = useFavoritosSupabase();
   const { config: siteConfig, loading: loadingTheme, updateConfig: updateSiteConfig } = useEpikasTheme();
-  const { sections, loading: loadingSections, toggleSection, reorderSections } = usePageSections();
+  const { sections, loading: loadingSections, toggleSection, reorderSections, updateSectionConfig } = usePageSections();
 
   const [categoria, setCategoria] = useState<Categoria | "todos">("todos");
   const [busqueda, setBusqueda] = useState("");
@@ -195,6 +195,7 @@ function AppContent() {
           sections={sections}
           onSectionToggle={toggleSection}
           onSectionReorder={reorderSections}
+          onSectionUpdateConfig={updateSectionConfig}
         />
       </Suspense>
 

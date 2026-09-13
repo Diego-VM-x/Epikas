@@ -56,6 +56,7 @@ export interface SiteConfigMap {
   border_radius: number;
   hero_overlay_opacity: number;
   section_spacing: number;
+  active_theme_id: string;
 }
 
 export const DEFAULT_SITE_CONFIG: SiteConfigMap = {
@@ -69,7 +70,102 @@ export const DEFAULT_SITE_CONFIG: SiteConfigMap = {
   border_radius: 12,
   hero_overlay_opacity: 0.85,
   section_spacing: 80,
+  active_theme_id: "default",
 };
+
+export interface ThemePreset {
+  id: string;
+  name: string;
+  config: SiteConfigMap;
+}
+
+export const THEME_PRESETS: ThemePreset[] = [
+  {
+    id: "default",
+    name: "Epikas Original",
+    config: {
+      color_accent: "#D4AF37",
+      color_primary: "#33101d",
+      color_background: "#FDFBF7",
+      color_surface: "#ffffff",
+      color_text: "#3a222c",
+      font_heading: '"Cinzel", "Georgia", serif',
+      font_body: '"Jost", "Trebuchet MS", sans-serif',
+      border_radius: 12,
+      hero_overlay_opacity: 0.85,
+      section_spacing: 80,
+      active_theme_id: "default",
+    },
+  },
+  {
+    id: "maria-auxiliadora",
+    name: "María Auxiliadora",
+    config: {
+      color_accent: "#1E3A5F",
+      color_primary: "#0A1628",
+      color_background: "#F0F4F8",
+      color_surface: "#ffffff",
+      color_text: "#1a2332",
+      font_heading: '"Cinzel", "Georgia", serif',
+      font_body: '"Jost", "Trebuchet MS", sans-serif',
+      border_radius: 10,
+      hero_overlay_opacity: 0.88,
+      section_spacing: 80,
+      active_theme_id: "maria-auxiliadora",
+    },
+  },
+  {
+    id: "divina-pastora",
+    name: "Divina Pastora",
+    config: {
+      color_accent: "#4A7C59",
+      color_primary: "#1B3322",
+      color_background: "#F5FAF5",
+      color_surface: "#ffffff",
+      color_text: "#2a3a2a",
+      font_heading: '"Cormorant Garamond", "Georgia", serif',
+      font_body: '"Jost", "Trebuchet MS", sans-serif',
+      border_radius: 14,
+      hero_overlay_opacity: 0.82,
+      section_spacing: 80,
+      active_theme_id: "divina-pastora",
+    },
+  },
+  {
+    id: "semana-santa",
+    name: "Semana Santa",
+    config: {
+      color_accent: "#8B1A1A",
+      color_primary: "#2D0A0A",
+      color_background: "#FDF5F5",
+      color_surface: "#ffffff",
+      color_text: "#3a1a1a",
+      font_heading: '"Playfair Display", "Georgia", serif',
+      font_body: '"Jost", "Trebuchet MS", sans-serif',
+      border_radius: 8,
+      hero_overlay_opacity: 0.9,
+      section_spacing: 80,
+      active_theme_id: "semana-santa",
+    },
+  },
+  {
+    id: "salescianos",
+    name: "Salescianos",
+    config: {
+      color_accent: "#0066CC",
+      color_primary: "#001A33",
+      color_background: "#F0F5FF",
+      color_surface: "#ffffff",
+      color_text: "#1a2a3a",
+      font_heading: '"Cinzel", "Georgia", serif',
+      font_body: '"DM Sans", "Trebuchet MS", sans-serif',
+      border_radius: 12,
+      hero_overlay_opacity: 0.85,
+      section_spacing: 80,
+      active_theme_id: "salescianos",
+    },
+  },
+];
 
 // =============================================
 // PAGE SECTIONS (epikas_page_sections)

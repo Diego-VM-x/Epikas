@@ -1,19 +1,53 @@
-import { useState } from "react";
-import type { PageSection } from "../types";
+import React, { useEffect, useState } from "react";
+import type { PageSection, SectionComponentName } from "../types";
 import { SECTION_LABELS } from "../types";
-import { IconoCerrar } from "./icons";
+import { IconoCerrar, IconoEditar, IconoMas } from "./icons";
 
 interface SectionManagerProps {
   sections: PageSection[];
   onToggle: (id: string) => void;
   onReorder: (sections: PageSection[]) => void;
+  onUpdateConfig: (id: string, config_data: Record<string, unknown>) => void;
   onClose: () => void;
 }
+
+const ALL_COMPONENTS: SectionComponentName[] = ["Portada", "Cinta", "Colecciones", "Catalogo", "Taller", "Sacramentos", "Nosotros"];
+
+const CONFIG_FIELDS: Record<SectionComponentName, { key: string; label: string; type: "text" | "textarea" | "number" }[]> = {
+  Portada: [
+    { key: "titulo", label: "Título", type: "text" },
+    { key: "subtitulo", label: "Subtítulo", type: "text" },
+    { key: "badge_text", label: "Badge", type: "text" },
+  ],
+  Cinta: [
+    { key: "phrases", label: "Frases (separadas por coma)", type: "textarea" },
+  ],
+  Catalogo: [
+    { key: "title", label: "Título", type: "text" },
+    { key: "items_per_page", label: "Ítems por página", type: "number" },
+  ],
+  Taller: [
+    { key: "title", label: "Título", type: "text" },
+    { key: "description", label: "Descripción", type: "textarea" },
+  ],
+  Nosotros: [
+    { key: "title", label: "Título", type: "text" },
+    { key: "quote", label: "Cita", type: "textarea" },
+    { key: "reference", label: "Referencia", type: "text" },
+  ],
+  Colecciones: [
+    { key: "title", label: "Título", type: "text" },
+  ],
+  Sacramentos: [
+    { key: "title", label: "Título", type: "text" },
+  ],
+};
 
 export default function SectionManager({
   sections,
   onToggle,
   onReorder,
+  onUpdateConfig,
   onClose,
 }: SectionManagerProps) {
   const [list, setList] = useState<PageSection[]>(() =>
@@ -21,6 +55,13 @@ export default function SectionManager({
   );
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dirty, setDirty] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Record<string, unknown>>({});
+  const [showAddMenu, setShowAddMenu] = useState(false);
+
+  useEffect(() => {
+    setList([...sections].sort((a, b) => a.order_index - b.order_index));
+  }, [sections]);
 
   function moveUp(idx: number) {
     if (idx === 0) return;
@@ -60,6 +101,37 @@ export default function SectionManager({
     setDragIdx(null);
   }
 
+  function handleToggle(id: string) {
+    setList(prev => prev.map(s => s.id === id ? { ...s, is_active: !s.is_active } : s));
+    onToggle(id);
+  }
+
+  function openEdit(id: string, config: Record<string, unknown>) {
+    setEditingId(id);
+    setEditForm({ ...config });
+  }
+
+  function handleSaveConfig() {
+    if (editingId) {
+      onUpdateConfig(editingId, editForm);
+      setList(prev => prev.map(s => s.id === editingId ? { ...s, config_data: editForm } : s));
+      setEditingId(null);
+    }
+  }
+
+  function addSection(name: SectionComponentName) {
+    const newSection: PageSection = {
+      id: `sec-${name.toLowerCase()}-${Date.now()}`,
+      component_name: name,
+      is_active: true,
+      order_index: list.length,
+      config_data: {},
+    };
+    setList(prev => [...prev, newSection]);
+    setDirty(true);
+    setShowAddMenu(false);
+  }
+
   function handleSave() {
     onReorder(list);
     setDirty(false);
@@ -90,18 +162,18 @@ export default function SectionManager({
 
       <div className="space-y-3">
         {list.map((section, idx) => (
-          <div
-            key={section.id}
-            draggable
-            onDragStart={() => handleDragStart(idx)}
-            onDragOver={(e) => handleDragOver(e, idx)}
-            onDragEnd={handleDragEnd}
-            className={`flex items-center gap-4 rounded-xl border p-4 transition ${
-              dragIdx === idx
-                ? "border-oro-400 bg-oro-400/10 opacity-80"
-                : "border-oro-400/20 bg-vino-900/30 hover:border-oro-400/40"
-            }`}
-          >
+          <React.Fragment key={section.id}>
+            <div
+              draggable
+              onDragStart={() => handleDragStart(idx)}
+              onDragOver={(e) => handleDragOver(e, idx)}
+              onDragEnd={handleDragEnd}
+              className={`flex items-center gap-4 rounded-xl border p-4 transition ${
+                dragIdx === idx
+                  ? "border-oro-400 bg-oro-400/10 opacity-80"
+                  : "border-oro-400/20 bg-vino-900/30 hover:border-oro-400/40"
+              }`}
+            >
             {/* Drag handle */}
             <div className="flex flex-col items-center gap-1">
               <svg
@@ -132,7 +204,7 @@ export default function SectionManager({
 
             {/* Visibility toggle */}
             <button
-              onClick={() => onToggle(section.id)}
+              onClick={() => handleToggle(section.id)}
               className={`relative h-7 w-12 rounded-full transition ${
                 section.is_active ? "bg-oro-400" : "bg-stone-600"
               }`}
@@ -161,8 +233,94 @@ export default function SectionManager({
                 ▼
               </button>
             </div>
+
+            {/* Edit config button */}
+            <button
+              onClick={() => openEdit(section.id, section.config_data)}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950"
+              title="Configurar"
+            >
+              <IconoEditar className="h-4 w-4" />
+            </button>
           </div>
-        ))}
+
+          {editingId === section.id && (
+            <div className="mt-2 rounded-xl border border-oro-400/30 bg-vino-900/50 p-4 space-y-3">
+              <h4 className="text-sm font-semibold text-oro-300">
+                Configurar {SECTION_LABELS[section.component_name]}
+              </h4>
+              {CONFIG_FIELDS[section.component_name]?.map((field) => (
+                <div key={field.key}>
+                  <label className="block text-[11px] font-semibold uppercase tracking-[0.2em] text-marfil-100/50">
+                    {field.label}
+                  </label>
+                  {field.type === "textarea" ? (
+                    <textarea
+                      value={String(editForm[field.key] ?? "")}
+                      onChange={(e) => setEditForm(prev => ({ ...prev, [field.key]: e.target.value }))}
+                      className="mt-1 w-full rounded-lg border border-stone-600 bg-stone-800 px-3 py-2 text-sm text-marfil-50 outline-none transition placeholder:text-stone-500 focus:border-oro-400 focus:ring-2 focus:ring-oro-400/20 min-h-[60px] resize-y"
+                    />
+                  ) : field.type === "number" ? (
+                    <input
+                      type="number"
+                      value={String(editForm[field.key] ?? "")}
+                      onChange={(e) => setEditForm(prev => ({ ...prev, [field.key]: Number(e.target.value) }))}
+                      className="mt-1 w-full rounded-lg border border-stone-600 bg-stone-800 px-3 py-2 text-sm text-marfil-50 outline-none transition placeholder:text-stone-500 focus:border-oro-400 focus:ring-2 focus:ring-oro-400/20"
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      value={String(editForm[field.key] ?? "")}
+                      onChange={(e) => setEditForm(prev => ({ ...prev, [field.key]: e.target.value }))}
+                      className="mt-1 w-full rounded-lg border border-stone-600 bg-stone-800 px-3 py-2 text-sm text-marfil-50 outline-none transition placeholder:text-stone-500 focus:border-oro-400 focus:ring-2 focus:ring-oro-400/20"
+                    />
+                  )}
+                </div>
+              ))}
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={handleSaveConfig}
+                  className="rounded-full bg-oro-400 px-6 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-vino-950 transition hover:bg-oro-300"
+                >
+                  Guardar
+                </button>
+                <button
+                  onClick={() => setEditingId(null)}
+                  className="rounded-full border border-stone-600 px-6 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-marfil-100/60 transition hover:border-stone-400"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+        </React.Fragment>
+      ))}
+      </div>
+
+      <div className="relative">
+        <button
+          onClick={() => setShowAddMenu(!showAddMenu)}
+          className="flex items-center gap-2 rounded-full border border-oro-400/30 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-oro-300 transition hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950"
+        >
+          <IconoMas className="h-4 w-4" />
+          Agregar Sección
+        </button>
+        {showAddMenu && (
+          <div className="absolute left-0 top-full z-10 mt-2 w-64 rounded-xl border border-oro-400/30 bg-vino-900 shadow-xl">
+            {ALL_COMPONENTS.filter(c => !list.some(s => s.component_name === c)).map((name) => (
+              <button
+                key={name}
+                onClick={() => addSection(name)}
+                className="block w-full px-4 py-3 text-left text-sm text-marfil-50 transition hover:bg-oro-400/20 first:rounded-t-xl last:rounded-b-xl"
+              >
+                {SECTION_LABELS[name]}
+              </button>
+            ))}
+            {ALL_COMPONENTS.filter(c => !list.some(s => s.component_name === c)).length === 0 && (
+              <p className="px-4 py-3 text-sm text-marfil-100/40">Todas las secciones ya están agregadas</p>
+            )}
+          </div>
+        )}
       </div>
 
       {dirty && (
