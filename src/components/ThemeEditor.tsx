@@ -11,21 +11,9 @@ interface ThemeEditorProps {
 
 const labelClass = "block text-[11px] font-semibold uppercase tracking-[0.2em] text-marfil-100/50";
 
-const COLOR_FIELDS: { key: keyof SiteConfigMap; label: string; desc: string }[] = [
-  { key: "color_accent", label: "Acento", desc: "Botones, badges, acentos" },
-  { key: "color_primary", label: "Primario", desc: "Fondos oscuros, header" },
-  { key: "color_background", label: "Fondo", desc: "Fondo general de la web" },
-  { key: "color_surface", label: "Superficie", desc: "Cards, modales, formularios" },
-  { key: "color_text", label: "Texto", desc: "Color del texto principal" },
-];
-
 export default function ThemeEditor({ config, onSave, onClose }: ThemeEditorProps) {
   const [local, setLocal] = useState<SiteConfigMap>({ ...config });
   const [saving, setSaving] = useState(false);
-
-  function update<K extends keyof SiteConfigMap>(key: K, value: SiteConfigMap[K]) {
-    setLocal((prev) => ({ ...prev, [key]: value }));
-  }
 
   async function handleSave() {
     setSaving(true);
@@ -63,7 +51,7 @@ export default function ThemeEditor({ config, onSave, onClose }: ThemeEditorProp
             Editor de Tema
           </h3>
           <p className="mt-1 text-xs text-marfil-100/50 sm:text-sm">
-            Selecciona un tema, ajusta colores y layout
+            Selecciona un tema y ajusta layout
           </p>
         </div>
         <button
@@ -102,38 +90,6 @@ export default function ThemeEditor({ config, onSave, onClose }: ThemeEditorProp
               </button>
             );
           })}
-        </div>
-      </div>
-
-      {/* Color Pickers */}
-      <div className="rounded-xl border border-oro-400/20 bg-vino-900/30 p-4 sm:p-6">
-        <h4 className={labelClass}>Colores Personalizados</h4>
-        <p className="mt-1 text-[10px] text-marfil-100/30 sm:text-xs">
-          Override los colores del tema seleccionado
-        </p>
-        <div className="mt-3 grid gap-3 sm:gap-4">
-          {COLOR_FIELDS.map((field) => (
-            <div key={field.key} className="flex items-center gap-3">
-              <input
-                type="color"
-                value={String(local[field.key])}
-                onChange={(e) => applyLive({ [field.key]: e.target.value })}
-                className="h-8 w-8 cursor-pointer rounded-lg border-0 sm:h-10 sm:w-10"
-              />
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-marfil-100 sm:text-sm">{field.label}</span>
-                  <span className="text-[10px] text-marfil-100/30 sm:text-xs">· {field.desc}</span>
-                </div>
-                <input
-                  type="text"
-                  value={String(local[field.key])}
-                  onChange={(e) => applyLive({ [field.key]: e.target.value })}
-                  className="mt-1 w-full rounded-lg border border-stone-600 bg-stone-800 px-3 py-1.5 text-xs text-marfil-50 outline-none transition placeholder:text-stone-500 focus:border-oro-400 focus:ring-2 focus:ring-oro-400/20 sm:py-2 sm:text-sm"
-                />
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 
