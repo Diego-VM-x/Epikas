@@ -117,7 +117,7 @@ export default function ThemeEditor({ config, onSave, onClose }: ThemeEditorProp
               <input
                 type="color"
                 value={String(local[field.key])}
-                onChange={(e) => update(field.key, e.target.value as never)}
+                onChange={(e) => applyLive({ [field.key]: e.target.value })}
                 className="h-8 w-8 cursor-pointer rounded-lg border-0 sm:h-10 sm:w-10"
               />
               <div className="flex-1">
@@ -128,7 +128,7 @@ export default function ThemeEditor({ config, onSave, onClose }: ThemeEditorProp
                 <input
                   type="text"
                   value={String(local[field.key])}
-                  onChange={(e) => update(field.key, e.target.value as never)}
+                  onChange={(e) => applyLive({ [field.key]: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-stone-600 bg-stone-800 px-3 py-1.5 text-xs text-marfil-50 outline-none transition placeholder:text-stone-500 focus:border-oro-400 focus:ring-2 focus:ring-oro-400/20 sm:py-2 sm:text-sm"
                 />
               </div>

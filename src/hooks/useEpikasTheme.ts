@@ -108,19 +108,19 @@ export function useEpikasTheme() {
   const updateConfig = useCallback(
     async (updates: Partial<SiteConfigMap>) => {
       const next = { ...config, ...updates };
-      let palette: ThemePreset["palette"] | undefined;
+      const themeId = next.active_theme_id || "default";
+      const preset = THEME_PRESETS.find((p) => p.id === themeId);
 
       if (updates.active_theme_id) {
-        const preset = THEME_PRESETS.find((p) => p.id === updates.active_theme_id);
-        if (preset) {
-          Object.assign(next, preset.config);
-          palette = preset.palette;
+        const newPreset = THEME_PRESETS.find((p) => p.id === updates.active_theme_id);
+        if (newPreset) {
+          Object.assign(next, newPreset.config);
         }
       }
 
       setConfig(next);
       saveLocal(next);
-      applyCSSVariables(next, palette);
+      applyCSSVariables(next, preset?.palette);
 
       try {
         for (const [key, value] of Object.entries(updates)) {
