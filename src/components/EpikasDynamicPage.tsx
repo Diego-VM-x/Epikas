@@ -28,8 +28,10 @@ interface DynamicPageProps {
 
 function renderSection(
   name: SectionComponentName,
-  props: DynamicPageProps
+  props: DynamicPageProps,
+  section: PageSection
 ): ReactNode {
+  const config = section.config_data;
   switch (name) {
     case "Portada":
       return (
@@ -40,7 +42,7 @@ function renderSection(
         />
       );
     case "Cinta":
-      return <Cinta />;
+      return <Cinta config_data={config} />;
     case "Colecciones":
       return (
         <Colecciones
@@ -49,6 +51,7 @@ function renderSection(
             props.irA("catalogo");
           }}
           irA={props.irA}
+          config_data={config}
         />
       );
     case "Catalogo":
@@ -66,14 +69,15 @@ function renderSection(
           favoritos={props.favoritos}
           onToggleFavorito={props.onToggleFavorito}
           esFavorito={props.esFavorito}
+          config_data={config}
         />
       );
     case "Taller":
-      return <Taller />;
+      return <Taller config_data={config} />;
     case "Sacramentos":
-      return <Sacramentos />;
+      return <Sacramentos config_data={config} />;
     case "Nosotros":
-      return <Nosotros />;
+      return <Nosotros config_data={config} />;
     default:
       return null;
   }
@@ -88,7 +92,7 @@ export default function EpikasDynamicPage(props: DynamicPageProps) {
     <>
       {sorted.map((section) => (
         <section key={section.id}>
-          {renderSection(section.component_name, props)}
+          {renderSection(section.component_name, props, section)}
         </section>
       ))}
     </>

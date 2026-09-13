@@ -1,5 +1,9 @@
 import Reveal from "./Reveal";
 
+interface TallerProps {
+  config_data?: Record<string, unknown>;
+}
+
 const PASOS = [
   {
     num: "I",
@@ -18,7 +22,12 @@ const PASOS = [
   },
 ];
 
-export default function Taller() {
+export default function Taller({ config_data }: TallerProps) {
+  const eyebrow = typeof config_data?.eyebrow === "string" ? config_data.eyebrow : "Tradición & Devoción de Manos Mexicanas";
+  const title = typeof config_data?.title === "string" ? config_data.title : "EL ARTE DEL";
+  const titleHighlight = typeof config_data?.title_highlight === "string" ? config_data.title_highlight : "taller sacro";
+  const description = typeof config_data?.description === "string" ? config_data.description : "Cada hilo es anudado en recogimiento; cada engarce y medalla pasa por las manos de nuestros artesanos devotos antes de ser presentada ante el altar para su bendición.";
+
   return (
     <section
       id="taller"
@@ -30,15 +39,14 @@ export default function Taller() {
         <Reveal className="mx-auto mb-14 max-w-3xl text-center">
           <div className="mb-2 inline-flex items-center space-x-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-oro-400">
             <span className="h-px w-6 bg-oro-400" />
-            <span>Tradición & Devoción de Manos Mexicanas</span>
+            <span>{eyebrow}</span>
             <span className="h-px w-6 bg-oro-400" />
           </div>
           <h2 className="font-display text-3xl font-medium tracking-tight text-white sm:text-5xl">
-            EL ARTE DEL <span className="italic-gold font-serif">taller sacro</span>
+            {title} <span className="italic-gold font-serif">{titleHighlight}</span>
           </h2>
           <p className="mt-3 text-xs font-light leading-relaxed text-stone-300 sm:text-sm">
-            Cada hilo es anudado en recogimiento; cada engarce y medalla pasa por las manos de nuestros
-            artesanos devotos antes de ser presentada ante el altar para su bendición.
+            {description}
           </p>
         </Reveal>
 

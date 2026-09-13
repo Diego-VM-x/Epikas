@@ -5,6 +5,7 @@ import { SEMILLA } from "../data/seed";
 interface ColeccionesProps {
   onCategoria: (c: Categoria) => void;
   irA: (id: string) => void;
+  config_data?: Record<string, unknown>;
 }
 
 const COLECCIONES: { id: Categoria; nombre: string; subtitulo: string; imagen: string }[] = [
@@ -15,16 +16,19 @@ const COLECCIONES: { id: Categoria; nombre: string; subtitulo: string; imagen: s
   { id: "collares", nombre: "Collares de Fe", subtitulo: "Sagrado Corazón", imagen: SEMILLA[4].imagen },
 ];
 
-export default function Colecciones({ onCategoria, irA }: ColeccionesProps) {
+export default function Colecciones({ onCategoria, irA, config_data }: ColeccionesProps) {
+  const eyebrow = typeof config_data?.eyebrow === "string" ? config_data.eyebrow : "Explora por Devoción y Tipo";
+  const title = typeof config_data?.title === "string" ? config_data.title : "Colecciones Destacadas del Atelier";
+
   return (
     <section className="border-b border-oro-500/25 bg-gradient-to-b from-vino-950 to-vino-900 py-8">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 text-center">
           <span className="block text-[10px] font-semibold uppercase tracking-[0.3em] text-oro-400">
-            Explora por Devoción y Tipo
+            {eyebrow}
           </span>
           <h3 className="mt-1 font-display text-xl tracking-wide text-white">
-            Colecciones Destacadas del Atelier
+            {title}
           </h3>
         </div>
 

@@ -40,7 +40,17 @@ const VALORES: Valor[] = [
   },
 ];
 
-export default function Nosotros() {
+interface NosotrosProps {
+  config_data?: Record<string, unknown>;
+}
+
+export default function Nosotros({ config_data }: NosotrosProps) {
+  const eyebrow = typeof config_data?.eyebrow === "string" ? config_data.eyebrow : "Nuestra promesa";
+  const titleLine1 = typeof config_data?.title_line1 === "string" ? config_data.title_line1 : "Cada pieza,";
+  const titleHighlight = typeof config_data?.title_highlight === "string" ? config_data.title_highlight : "oración";
+  const description = typeof config_data?.description === "string" ? config_data.description : "Epikas nació en una mesa familiar, ensartando cuentas para la kermés de la parroquia. Hoy seguimos igual: pocas piezas, hechas despacio, con la certeza de que una joya de fe acompaña bautizos, primeras comuniones, bodas, aniversarios y despedidas.";
+  const quote = typeof config_data?.quote === "string" ? config_data.quote : "«Todo lo que hagan, háganlo con amor.»";
+  const quoteReference = typeof config_data?.quote_reference === "string" ? config_data.quote_reference : "— 1 Corintios 16, 14";
   return (
     <section id="promesa" className="patron-cruces relative overflow-hidden bg-vino-950 py-24 text-marfil-50 lg:py-32">
       <div
@@ -55,30 +65,27 @@ export default function Nosotros() {
               <IconoRombo className="h-2 w-2 text-oro-400" />
               <span className="h-px w-12 bg-oro-400/60" />
               <p className="text-[11px] font-medium uppercase tracking-[0.38em] text-oro-300">
-                Nuestra promesa
+                {eyebrow}
               </p>
             </div>
 
             <h2 className="mt-6 font-display text-4xl font-bold leading-tight sm:text-5xl">
-              Cada pieza,
+              {titleLine1}
               <br />
-              una <span className="font-quote font-medium italic text-oro-300">oración</span>
+              una <span className="font-quote font-medium italic text-oro-300">{titleHighlight}</span>
             </h2>
 
             <p className="mt-6 max-w-lg leading-relaxed text-marfil-100/70">
-              Epikas nació en una mesa familiar, ensartando cuentas para la kermés de la
-              parroquia. Hoy seguimos igual: pocas piezas, hechas despacio, con la certeza de que
-              una joya de fe acompaña bautizos, primeras comuniones, bodas, aniversarios y
-              despedidas.
+              {description}
             </p>
 
             <blockquote className="relative mt-10 border-l-2 border-oro-400 pl-6">
               <IconoRombo className="absolute -left-[7px] top-1 h-3 w-3 text-oro-400" />
               <p className="font-quote text-2xl italic leading-relaxed text-oro-200 sm:text-3xl">
-                «Todo lo que hagan, háganlo con amor.»
+                {quote}
               </p>
               <footer className="mt-3 text-[11px] font-medium uppercase tracking-[0.3em] text-marfil-100/50">
-                — 1 Corintios 16, 14
+                {quoteReference}
               </footer>
             </blockquote>
           </Reveal>

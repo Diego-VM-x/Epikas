@@ -31,7 +31,15 @@ const CANTIDADES = [
   "Más de 30 piezas (Mayoreo Sacro)",
 ];
 
-export default function Sacramentos() {
+interface SacramentosProps {
+  config_data?: Record<string, unknown>;
+}
+
+export default function Sacramentos({ config_data }: SacramentosProps) {
+  const eyebrow = typeof config_data?.eyebrow === "string" ? config_data.eyebrow : "— SERVICIO DE ATELIER A MEDIDA";
+  const title = typeof config_data?.title === "string" ? config_data.title : "ENCARGOS SACRAMENTALES";
+  const titleHighlight = typeof config_data?.title_highlight === "string" ? config_data.title_highlight : "personalizados";
+  const description = typeof config_data?.description === "string" ? config_data.description : "Diseñamos piezas únicas para Bautizos, Primeras Comuniones, Confirmaciones, Bodas Católicas y Recuerdos de Familia. Grabamos nombres, fechas sagradas e intenciones particulares.";
   const [sacramento, setSacramento] = useState("bautizo");
   const [material, setMaterial] = useState(MATERIALES[0]);
   const [cantidad, setCantidad] = useState(CANTIDADES[0]);
@@ -53,16 +61,14 @@ export default function Sacramentos() {
           <div className="space-y-4 lg:col-span-5">
             <Reveal>
               <span className="block text-[10px] font-bold uppercase tracking-[0.3em] text-oro-700">
-                — SERVICIO DE ATELIER A MEDIDA
+                {eyebrow}
               </span>
               <h2 className="mt-2 font-display text-3xl tracking-tight leading-tight text-stone-900 sm:text-4xl">
-                ENCARGOS SACRAMENTALES{" "}
-                <span className="italic-gold font-serif lowercase text-oro-600">personalizados</span>
+                {title}{" "}
+                <span className="italic-gold font-serif lowercase text-oro-600">{titleHighlight}</span>
               </h2>
               <p className="mt-2 text-xs font-light leading-relaxed text-stone-600 sm:text-sm">
-                Diseñamos piezas únicas para{" "}
-                <strong>Bautizos, Primeras Comuniones, Confirmaciones, Bodas Católicas y Recuerdos de Familia</strong>.
-                Grabamos nombres, fechas sagradas e intenciones particulares.
+                {description}
               </p>
 
               <div className="space-y-2 pt-2 text-xs text-stone-700">

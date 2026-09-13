@@ -13,34 +13,98 @@ interface SectionManagerProps {
 
 const ALL_COMPONENTS: SectionComponentName[] = ["Portada", "Cinta", "Colecciones", "Catalogo", "Taller", "Sacramentos", "Nosotros"];
 
-const CONFIG_FIELDS: Record<SectionComponentName, { key: string; label: string; type: "text" | "textarea" | "number" }[]> = {
+const CONFIG_FIELDS: Record<SectionComponentName, { key: string; label: string; type: "text" | "textarea" | "number"; placeholder?: string }[]> = {
   Portada: [
-    { key: "titulo", label: "Título", type: "text" },
-    { key: "subtitulo", label: "Subtítulo", type: "text" },
-    { key: "badge_text", label: "Badge", type: "text" },
+    { key: "titulo_linea1", label: "Título Línea 1", type: "text", placeholder: "TU FE," },
+    { key: "titulo_linea2", label: "Título Línea 2", type: "text", placeholder: "HECHA" },
+    { key: "titulo_joya", label: "Palabra destacada", type: "text", placeholder: "joya" },
+    { key: "subtitulo", label: "Subtítulo", type: "textarea", placeholder: "Piezas de orfebrería..." },
+    { key: "escritura", label: "Escritura sagrada", type: "textarea", placeholder: "«Yo soy la luz del mundo...»" },
+    { key: "referencia", label: "Referencia", type: "text", placeholder: "— San Juan 8, 12" },
+    { key: "badge1", label: "Badge 1", type: "text", placeholder: "Colección Sacra 2026" },
+    { key: "badge2", label: "Badge 2", type: "text", placeholder: "Bendecida en el Taller" },
   ],
   Cinta: [
-    { key: "phrases", label: "Frases (separadas por coma)", type: "textarea" },
-  ],
-  Catalogo: [
-    { key: "title", label: "Título", type: "text" },
-    { key: "items_per_page", label: "Ítems por página", type: "number" },
-  ],
-  Taller: [
-    { key: "title", label: "Título", type: "text" },
-    { key: "description", label: "Descripción", type: "textarea" },
-  ],
-  Nosotros: [
-    { key: "title", label: "Título", type: "text" },
-    { key: "quote", label: "Cita", type: "textarea" },
-    { key: "reference", label: "Referencia", type: "text" },
+    { key: "frases", label: "Frases del marquesino (una por línea)", type: "textarea", placeholder: "Rosarios artesanales\nMedallas milagrosas\nCollares de fe" },
   ],
   Colecciones: [
-    { key: "title", label: "Título", type: "text" },
+    { key: "eyebrow", label: "Texto superior", type: "text", placeholder: "Explora por Devoción y Tipo" },
+    { key: "title", label: "Título", type: "text", placeholder: "Colecciones Destacadas del Atelier" },
+  ],
+  Catalogo: [
+    { key: "eyebrow", label: "Texto superior", type: "text", placeholder: "— ATELIER CATALOGUE" },
+    { key: "title", label: "Título", type: "text", placeholder: "PIEZAS CON" },
+    { key: "title_highlight", label: "Palabra destacada", type: "text", placeholder: "alma" },
+    { key: "description", label: "Descripción", type: "textarea", placeholder: "Cada creación se prepara..." },
+    { key: "search_placeholder", label: "Placeholder búsqueda", type: "text", placeholder: "Buscar por advocación, metal o pieza..." },
+  ],
+  Taller: [
+    { key: "eyebrow", label: "Texto superior", type: "text", placeholder: "Tradición & Devoción de Manos Mexicanas" },
+    { key: "title", label: "Título", type: "text", placeholder: "EL ARTE DEL" },
+    { key: "title_highlight", label: "Palabra destacada", type: "text", placeholder: "taller sacro" },
+    { key: "description", label: "Descripción", type: "textarea", placeholder: "Cada hilo es anudado..." },
+  ],
+  Nosotros: [
+    { key: "eyebrow", label: "Texto superior", type: "text", placeholder: "Nuestra promesa" },
+    { key: "title_line1", label: "Título", type: "text", placeholder: "Cada pieza," },
+    { key: "title_highlight", label: "Palabra destacada", type: "text", placeholder: "oración" },
+    { key: "description", label: "Descripción", type: "textarea", placeholder: "Epikas nació en una mesa familiar..." },
+    { key: "quote", label: "Cita bíblica", type: "textarea", placeholder: "«Todo lo que hagan, háganlo con amor.»" },
+    { key: "quote_reference", label: "Referencia", type: "text", placeholder: "— 1 Corintios 16, 14" },
   ],
   Sacramentos: [
-    { key: "title", label: "Título", type: "text" },
+    { key: "eyebrow", label: "Texto superior", type: "text", placeholder: "— SERVICIO DE ATELIER A MEDIDA" },
+    { key: "title", label: "Título", type: "text", placeholder: "ENCARGOS SACRAMENTALES" },
+    { key: "title_highlight", label: "Palabra destacada", type: "text", placeholder: "personalizados" },
+    { key: "description", label: "Descripción", type: "textarea", placeholder: "Diseñamos piezas únicas..." },
   ],
+};
+
+const SECTION_DEFAULTS: Record<SectionComponentName, Record<string, unknown>> = {
+  Portada: {
+    titulo_linea1: "TU FE,",
+    titulo_linea2: "HECHA",
+    titulo_joya: "joya",
+    subtitulo: "Piezas de orfebrería devocional forjadas a mano en plata .925 y oro de 18 quilates.",
+    escritura: "«Yo soy la luz del mundo; quien me sigue no caminará en tinieblas.»",
+    referencia: "— San Juan 8, 12",
+    badge1: "Colección Sacra 2026",
+    badge2: "Bendecida en el Taller",
+  },
+  Cinta: {
+    frases: "Rosarios artesanales\nMedallas milagrosas\nCollares de fe\nAnillos de promesa\nPulseras bendecidas\nBendición incluida\nHecho a mano\nEnvío a todo México",
+  },
+  Colecciones: {
+    eyebrow: "Explora por Devoción y Tipo",
+    title: "Colecciones Destacadas del Atelier",
+  },
+  Catalogo: {
+    eyebrow: "— ATELIER CATALOGUE",
+    title: "PIEZAS CON",
+    title_highlight: "alma",
+    description: "Cada creación se prepara en pequeñas series artesanales, lista para bendición personal y entrega de lujo.",
+    search_placeholder: "Buscar por advocación, metal o pieza...",
+  },
+  Taller: {
+    eyebrow: "Tradición & Devoción de Manos Mexicanas",
+    title: "EL ARTE DEL",
+    title_highlight: "taller sacro",
+    description: "Cada hilo es anudado en recogimiento; cada engarce y medalla pasa por las manos de nuestros artesanos devotos antes de ser presentada ante el altar para su bendición.",
+  },
+  Nosotros: {
+    eyebrow: "Nuestra promesa",
+    title_line1: "Cada pieza,",
+    title_highlight: "oración",
+    description: "Epikas nació en una mesa familiar, ensartando cuentas para la kermés de la parroquia. Hoy seguimos igual: pocas piezas, hechas despacio.",
+    quote: "«Todo lo que hagan, háganlo con amor.»",
+    quote_reference: "— 1 Corintios 16, 14",
+  },
+  Sacramentos: {
+    eyebrow: "— SERVICIO DE ATELIER A MEDIDA",
+    title: "ENCARGOS SACRAMENTALES",
+    title_highlight: "personalizados",
+    description: "Diseñamos piezas únicas para Bautizos, Primeras Comuniones, Confirmaciones, Bodas Católicas y Recuerdos de Familia.",
+  },
 };
 
 export default function SectionManager({
@@ -106,9 +170,10 @@ export default function SectionManager({
     onToggle(id);
   }
 
-  function openEdit(id: string, config: Record<string, unknown>) {
+  function openEdit(id: string, componentName: SectionComponentName, config: Record<string, unknown>) {
     setEditingId(id);
-    setEditForm({ ...config });
+    const defaults = SECTION_DEFAULTS[componentName] ?? {};
+    setEditForm({ ...defaults, ...config });
   }
 
   function handleSaveConfig() {
@@ -236,7 +301,7 @@ export default function SectionManager({
 
             {/* Edit config button */}
             <button
-              onClick={() => openEdit(section.id, section.config_data)}
+              onClick={() => openEdit(section.id, section.component_name, section.config_data)}
               className="flex h-8 w-8 items-center justify-center rounded-full border border-oro-400/40 text-oro-300 transition hover:border-oro-400 hover:bg-oro-400 hover:text-vino-950"
               title="Configurar"
             >

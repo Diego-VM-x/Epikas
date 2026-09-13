@@ -44,6 +44,7 @@ interface CatalogoProps {
   favoritos: string[];
   onToggleFavorito: (id: string) => void;
   esFavorito: (id: string) => boolean;
+  config_data?: Record<string, unknown>;
 }
 
 export default function Catalogo({
@@ -59,7 +60,14 @@ export default function Catalogo({
   favoritos,
   onToggleFavorito,
   esFavorito,
+  config_data,
 }: CatalogoProps) {
+  const eyebrow = typeof config_data?.eyebrow === "string" ? config_data.eyebrow : "— ATELIER CATALOGUE";
+  const title = typeof config_data?.title === "string" ? config_data.title : "PIEZAS CON";
+  const titleHighlight = typeof config_data?.title_highlight === "string" ? config_data.title_highlight : "alma";
+  const description = typeof config_data?.description === "string" ? config_data.description : "Cada creación se prepara en pequeñas series artesanales, lista para bendición personal y entrega de lujo.";
+  const searchPlaceholder = typeof config_data?.search_placeholder === "string" ? config_data.search_placeholder : "Buscar por advocación, metal o pieza...";
+
   const [orden, setOrden] = useState<TipoOrden>("nuevos");
   const [pagina, setPagina] = useState(1);
 
@@ -117,13 +125,13 @@ export default function Catalogo({
         {/* Section Header */}
         <Reveal className="mb-10 text-center max-w-2xl mx-auto">
           <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.3em] text-oro-600">
-            — ATELIER CATALOGUE
+            {eyebrow}
           </span>
           <h2 className="font-display text-3xl font-medium tracking-tight text-stone-900 sm:text-5xl">
-            PIEZAS CON <span className="italic-gold font-serif">alma</span>
+            {title} <span className="italic-gold font-serif">{titleHighlight}</span>
           </h2>
           <p className="mt-3 text-xs font-light leading-relaxed text-stone-600 sm:text-sm">
-            Cada creación se prepara en pequeñas series artesanales, lista para bendición personal y entrega de lujo.
+            {description}
           </p>
         </Reveal>
 
@@ -139,7 +147,7 @@ export default function Catalogo({
                 <input
                   value={busqueda}
                   onChange={(e) => onBusqueda(e.target.value)}
-                  placeholder="Buscar por advocación, metal o pieza..."
+                  placeholder={searchPlaceholder}
                   className="w-full rounded-xl border border-stone-200 bg-marfil-50 py-2.5 pl-9 pr-4 text-xs text-stone-800 placeholder-stone-400 focus:border-oro-500 focus:ring-1 focus:ring-oro-500"
                 />
               </div>
