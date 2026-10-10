@@ -75,8 +75,8 @@ export default function Catalogo({
     setPagina(1);
   }, [categoria, busqueda]);
 
-  const texto = busqueda.trim().toLowerCase();
-  const filtrados = productos.filter((p) => {
+  const texto = useMemo(() => busqueda.trim().toLowerCase(), [busqueda]);
+  const filtrados = useMemo(() => productos.filter((p) => {
     const porCategoria = categoria === "todos" || p.categoria === categoria;
     const porTexto =
       texto === "" ||
@@ -84,8 +84,9 @@ export default function Catalogo({
         .toLowerCase()
         .includes(texto);
     return porCategoria && porTexto;
-  });
-  const visibles = ordenarProductos(filtrados, orden);
+  }), [productos, categoria, texto]);
+
+  const visibles = useMemo(() => ordenarProductos(filtrados, orden), [filtrados, orden]);
 
   const POR_PAGINA = 12;
   const totalPaginas = Math.max(1, Math.ceil(visibles.length / POR_PAGINA));

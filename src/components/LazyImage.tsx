@@ -6,6 +6,8 @@ interface LazyImageProps {
   className?: string;
   width?: number;
   height?: number;
+  srcSet?: string;
+  sizes?: string;
 }
 
 export default function LazyImage({
@@ -14,6 +16,8 @@ export default function LazyImage({
   className = "",
   width,
   height,
+  srcSet,
+  sizes,
 }: LazyImageProps) {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -44,6 +48,8 @@ export default function LazyImage({
         <img
           src={src}
           alt={alt}
+          srcSet={srcSet}
+          sizes={sizes || "(max-width: 640px) 100vw, 50vw"}
           loading="lazy"
           className="h-full w-full object-cover transition-all duration-700 ease-out"
           width={width}

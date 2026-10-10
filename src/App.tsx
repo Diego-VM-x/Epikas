@@ -10,8 +10,6 @@ import AuthModal from "./components/AuthModal";
 import SchemaMarkup from "./components/SchemaMarkup";
 import ScrollProgress from "./components/ScrollProgress";
 import Toast, { type AvisoToast } from "./components/Toast";
-const Portada = lazy(() => import("./components/Portada"));
-const Catalogo = lazy(() => import("./components/Catalogo"));
 import EpikasDynamicPage from "./components/EpikasDynamicPage";
 import { useProductos } from "./hooks/useProductos";
 import { useFavoritosSupabase } from "./hooks/useFavoritosSupabase";
