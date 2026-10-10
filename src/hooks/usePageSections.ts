@@ -51,6 +51,31 @@ export function usePageSections() {
         setLoading(false);
       }
     })();
+
+    // Single realtime channel for all section changes (consolidated)
+    const channel = supabase
+      .channel("epikas-page-sections-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "epikas_page_sections" },
+        (payload) => {
+          // Optimistic update: refresh sections on any change
+          const deleteId = payload.eventType === "DELETE" ? (payload.old as any)?.id : null;
+          const insertId = payload.eventType === "INSERT" ? (payload.new as any)?.id : null;
+          const updateId = payload.eventType === "UPDATE" ? (payload.new as any)?.id : null;
+          setSections((prev) =>
+            prev.filter(s => {
+              const sid = s.id;
+              return sid !== deleteId && sid !== insertId && sid !== updateId;
+            })
+          );
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const toggleSection = useCallback(
@@ -82,16 +107,14 @@ export function usePageSections() {
       setSections(reordered);
       saveLocal(reordered);
 
-      try {
-        for (const s of reordered) {
-          await supabase
-            .from("epikas_page_sections")
-            .update({ order_index: s.order_index })
-            .eq("id", s.id);
-        }
-      } catch {
-        // localStorage fallback
-      }
+      // Batch update with Promise.all instead of sequential awaits
+      const updates = reordered.map((s) =>
+        supabase
+          .from("epikas_page_sections")
+          .update({ order_index: s.order_index })
+          .eq("id", s.id)
+      );
+      await Promise.all(updates);
     },
     []
   );

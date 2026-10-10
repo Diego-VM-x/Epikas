@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, memo } from "react";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { CurrencyProvider } from "./contexts/CurrencyContext";
@@ -10,7 +10,11 @@ import AuthModal from "./components/AuthModal";
 import SchemaMarkup from "./components/SchemaMarkup";
 import ScrollProgress from "./components/ScrollProgress";
 import Toast, { type AvisoToast } from "./components/Toast";
-import EpikasDynamicPage from "./components/EpikasDynamicPage";
+const Portada = lazy(() => import("./components/Portada"));
+const Catalogo = lazy(() => import("./components/Catalogo"));
+const EpikasDynamicPage = lazy(
+  () => import("./components/EpikasDynamicPage")
+);
 import { useProductos } from "./hooks/useProductos";
 import { useFavoritosSupabase } from "./hooks/useFavoritosSupabase";
 import { useEpikasTheme } from "./hooks/useEpikasTheme";
@@ -145,23 +149,31 @@ function AppContent() {
       />
 
       <main>
-        <EpikasDynamicPage
-          sections={sections}
-          onExplorar={() => irA("catalogo")}
-          esAdmin={isAdmin}
-          productos={productos}
-          categoria={categoria}
-          onCategoria={setCategoria}
-          busqueda={busqueda}
-          onBusqueda={setBusqueda}
-          onVer={setDetalle}
-          onEditar={editarDesdeTarjeta}
-          onEliminar={manejarEliminarProducto}
-          favoritos={favoritos}
-          onToggleFavorito={handleToggleFavorito}
-          esFavorito={esFavorito}
-          irA={irA}
-        />
+        <Suspense
+          fallback={
+            <div className="flex min-h-[60vh] items-center justify-center bg-marfil-50">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-oro-400 border-t-transparent" />
+            </div>
+          }
+        >
+          <EpikasDynamicPage
+            sections={sections}
+            onExplorar={() => irA("catalogo")}
+            esAdmin={isAdmin}
+            productos={productos}
+            categoria={categoria}
+            onCategoria={setCategoria}
+            busqueda={busqueda}
+            onBusqueda={setBusqueda}
+            onVer={setDetalle}
+            onEditar={editarDesdeTarjeta}
+            onEliminar={manejarEliminarProducto}
+            favoritos={favoritos}
+            onToggleFavorito={handleToggleFavorito}
+            esFavorito={esFavorito}
+            irA={irA}
+          />
+        </Suspense>
       </main>
 
       <Footer

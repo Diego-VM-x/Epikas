@@ -4,10 +4,17 @@ interface LazyImageProps {
   src: string;
   alt: string;
   className?: string;
+  width?: number;
+  height?: number;
 }
 
-export default function LazyImage({ src, alt, className = "" }: LazyImageProps) {
-  const [cargando, setCargando] = useState(true);
+export default function LazyImage({
+  src,
+  alt,
+  className = "",
+  width,
+  height,
+}: LazyImageProps) {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -27,27 +34,24 @@ export default function LazyImage({ src, alt, className = "" }: LazyImageProps) 
   }, []);
 
   return (
-    <div ref={ref} className={`relative overflow-hidden ${className}`}>
+    <div
+      ref={ref}
+      className={`relative overflow-hidden ${className}`}
+      style={{ width, height }}
+      aria-hidden={!visible}
+    >
       {visible && (
         <img
           src={src}
           alt={alt}
           loading="lazy"
-          onLoad={() => setCargando(false)}
-          className={`h-full w-full object-cover transition-all duration-700 ${
-            cargando ? "scale-105 blur-sm opacity-0" : "scale-100 blur-0 opacity-100"
-          }`}
+          className="h-full w-full object-cover transition-all duration-700 ease-out"
+          width={width}
+          height={height}
         />
       )}
       {!visible && (
         <div className="h-full w-full bg-stone-200">
-          <div
-            className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent"
-          />
-        </div>
-      )}
-      {visible && cargando && (
-        <div className="absolute inset-0 bg-stone-200">
           <div
             className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent"
           />

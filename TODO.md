@@ -25,6 +25,31 @@
 - [ ] Configurar bucket Supabase Storage `productos` (público)
 - [ ] Optimizar bundle (code splitting por ruta)
 
+## 🟣 Rendimiento — Reporte de cambios
+
+> Último reporte de cambios: 2026-09-07
+
+### 🔵 Implementado
+
+- [x] **Code splitting por chunk** — `vite.config.js` configurado con `manualChunks` (admin, cart, pages, vendor, default).
+- [x] **Lazy loading pesado** — `Portada` y `Catalogo` importados dinámicamente en `App.tsx` con `React.lazy` + `Suspense`.
+- [x] **Múltiples chunks para AdminPanel** — `AdminPanel` agrupado en un chunk separado en `vite.config.js`.
+- [x] **Chunks consolidados para suscripciones realtime** — `usePageSections`, `useProductos`, `useFavoritosSupabase`, `useEpikasTheme` agrupados en un chunk `supabase`.
+- [x] **Chunks para gráficos** — `recharts` + d3 agrupado en un chunk `chart`.
+- [x] **Chunks para motion** — `framer-motion` + dnd-kit agrupado en un chunk `motion`.
+- [x] **Memoización `useMemo` en `Catalogo.tsx`** — filtrado + ordenamiento + paginación + conteo de categorías calculados con `useMemo`.
+- [x] **`React.memo`** — `EpikasDynamicPage` y `renderSection` envueltos para evitar re-render por `sections` inmutables.
+- [x] **Consolidación realtime** — `usePageSections` ahora usa un solo `supabase.channel()` en lugar de múltiples canales.
+- [x] **Lista de scroll optimizada** — `Header` ahora usa `IntersectionObserver` en lugar de `scroll` event listener por scroll.
+- [x] **`LazyImage` depurado** — reducido a un solo estado (`visible`), carga real de imagen con `loading="lazy"`.
+- [x] **`CartContext` con `useCallback`** — todos los dispatchers son `useCallback` estables.
+
+### 🟡 En progreso / por implementar
+
+- [x] **Reales conectados a secciones individuales** — `usePageSections` usa un solo `supabase.channel()` consolidado + `Promise.all` para `reorderSections`.
+- [x] **LazyImage depurado** — eliminado `cargando`; un solo estado `visible` + `IntersectionObserver`; `loading="lazy"` aplicado.
+- [x] **CartContext callbacks** — todos los dispatchers (`addItem`, `removeItem`, etc.) envueltos en `useCallback` (ya estaba implementado previamente).
+
 ## ✅ Completados
 
 ### Diseño Atelier (v2)
