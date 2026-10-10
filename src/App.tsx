@@ -12,9 +12,7 @@ import ScrollProgress from "./components/ScrollProgress";
 import Toast, { type AvisoToast } from "./components/Toast";
 const Portada = lazy(() => import("./components/Portada"));
 const Catalogo = lazy(() => import("./components/Catalogo"));
-const EpikasDynamicPage = lazy(
-  () => import("./components/EpikasDynamicPage")
-);
+import EpikasDynamicPage from "./components/EpikasDynamicPage";
 import { useProductos } from "./hooks/useProductos";
 import { useFavoritosSupabase } from "./hooks/useFavoritosSupabase";
 import { useEpikasTheme } from "./hooks/useEpikasTheme";
@@ -120,13 +118,8 @@ function AppContent() {
     setCarritoModalAbierto(true);
   }
 
-  if (loading || loadingProductos || loadingTheme || loadingSections) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-marfil-50">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-oro-400 border-t-transparent" />
-      </div>
-    );
-  }
+  // Render rápido: nunca bloquear todo; mostrar estructura mientras cargan datos
+  const cargando = loading || loadingProductos || loadingTheme || loadingSections;
 
   return (
     <div className="relative min-h-screen">
@@ -149,31 +142,23 @@ function AppContent() {
       />
 
       <main>
-        <Suspense
-          fallback={
-            <div className="flex min-h-[60vh] items-center justify-center bg-marfil-50">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-oro-400 border-t-transparent" />
-            </div>
-          }
-        >
-          <EpikasDynamicPage
-            sections={sections}
-            onExplorar={() => irA("catalogo")}
-            esAdmin={isAdmin}
-            productos={productos}
-            categoria={categoria}
-            onCategoria={setCategoria}
-            busqueda={busqueda}
-            onBusqueda={setBusqueda}
-            onVer={setDetalle}
-            onEditar={editarDesdeTarjeta}
-            onEliminar={manejarEliminarProducto}
-            favoritos={favoritos}
-            onToggleFavorito={handleToggleFavorito}
-            esFavorito={esFavorito}
-            irA={irA}
-          />
-        </Suspense>
+        <EpikasDynamicPage
+          sections={sections}
+          onExplorar={() => irA("catalogo")}
+          esAdmin={isAdmin}
+          productos={productos}
+          categoria={categoria}
+          onCategoria={setCategoria}
+          busqueda={busqueda}
+          onBusqueda={setBusqueda}
+          onVer={setDetalle}
+          onEditar={editarDesdeTarjeta}
+          onEliminar={manejarEliminarProducto}
+          favoritos={favoritos}
+          onToggleFavorito={handleToggleFavorito}
+          esFavorito={esFavorito}
+          irA={irA}
+        />
       </main>
 
       <Footer
